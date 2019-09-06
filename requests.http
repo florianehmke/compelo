@@ -1,0 +1,13 @@
+### Create Project
+POST localhost:8080/projects
+Content-Type: application/json
+
+{
+  "name": "My Project"
+}
+
+### Get Projects
+GET localhost:8080/projects
+
+###
+
