@@ -1,9 +1,10 @@
 package player
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+
+	"compelo/models"
+	"compelo/rest"
 )
 
 type Router struct {
@@ -16,22 +17,19 @@ func NewRouter(s *Service) *Router {
 
 func (r *Router) Post(c *gin.Context) {
 	var body struct {
-		Name      string `json:"name" binding:"required"`
-		ProjectID uint   `json:"projectId" binding:"required"`
+		Name string `json:"name" binding:"required"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		c.JSON(http.StatusBadRequest, err)
-	} else {
-		p, err := r.s.CreatePlayer(body.ProjectID, body.Name)
-		if err == nil {
-			c.JSON(http.StatusOK, &p)
-		} else {
-			c.JSON(http.StatusBadRequest, err)
-		}
+	var p *models.Player
+	err := c.Bind(&body)
+	if err == nil {
+		p, err = r.s.CreatePlayer(uint(c.GetInt("projectID")), body.Name)
 	}
+	rest.WriteOkResponse(p, err, c)
 }
 
 func (r *Router) GetAll(c *gin.Context) {
-	c.JSON(http.StatusOK, r.s.LoadPlayers())
+	projectID := c.GetInt("projectID")
+	games, err := r.s.LoadPlayersByProjectID(uint(projectID))
+	rest.WriteOkResponse(games, err, c)
 }

@@ -28,6 +28,7 @@ func NewService(
 }
 
 type CreateMatchParameter struct {
+	ProjectID       uint
 	Date            time.Time
 	GameID          uint
 	Teams           uint
@@ -73,13 +74,10 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error)
 		playerIdMatchPlayerMap[playerID] = mp
 	}
 
-	p := &models.Match{
-		Date:              param.Date,
-		WinnerMatchTeamID: 0,
-		GameID:            g.ID,
-	}
-	err = s.db.Create(p).Error
-	return p, err
+	// Set the "real" match id of the winning team.
+	m.WinnerMatchTeamID = teamMap[param.WinnerMatchTeam].ID
+	err = s.updateMatch(m)
+	return m, err
 }
 
 func (s *Service) createMatch(date time.Time, gameID uint) (*models.Match, error) {
@@ -88,7 +86,10 @@ func (s *Service) createMatch(date time.Time, gameID uint) (*models.Match, error
 	return m, err
 }
 
-// FIXME (score)
+func (s *Service) updateMatch(match *models.Match) error {
+	return s.db.Save(match).Error
+}
+
 func (s *Service) createTeam(matchID uint, score int) (*models.MatchTeam, error) {
 	t := &models.MatchTeam{MatchID: matchID, Score: score}
 	err := s.db.Create(t).Error
@@ -121,10 +122,10 @@ func (s *Service) LoadByID(id uint) (CompleteMatch, error) {
 	}
 
 	var players []models.MatchPlayer
-	s.db.Find(&players) // FIXME by match id
+	s.db.Where(&models.MatchPlayer{MatchID: match.ID}).Find(&players)
 
 	var teams []models.MatchTeam
-	s.db.Find(&teams) // FIXME by match id
+	s.db.Where(&models.MatchTeam{MatchID: match.ID}).Find(&teams)
 
 	return CompleteMatch{
 		Match:        match,

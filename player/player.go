@@ -22,10 +22,10 @@ func (s *Service) CreatePlayer(projectID uint, name string) (*models.Player, err
 	return p, err
 }
 
-func (s *Service) LoadPlayers() []models.Player {
+func (s *Service) LoadPlayersByProjectID(pid uint) ([]models.Player, error) {
 	var players []models.Player
-	s.db.Find(&players)
-	return players
+	err := s.db.Where(&models.Player{ProjectID: pid}).Find(&players).Error
+	return players, err
 }
 
 func (s *Service) LoadPlayerByID(id uint) (models.Player, error) {

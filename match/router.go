@@ -1,6 +1,8 @@
 package match
 
 import (
+	"compelo/models"
+	"compelo/rest"
 	"net/http"
 	"strconv"
 	"time"
@@ -25,10 +27,13 @@ func (r *Router) Post(c *gin.Context) {
 		WinnerMatchTeam uint          `json:"winnerMatchTeamId" binding:"required"`
 	}
 
-	if err := c.Bind(&body); err != nil {
-		c.JSON(http.StatusBadRequest, err)
-	} else {
-		p, err := r.s.CreateMatch(CreateMatchParameter{
+	// TODO verify that game ID belongs to project.
+	// TODO verify that player IDs belong to project.
+
+	var m *models.Match
+	err := c.Bind(&body)
+	if err == nil {
+		m, err = r.s.CreateMatch(CreateMatchParameter{
 			Date:            time.Now(),
 			GameID:          body.GameID,
 			Teams:           body.Teams,
@@ -36,27 +41,19 @@ func (r *Router) Post(c *gin.Context) {
 			TeamScoreMap:    body.TeamScoreMap,
 			WinnerMatchTeam: body.WinnerMatchTeam,
 		})
-		if err == nil {
-			c.JSON(http.StatusOK, &p)
-		} else {
-			c.JSON(http.StatusBadRequest, err)
-		}
 	}
+	rest.WriteOkResponse(m, err, c)
 }
 
 func (r *Router) GetByID(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
+
+	var m CompleteMatch
 	if err == nil {
-		m, err := r.s.LoadByID(uint(id))
-		if err == nil {
-			c.JSON(http.StatusOK, &m)
-		} else {
-			c.JSON(http.StatusBadRequest, err)
-		}
-	} else {
-		c.JSON(http.StatusBadRequest, err)
+		m, err = r.s.LoadByID(uint(id))
 	}
+	rest.WriteOkResponse(m, err, c)
 }
 
 func (r *Router) GetAll(c *gin.Context) {
