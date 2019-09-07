@@ -27,3 +27,9 @@ func (s *Service) LoadPlayers() []models.Player {
 	s.db.Find(&players)
 	return players
 }
+
+func (s *Service) LoadPlayerByID(id uint) (models.Player, error) {
+	var player models.Player
+	err := s.db.First(&player, id).Error
+	return player, err
+}

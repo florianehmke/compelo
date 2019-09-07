@@ -39,20 +39,20 @@ type Match struct {
 	Model
 
 	Date              time.Time `json:"date" gorm:"not null"`
-	GameID            uint      `json:"gameId" gorm:"not null"`
-	WinnerMatchTeamID uint      `json:"winnerMatchTeamId" gorm:"not null"`
+	GameID            uint      `json:"gameId" gorm:"type:int REFERENCES games(id) ON DELETE CASCADE"`
+	WinnerMatchTeamID uint      `json:"winnerMatchTeamId"`
 }
 
 type MatchTeam struct {
 	Model
 
-	MatchID uint
+	MatchID uint `json:"matchId" gorm:"type:int REFERENCES matches(id) ON DELETE CASCADE"`
 	Score   int
 }
 
 type MatchPlayer struct {
 	Model
 
-	MatchID  uint
-	PlayerID uint
+	MatchTeamID uint `json:"matchId" gorm:"type:int REFERENCES match_teams(id) ON DELETE CASCADE"`
+	PlayerID    uint `json:"matchId" gorm:"type:int REFERENCES players(id)"`
 }

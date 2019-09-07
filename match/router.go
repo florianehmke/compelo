@@ -20,6 +20,7 @@ func (r *Router) Post(c *gin.Context) {
 		GameID          uint          `json:"gameId" binding:"required"`
 		Teams           uint          `json:"teams" binding:"required"`
 		PlayerTeamMap   map[uint]uint `json:"playerTeamMap" binding:"required"`
+		TeamScoreMap    map[uint]int  `json:"teamScoreMap" binding:"required"`
 		WinnerMatchTeam uint          `json:"winnerMatchTeamId" binding:"required"`
 	}
 
@@ -31,6 +32,7 @@ func (r *Router) Post(c *gin.Context) {
 			GameID:          body.GameID,
 			Teams:           body.Teams,
 			PlayerTeamMap:   body.PlayerTeamMap,
+			TeamScoreMap:    body.TeamScoreMap,
 			WinnerMatchTeam: body.WinnerMatchTeam,
 		})
 		if err == nil {

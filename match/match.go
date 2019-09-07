@@ -32,13 +32,45 @@ type CreateMatchParameter struct {
 	GameID          uint
 	Teams           uint
 	PlayerTeamMap   map[uint]uint
+	TeamScoreMap    map[uint]int
 	WinnerMatchTeam uint
 }
 
 func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error) {
+	// Verify that the game exists.
 	g, err := s.gameService.LoadGameByID(param.GameID)
 	if err != nil {
 		return nil, err // FIXME
+	}
+
+	// Create the match.
+	m, err := s.createMatch(param.Date, g.ID)
+	if err != nil {
+		return nil, err // FIXME
+	}
+
+	// Create the teams.
+	teamMap := map[uint]*models.MatchTeam{}
+	for i := 1; i <= int(param.Teams); i++ {
+		t, err := s.createTeam(m.ID, param.TeamScoreMap[uint(i)]) // FIXME maybe validate scores
+		if err != nil {
+			return nil, err // FIXME
+		}
+		teamMap[uint(i)] = t
+	}
+
+	// Create the players.
+	playerIdMatchPlayerMap := map[uint]*models.MatchPlayer{}
+	for playerID, teamNumber := range param.PlayerTeamMap {
+		p, err := s.playerService.LoadPlayerByID(playerID)
+		if err != nil {
+			return nil, err // FIXME
+		}
+		mp, err := s.createPlayer(teamMap[teamNumber].ID, p.ID)
+		if err != nil {
+			return nil, err // FIXME
+		}
+		playerIdMatchPlayerMap[playerID] = mp
 	}
 
 	p := &models.Match{
@@ -47,6 +79,25 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error)
 		GameID:            g.ID,
 	}
 	err = s.db.Create(p).Error
+	return p, err
+}
+
+func (s *Service) createMatch(date time.Time, gameID uint) (*models.Match, error) {
+	m := &models.Match{Date: date, GameID: gameID}
+	err := s.db.Create(m).Error
+	return m, err
+}
+
+// FIXME (score)
+func (s *Service) createTeam(matchID uint, score int) (*models.MatchTeam, error) {
+	t := &models.MatchTeam{MatchID: matchID, Score: score}
+	err := s.db.Create(t).Error
+	return t, err
+}
+
+func (s *Service) createPlayer(matchTeamID uint, playerID uint) (*models.MatchPlayer, error) {
+	p := &models.MatchPlayer{MatchTeamID: matchTeamID, PlayerID: playerID}
+	err := s.db.Create(p).Error
 	return p, err
 }
 

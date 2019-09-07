@@ -54,6 +54,10 @@ Content-Type: application/json
     "1": 1,
     "2": 2
   },
+  "teamScoreMap": {
+    "1": 5,
+    "2": 3
+  },
   "teams": 2,
   "winnerMatchTeamId": 1
 }
