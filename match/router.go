@@ -2,6 +2,7 @@ package match
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -40,6 +41,21 @@ func (r *Router) Post(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusBadRequest, err)
 		}
+	}
+}
+
+func (r *Router) GetByID(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err == nil {
+		m, err := r.s.LoadByID(uint(id))
+		if err == nil {
+			c.JSON(http.StatusOK, &m)
+		} else {
+			c.JSON(http.StatusBadRequest, err)
+		}
+	} else {
+		c.JSON(http.StatusBadRequest, err)
 	}
 }
 

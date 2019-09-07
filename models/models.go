@@ -53,6 +53,7 @@ type MatchTeam struct {
 type MatchPlayer struct {
 	Model
 
-	MatchTeamID uint `json:"matchId" gorm:"type:int REFERENCES match_teams(id) ON DELETE CASCADE"`
-	PlayerID    uint `json:"matchId" gorm:"type:int REFERENCES players(id)"`
+	MatchID     uint `json:"matchId" gorm:"type:int REFERENCES match_teams(id) ON DELETE CASCADE"`
+	MatchTeamID uint `json:"matchTeamId" gorm:"type:int REFERENCES match_teams(id) ON DELETE CASCADE"`
+	PlayerID    uint `json:"playerId" gorm:"type:int REFERENCES players(id)"`
 }

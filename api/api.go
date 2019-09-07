@@ -25,6 +25,8 @@ func Serve(projectRouter *project.Router, playerRouter *player.Router, matchRout
 		gameRouter:    gameRouter,
 	}
 
+	// FIXME move matches under projects
+
 	r := gin.Default()
 	r.POST("projects", api.projectRouter.Post)
 	r.GET("projects", api.projectRouter.GetAll)
@@ -34,6 +36,7 @@ func Serve(projectRouter *project.Router, playerRouter *player.Router, matchRout
 
 	r.POST("matches", api.matchRouter.Post)
 	r.GET("matches", api.matchRouter.GetAll)
+	r.GET("matches/:id", api.matchRouter.GetByID)
 
 	r.POST("games", api.gameRouter.Post)
 	r.GET("games", api.gameRouter.GetAll)

@@ -65,3 +65,7 @@ Content-Type: application/json
 ### Get Matches
 GET localhost:8080/matches
 
+### Get Matches by ID
+GET localhost:8080/matches/2
+
+###

@@ -66,7 +66,7 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error)
 		if err != nil {
 			return nil, err // FIXME
 		}
-		mp, err := s.createPlayer(teamMap[teamNumber].ID, p.ID)
+		mp, err := s.createPlayer(m.ID, teamMap[teamNumber].ID, p.ID)
 		if err != nil {
 			return nil, err // FIXME
 		}
@@ -95,8 +95,8 @@ func (s *Service) createTeam(matchID uint, score int) (*models.MatchTeam, error)
 	return t, err
 }
 
-func (s *Service) createPlayer(matchTeamID uint, playerID uint) (*models.MatchPlayer, error) {
-	p := &models.MatchPlayer{MatchTeamID: matchTeamID, PlayerID: playerID}
+func (s *Service) createPlayer(matchID uint, matchTeamID uint, playerID uint) (*models.MatchPlayer, error) {
+	p := &models.MatchPlayer{MatchID: matchID, MatchTeamID: matchTeamID, PlayerID: playerID}
 	err := s.db.Create(p).Error
 	return p, err
 }
@@ -105,4 +105,30 @@ func (s *Service) LoadMatches() []models.Match {
 	var matches []models.Match
 	s.db.Find(&matches)
 	return matches
+}
+
+type CompleteMatch struct {
+	Match        models.Match         `json:"match"`
+	MatchTeams   []models.MatchTeam   `json:"teams"`
+	MatchPlayers []models.MatchPlayer `json:"players"`
+}
+
+func (s *Service) LoadByID(id uint) (CompleteMatch, error) {
+	var match models.Match
+	err := s.db.First(&match, id).Error
+	if err != nil {
+		return CompleteMatch{}, err // FIXME
+	}
+
+	var players []models.MatchPlayer
+	s.db.Find(&players) // FIXME by match id
+
+	var teams []models.MatchTeam
+	s.db.Find(&teams) // FIXME by match id
+
+	return CompleteMatch{
+		Match:        match,
+		MatchTeams:   teams,
+		MatchPlayers: players,
+	}, nil
 }
