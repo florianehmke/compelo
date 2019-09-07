@@ -20,12 +20,19 @@ func (db *DB) Close() {
 }
 
 func New() *DB {
-	db, err := gorm.Open("sqlite3", "test.db")
+	db, err := gorm.Open("sqlite3", "file::memory:")
+	db.Exec("PRAGMA foreign_keys = ON")
+
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	db.AutoMigrate(&models.Project{})
+	db.AutoMigrate(&models.Player{})
+	db.AutoMigrate(&models.Game{})
+	db.AutoMigrate(&models.Match{})
+	db.AutoMigrate(&models.MatchPlayer{})
+	db.AutoMigrate(&models.MatchTeam{})
 
 	return &DB{db}
 }

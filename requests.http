@@ -1,3 +1,5 @@
+# ------------- Project
+
 ### Create Project
 POST localhost:8080/projects
 Content-Type: application/json
@@ -9,5 +11,53 @@ Content-Type: application/json
 ### Get Projects
 GET localhost:8080/projects
 
+# ------------- Players
+
+### Create Player
+POST localhost:8080/players
+Content-Type: application/json
+
+{
+  "name": "My Player",
+  "projectId": 1
+}
+
+### Get Players
+GET localhost:8080/players
+
+# ------------- Games
+
+### Create Match
+POST localhost:8080/games
+Content-Type: application/json
+
+{
+  "name": "My Game",
+  "projectId": 1
+}
+
+### Get Matches
+GET localhost:8080/games
+
 ###
+
+# ------------- Matches
+
+### Create Match
+POST localhost:8080/matches
+Content-Type: application/json
+
+{
+  "name": "My Player",
+  "gameId": 1,
+  "playerTeamMap": {
+    "1": 1,
+    "2": 2
+  },
+  "teams": 2,
+  "winnerMatchTeamId": 1
+}
+
+### Get Matches
+GET localhost:8080/matches
 
