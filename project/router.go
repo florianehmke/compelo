@@ -1,6 +1,7 @@
 package project
 
 import (
+	"compelo"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
@@ -8,8 +9,6 @@ import (
 
 	"github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-
-	"compelo/models"
 )
 
 const (
@@ -38,7 +37,7 @@ func (r *Router) CreateProject(c *gin.Context) {
 	} else {
 		p, err := r.s.CreateProject(body.Name, hashAndSalt([]byte(body.Password)))
 		if err == nil {
-			c.JSON(http.StatusOK, &p)
+			c.JSON(http.StatusCreated, &p)
 		} else {
 			c.JSON(http.StatusBadRequest, err)
 		}
@@ -65,7 +64,7 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour * 24,
 		IdentityKey: idKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if p, ok := data.(*models.Project); ok {
+			if p, ok := data.(*compelo.Project); ok {
 				return jwt.MapClaims{
 					idKey:   p.ID,
 					nameKey: p.Name,
@@ -75,9 +74,9 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			return &models.Project{
+			return &compelo.Project{
 				Name: claims[nameKey].(string),
-				Model: models.Model{
+				Model: compelo.Model{
 					ID: uint(claims[idKey].(float64)),
 				},
 			}
@@ -101,7 +100,7 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 			return &p, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if fromToken, ok := data.(*models.Project); ok {
+			if fromToken, ok := data.(*compelo.Project); ok {
 				fromDB, err := s.LoadByName(fromToken.Name)
 				if err != nil {
 					return false

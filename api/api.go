@@ -1,8 +1,7 @@
 package api
 
 import (
-	"log"
-
+	"compelo/db"
 	"github.com/gin-gonic/gin"
 
 	"compelo/game"
@@ -11,12 +10,28 @@ import (
 	"compelo/project"
 )
 
-func Serve(
+func Setup(dbPath string) *gin.Engine {
+	database := db.New(dbPath)
+
+	projectService := project.NewService(database)
+	playerService := player.NewService(database)
+	gameService := game.NewService(database)
+	matchService := match.NewService(database, playerService, gameService)
+
+	return createRouter(
+		project.NewRouter(projectService),
+		player.NewRouter(playerService),
+		match.NewRouter(matchService),
+		game.NewRouter(gameService),
+	)
+}
+
+func createRouter(
 	projectRouter *project.Router,
 	playerRouter *player.Router,
 	matchRouter *match.Router,
 	gameRouter *game.Router,
-) {
+) *gin.Engine {
 	r := gin.Default()
 
 	r.POST("/create-project", projectRouter.CreateProject)
@@ -38,5 +53,5 @@ func Serve(
 	g.GET("/matches", matchRouter.GetAll)
 	g.GET("/matches/:id", matchRouter.GetByID)
 
-	log.Fatal(r.Run())
+	return r
 }

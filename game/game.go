@@ -1,8 +1,8 @@
 package game
 
 import (
+	"compelo"
 	"compelo/db"
-	"compelo/models"
 )
 
 type Service struct {
@@ -13,8 +13,8 @@ func NewService(db *db.DB) *Service {
 	return &Service{db: db}
 }
 
-func (s *Service) CreateGame(projectID uint, name string) (*models.Game, error) {
-	p := &models.Game{
+func (s *Service) CreateGame(projectID uint, name string) (*compelo.Game, error) {
+	p := &compelo.Game{
 		Name:      name,
 		ProjectID: projectID,
 	}
@@ -22,14 +22,14 @@ func (s *Service) CreateGame(projectID uint, name string) (*models.Game, error) 
 	return p, err
 }
 
-func (s *Service) LoadGamesByProjectID(pid uint) ([]models.Game, error) {
-	var games []models.Game
-	err := s.db.Where(&models.Game{ProjectID: pid}).Find(&games).Error
+func (s *Service) LoadGamesByProjectID(pid uint) ([]compelo.Game, error) {
+	var games []compelo.Game
+	err := s.db.Where(&compelo.Game{ProjectID: pid}).Find(&games).Error
 	return games, err
 }
 
-func (s *Service) LoadGameByID(id uint) (models.Game, error) {
-	var game models.Game
+func (s *Service) LoadGameByID(id uint) (compelo.Game, error) {
+	var game compelo.Game
 	err := s.db.First(&game, id).Error
 	return game, err
 }

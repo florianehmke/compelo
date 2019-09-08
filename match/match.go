@@ -1,9 +1,9 @@
 package match
 
 import (
+	"compelo"
 	"compelo/db"
 	"compelo/game"
-	"compelo/models"
 	"compelo/player"
 	"time"
 )
@@ -37,7 +37,7 @@ type CreateMatchParameter struct {
 	WinnerMatchTeam uint
 }
 
-func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error) {
+func (s *Service) CreateMatch(param CreateMatchParameter) (*compelo.Match, error) {
 	// Verify that the game exists.
 	g, err := s.gameService.LoadGameByID(param.GameID)
 	if err != nil {
@@ -51,7 +51,7 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error)
 	}
 
 	// Create the teams.
-	teamMap := map[uint]*models.MatchTeam{}
+	teamMap := map[uint]*compelo.MatchTeam{}
 	for i := 1; i <= int(param.Teams); i++ {
 		t, err := s.createTeam(m.ID, param.TeamScoreMap[uint(i)]) // FIXME maybe validate scores
 		if err != nil {
@@ -61,7 +61,7 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error)
 	}
 
 	// Create the players.
-	playerIdMatchPlayerMap := map[uint]*models.MatchPlayer{}
+	playerIdMatchPlayerMap := map[uint]*compelo.MatchPlayer{}
 	for playerID, teamNumber := range param.PlayerTeamMap {
 		p, err := s.playerService.LoadPlayerByID(playerID)
 		if err != nil {
@@ -80,52 +80,52 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*models.Match, error)
 	return m, err
 }
 
-func (s *Service) createMatch(date time.Time, gameID uint) (*models.Match, error) {
-	m := &models.Match{Date: date, GameID: gameID}
+func (s *Service) createMatch(date time.Time, gameID uint) (*compelo.Match, error) {
+	m := &compelo.Match{Date: date, GameID: gameID}
 	err := s.db.Create(m).Error
 	return m, err
 }
 
-func (s *Service) updateMatch(match *models.Match) error {
+func (s *Service) updateMatch(match *compelo.Match) error {
 	return s.db.Save(match).Error
 }
 
-func (s *Service) createTeam(matchID uint, score int) (*models.MatchTeam, error) {
-	t := &models.MatchTeam{MatchID: matchID, Score: score}
+func (s *Service) createTeam(matchID uint, score int) (*compelo.MatchTeam, error) {
+	t := &compelo.MatchTeam{MatchID: matchID, Score: score}
 	err := s.db.Create(t).Error
 	return t, err
 }
 
-func (s *Service) createPlayer(matchID uint, matchTeamID uint, playerID uint) (*models.MatchPlayer, error) {
-	p := &models.MatchPlayer{MatchID: matchID, MatchTeamID: matchTeamID, PlayerID: playerID}
+func (s *Service) createPlayer(matchID uint, matchTeamID uint, playerID uint) (*compelo.MatchPlayer, error) {
+	p := &compelo.MatchPlayer{MatchID: matchID, MatchTeamID: matchTeamID, PlayerID: playerID}
 	err := s.db.Create(p).Error
 	return p, err
 }
 
-func (s *Service) LoadMatches() []models.Match {
-	var matches []models.Match
+func (s *Service) LoadMatches() []compelo.Match {
+	var matches []compelo.Match
 	s.db.Find(&matches)
 	return matches
 }
 
 type CompleteMatch struct {
-	Match        models.Match         `json:"match"`
-	MatchTeams   []models.MatchTeam   `json:"teams"`
-	MatchPlayers []models.MatchPlayer `json:"players"`
+	Match        compelo.Match         `json:"match"`
+	MatchTeams   []compelo.MatchTeam   `json:"teams"`
+	MatchPlayers []compelo.MatchPlayer `json:"players"`
 }
 
 func (s *Service) LoadByID(id uint) (CompleteMatch, error) {
-	var match models.Match
+	var match compelo.Match
 	err := s.db.First(&match, id).Error
 	if err != nil {
 		return CompleteMatch{}, err // FIXME
 	}
 
-	var players []models.MatchPlayer
-	s.db.Where(&models.MatchPlayer{MatchID: match.ID}).Find(&players)
+	var players []compelo.MatchPlayer
+	s.db.Where(&compelo.MatchPlayer{MatchID: match.ID}).Find(&players)
 
-	var teams []models.MatchTeam
-	s.db.Where(&models.MatchTeam{MatchID: match.ID}).Find(&teams)
+	var teams []compelo.MatchTeam
+	s.db.Where(&compelo.MatchTeam{MatchID: match.ID}).Find(&teams)
 
 	return CompleteMatch{
 		Match:        match,

@@ -1,7 +1,7 @@
 package match
 
 import (
-	"compelo/models"
+	"compelo"
 	"compelo/rest"
 	"net/http"
 	"strconv"
@@ -30,7 +30,7 @@ func (r *Router) Post(c *gin.Context) {
 	// TODO verify that game ID belongs to project.
 	// TODO verify that player IDs belong to project.
 
-	var m *models.Match
+	var m *compelo.Match
 	err := c.Bind(&body)
 	if err == nil {
 		m, err = r.s.CreateMatch(CreateMatchParameter{
@@ -42,7 +42,7 @@ func (r *Router) Post(c *gin.Context) {
 			WinnerMatchTeam: body.WinnerMatchTeam,
 		})
 	}
-	rest.WriteOkResponse(m, err, c)
+	rest.WriteCreatedResponse(m, err, c)
 }
 
 func (r *Router) GetByID(c *gin.Context) {

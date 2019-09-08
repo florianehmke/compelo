@@ -1,12 +1,11 @@
 package db
 
 import (
+	"compelo"
 	"log"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-
-	"compelo/models"
 )
 
 type DB struct {
@@ -19,20 +18,20 @@ func (db *DB) Close() {
 	}
 }
 
-func New() *DB {
-	db, err := gorm.Open("sqlite3", "file::memory:")
+func New(dbPath string) *DB {
+	db, err := gorm.Open("sqlite3", dbPath)
 	db.Exec("PRAGMA foreign_keys = ON")
 
 	if err != nil {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&models.Project{})
-	db.AutoMigrate(&models.Player{})
-	db.AutoMigrate(&models.Game{})
-	db.AutoMigrate(&models.Match{})
-	db.AutoMigrate(&models.MatchPlayer{})
-	db.AutoMigrate(&models.MatchTeam{})
+	db.AutoMigrate(&compelo.Project{})
+	db.AutoMigrate(&compelo.Player{})
+	db.AutoMigrate(&compelo.Game{})
+	db.AutoMigrate(&compelo.Match{})
+	db.AutoMigrate(&compelo.MatchPlayer{})
+	db.AutoMigrate(&compelo.MatchTeam{})
 
 	return &DB{db}
 }

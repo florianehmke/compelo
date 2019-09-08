@@ -1,8 +1,8 @@
 package player
 
 import (
+	"compelo"
 	"compelo/db"
-	"compelo/models"
 )
 
 type Service struct {
@@ -13,8 +13,8 @@ func NewService(db *db.DB) *Service {
 	return &Service{db: db}
 }
 
-func (s *Service) CreatePlayer(projectID uint, name string) (*models.Player, error) {
-	p := &models.Player{
+func (s *Service) CreatePlayer(projectID uint, name string) (*compelo.Player, error) {
+	p := &compelo.Player{
 		Name:      name,
 		ProjectID: projectID,
 	}
@@ -22,14 +22,14 @@ func (s *Service) CreatePlayer(projectID uint, name string) (*models.Player, err
 	return p, err
 }
 
-func (s *Service) LoadPlayersByProjectID(pid uint) ([]models.Player, error) {
-	var players []models.Player
-	err := s.db.Where(&models.Player{ProjectID: pid}).Find(&players).Error
+func (s *Service) LoadPlayersByProjectID(pid uint) ([]compelo.Player, error) {
+	var players []compelo.Player
+	err := s.db.Where(&compelo.Player{ProjectID: pid}).Find(&players).Error
 	return players, err
 }
 
-func (s *Service) LoadPlayerByID(id uint) (models.Player, error) {
-	var player models.Player
+func (s *Service) LoadPlayerByID(id uint) (compelo.Player, error) {
+	var player compelo.Player
 	err := s.db.First(&player, id).Error
 	return player, err
 }

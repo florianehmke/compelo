@@ -65,7 +65,6 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "name": "My Player",
   "gameId": 1,
   "playerTeamMap": {
     "1": 1,
