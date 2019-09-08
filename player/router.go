@@ -30,7 +30,7 @@ func (r *Router) Post(c *gin.Context) {
 }
 
 func (r *Router) GetAll(c *gin.Context) {
-	projectID := c.GetInt(project.IdKey)
-	games, err := r.s.LoadPlayersByProjectID(uint(projectID))
+	p := c.MustGet(project.Key).(models.Project)
+	games, err := r.s.LoadPlayersByProjectID(p.ID)
 	rest.WriteOkResponse(games, err, c)
 }

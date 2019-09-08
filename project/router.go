@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	IdKey   = "projectId"
-	NameKey = "projectName"
+	Key     = "project"
+	idKey   = "projectId"
+	nameKey = "projectName"
 )
 
 type Router struct {
@@ -62,12 +63,12 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 		Key:         []byte("secret key"), // FIXME export
 		Timeout:     time.Hour * 24,
 		MaxRefresh:  time.Hour * 24,
-		IdentityKey: IdKey,
+		IdentityKey: idKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if p, ok := data.(*models.Project); ok {
 				return jwt.MapClaims{
-					IdKey:   p.ID,
-					NameKey: p.Name,
+					idKey:   p.ID,
+					nameKey: p.Name,
 				}
 			}
 			return jwt.MapClaims{}
@@ -75,9 +76,9 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 			return &models.Project{
-				Name: claims[NameKey].(string),
+				Name: claims[nameKey].(string),
 				Model: models.Model{
-					ID: uint(claims[IdKey].(float64)),
+					ID: uint(claims[idKey].(float64)),
 				},
 			}
 		},
@@ -100,9 +101,12 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 			return &p, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if p, ok := data.(*models.Project); ok {
-				c.Set(IdKey, p.ID)
-				c.Set(NameKey, p.Name)
+			if fromToken, ok := data.(*models.Project); ok {
+				fromDB, err := s.LoadByName(fromToken.Name)
+				if err != nil {
+					return false
+				}
+				c.Set(Key, fromDB)
 				return true
 			}
 			return false

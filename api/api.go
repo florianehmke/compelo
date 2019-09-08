@@ -32,7 +32,8 @@ func Serve(
 	p.POST("/games", gameRouter.Post)
 	p.GET("/games", gameRouter.GetAll)
 
-	g := p.Group("/games/:id") // TODO: Add middleware that verifies game belongs to project etc.
+	g := p.Group("/games/:" + game.IDParam)
+	g.Use(gameRouter.Middleware)
 	g.POST("/matches", matchRouter.Post)
 	g.GET("/matches", matchRouter.GetAll)
 	g.GET("/matches/:id", matchRouter.GetByID)

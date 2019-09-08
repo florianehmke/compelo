@@ -48,7 +48,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "name": "My Game"
+  "name": "My Game 2"
 }
 
 ### Get Games
@@ -60,7 +60,7 @@ Authorization: Bearer {{auth_token}}
 # ------------- Matches
 
 ### Create Match
-POST localhost:8080/project/matches
+POST localhost:8080/project/games/2/matches
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -80,11 +80,11 @@ Authorization: Bearer {{auth_token}}
 }
 
 ### Get Matches
-GET localhost:8080/project/matches
+GET localhost:8080/project/games/2/matches
 Authorization: Bearer {{auth_token}}
 
 ### Get Matches by ID
-GET localhost:8080/project/matches/1
+GET localhost:8080/project/games/2/matches/1
 Authorization: Bearer {{auth_token}}
 
 ###
