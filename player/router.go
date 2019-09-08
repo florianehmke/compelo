@@ -1,6 +1,7 @@
 package player
 
 import (
+	"compelo/project"
 	"github.com/gin-gonic/gin"
 
 	"compelo/models"
@@ -29,7 +30,7 @@ func (r *Router) Post(c *gin.Context) {
 }
 
 func (r *Router) GetAll(c *gin.Context) {
-	projectID := c.GetInt("projectID")
+	projectID := c.GetInt(project.IdKey)
 	games, err := r.s.LoadPlayersByProjectID(uint(projectID))
 	rest.WriteOkResponse(games, err, c)
 }

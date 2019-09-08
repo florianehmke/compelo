@@ -1,19 +1,20 @@
 package project
 
 import (
-	"compelo/models"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+
+	"compelo/models"
 )
 
 const (
-	projectId   = "projectId"
-	projectName = "projectName"
+	IdKey   = "projectId"
+	NameKey = "projectName"
 )
 
 type Router struct {
@@ -58,15 +59,15 @@ func (r *Router) GetAll(c *gin.Context) {
 func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 	mw, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "compelo",
-		Key:         []byte("secret key"),
+		Key:         []byte("secret key"), // FIXME export
 		Timeout:     time.Hour * 24,
 		MaxRefresh:  time.Hour * 24,
-		IdentityKey: projectId,
+		IdentityKey: IdKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if p, ok := data.(*models.Project); ok {
 				return jwt.MapClaims{
-					projectId:   p.ID,
-					projectName: p.Name,
+					IdKey:   p.ID,
+					NameKey: p.Name,
 				}
 			}
 			return jwt.MapClaims{}
@@ -74,9 +75,9 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 			return &models.Project{
-				Name: claims[projectName].(string),
+				Name: claims[NameKey].(string),
 				Model: models.Model{
-					ID: uint(claims[projectId].(float64)),
+					ID: uint(claims[IdKey].(float64)),
 				},
 			}
 		},
@@ -85,27 +86,23 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 				Name     string `json:"name" binding:"required"`
 				Password string `json:"password" binding:"required"`
 			}
-
 			if err := c.ShouldBind(&body); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-
 			p, err := s.LoadByName(body.Name)
 			if err != nil {
 				return nil, jwt.ErrFailedAuthentication
 			}
-
 			err = bcrypt.CompareHashAndPassword(p.PasswordHash, []byte(body.Password))
 			if err != nil {
 				return nil, jwt.ErrFailedAuthentication
 			}
-
 			return &p, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			if p, ok := data.(*models.Project); ok {
-				c.Set("projectID", p.ID)
-				c.Set("projectName", p.Name)
+				c.Set(IdKey, p.ID)
+				c.Set(NameKey, p.Name)
 				return true
 			}
 			return false
