@@ -19,20 +19,23 @@ func Serve(
 ) {
 	r := gin.Default()
 
-	r.POST("create-project", projectRouter.CreateProject)
-	r.POST("select-project", projectRouter.SelectProject)
-	r.GET("projects", projectRouter.GetAll)
+	r.POST("/create-project", projectRouter.CreateProject)
+	r.POST("/select-project", projectRouter.SelectProject)
+	r.GET("/projects", projectRouter.GetAll)
 
 	// Sub-router for project specific activities.
-	p := r.Group("project")
+	p := r.Group("/project")
 	p.Use(projectRouter.Middleware())
 
-	p.POST("players", playerRouter.Post)
-	p.GET("players", playerRouter.GetAll)
-	p.POST("matches", matchRouter.Post)
-	p.GET("matches", matchRouter.GetAll)
-	p.GET("matches/:id", matchRouter.GetByID)
-	p.POST("games", gameRouter.Post)
-	p.GET("games", gameRouter.GetAll)
+	p.POST("/players", playerRouter.Post)
+	p.GET("/players", playerRouter.GetAll)
+	p.POST("/games", gameRouter.Post)
+	p.GET("/games", gameRouter.GetAll)
+
+	g := p.Group("/games/:id") // TODO: Add middleware that verifies game belongs to project etc.
+	g.POST("/matches", matchRouter.Post)
+	g.GET("/matches", matchRouter.GetAll)
+	g.GET("/matches/:id", matchRouter.GetByID)
+
 	log.Fatal(r.Run())
 }
