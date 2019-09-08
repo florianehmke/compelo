@@ -1,12 +1,26 @@
 # ------------- Project
 
 ### Create Project
-POST localhost:8080/projects
+POST localhost:8080/create-project
 Content-Type: application/json
 
 {
-  "name": "My Project"
+  "name": "My Project 2",
+  "password": "123"
 }
+
+### Select Project
+POST localhost:8080/select-project
+Content-Type: application/json
+
+{
+  "name": "My Project 2",
+  "password": "123"
+}
+
+> {%
+    client.global.set("auth_token", response.body.token);
+  %}
 
 ### Get Projects
 GET localhost:8080/projects
@@ -16,6 +30,7 @@ GET localhost:8080/projects
 ### Create Player
 POST localhost:8080/project/players
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "name": "My Player"
@@ -23,12 +38,14 @@ Content-Type: application/json
 
 ### Get Players
 GET localhost:8080/project/players
+Authorization: Bearer {{auth_token}}
 
 # ------------- Games
 
 ### Create Game
 POST localhost:8080/project/games
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "name": "My Game"
@@ -36,6 +53,7 @@ Content-Type: application/json
 
 ### Get Games
 GET localhost:8080/project/games
+Authorization: Bearer {{auth_token}}
 
 ###
 
@@ -44,6 +62,7 @@ GET localhost:8080/project/games
 ### Create Match
 POST localhost:8080/project/matches
 Content-Type: application/json
+Authorization: Bearer {{auth_token}}
 
 {
   "name": "My Player",
@@ -62,8 +81,10 @@ Content-Type: application/json
 
 ### Get Matches
 GET localhost:8080/project/matches
+Authorization: Bearer {{auth_token}}
 
 ### Get Matches by ID
 GET localhost:8080/project/matches/1
+Authorization: Bearer {{auth_token}}
 
 ###

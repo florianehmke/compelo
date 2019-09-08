@@ -17,7 +17,7 @@ func main() {
 	gameService := game.NewService(database)
 	matchService := match.NewService(database, playerService, gameService)
 
-	projectService.CreateProject("My Project")
+	projectService.CreateProject("My Project", []byte("test"))
 	playerService.CreatePlayer(1, "Player 1")
 	playerService.CreatePlayer(1, "Player 2")
 	gameService.CreateGame(1, "FIFA")

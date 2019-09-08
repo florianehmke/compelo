@@ -11,44 +11,28 @@ import (
 	"compelo/project"
 )
 
-type Api struct {
-	projectRouter *project.Router
-	playerRouter  *player.Router
-	matchRouter   *match.Router
-	gameRouter    *game.Router
-}
-
-func Serve(projectRouter *project.Router, playerRouter *player.Router, matchRouter *match.Router, gameRouter *game.Router) {
-	api := &Api{
-		projectRouter: projectRouter,
-		playerRouter:  playerRouter,
-		matchRouter:   matchRouter,
-		gameRouter:    gameRouter,
-	}
-
+func Serve(
+	projectRouter *project.Router,
+	playerRouter *player.Router,
+	matchRouter *match.Router,
+	gameRouter *game.Router,
+) {
 	r := gin.Default()
 
-	r.POST("projects", api.projectRouter.Post)
-	r.GET("projects", api.projectRouter.GetAll)
+	r.POST("create-project", projectRouter.CreateProject)
+	r.POST("select-project", projectRouter.SelectProject)
+	r.GET("projects", projectRouter.GetAll)
 
 	// Sub-router for project specific activities.
 	p := r.Group("project")
-	p.Use(ProjectMiddleware)
+	p.Use(projectRouter.Middleware())
 
-	p.POST("players", api.playerRouter.Post)
-	p.GET("players", api.playerRouter.GetAll)
-	p.POST("matches", api.matchRouter.Post)
-	p.GET("matches", api.matchRouter.GetAll)
-	p.GET("matches/:id", api.matchRouter.GetByID)
-	p.POST("games", api.gameRouter.Post)
-	p.GET("games", api.gameRouter.GetAll)
+	p.POST("players", playerRouter.Post)
+	p.GET("players", playerRouter.GetAll)
+	p.POST("matches", matchRouter.Post)
+	p.GET("matches", matchRouter.GetAll)
+	p.GET("matches/:id", matchRouter.GetByID)
+	p.POST("games", gameRouter.Post)
+	p.GET("games", gameRouter.GetAll)
 	log.Fatal(r.Run())
-}
-
-func ProjectMiddleware(c *gin.Context) {
-	c.Set("projectID", 1)
-
-	// TODO
-	// - read from token
-	// - ensure it exists, respond with 404 else
 }

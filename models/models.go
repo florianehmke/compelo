@@ -18,7 +18,8 @@ type Model struct {
 type Project struct {
 	Model
 
-	Name string `json:"name" gorm:"unique;not null"`
+	Name         string `json:"name" gorm:"unique;not null"`
+	PasswordHash []byte `json:"-" gorm:"not null"`
 }
 
 type Game struct {
