@@ -33,16 +33,17 @@ func (r *Router) CreateProject(c *gin.Context) {
 		Name     string `json:"name" binding:"required"`
 		Password string `json:"password" binding:"required"`
 	}
+	err := c.Bind(&body)
 
-	if err := c.Bind(&body); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+	var p *compelo.Project
+	if err == nil {
+		p, err = r.s.CreateProject(body.Name, hashAndSalt([]byte(body.Password)))
+	}
+
+	if err == nil {
+		c.JSON(http.StatusCreated, p)
 	} else {
-		p, err := r.s.CreateProject(body.Name, hashAndSalt([]byte(body.Password)))
-		if err == nil {
-			c.JSON(http.StatusCreated, &p)
-		} else {
-			c.JSON(http.StatusBadRequest, err)
-		}
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 }
 

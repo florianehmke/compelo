@@ -4,8 +4,7 @@ import (
 	"compelo"
 	"compelo/project"
 	"github.com/gin-gonic/gin"
-
-	"compelo/rest"
+	"net/http"
 )
 
 type Router struct {
@@ -26,11 +25,21 @@ func (r *Router) Post(c *gin.Context) {
 		p := c.MustGet(project.Key).(compelo.Project)
 		player, err = r.s.CreatePlayer(p.ID, body.Name)
 	}
-	rest.WriteCreatedResponse(player, err, c)
+
+	if err == nil {
+		c.JSON(http.StatusCreated, player)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
 }
 
 func (r *Router) GetAll(c *gin.Context) {
 	p := c.MustGet(project.Key).(compelo.Project)
-	games, err := r.s.LoadPlayersByProjectID(p.ID)
-	rest.WriteOkResponse(games, err, c)
+	players, err := r.s.LoadPlayersByProjectID(p.ID)
+
+	if err == nil {
+		c.JSON(http.StatusCreated, players)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
 }

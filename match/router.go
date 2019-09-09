@@ -9,7 +9,6 @@ import (
 
 	"compelo"
 	"compelo/game"
-	"compelo/rest"
 )
 
 type Router struct {
@@ -22,10 +21,10 @@ func NewRouter(s *Service) *Router {
 
 func (r *Router) Post(c *gin.Context) {
 	var body struct {
-		Teams           uint          `json:"teams" binding:"required"`
-		PlayerTeamMap   map[uint]uint `json:"playerTeamMap" binding:"required"`
-		TeamScoreMap    map[uint]int  `json:"teamScoreMap" binding:"required"`
-		WinnerMatchTeam uint          `json:"winnerMatchTeamId" binding:"required"`
+		Teams         uint          `json:"teams" binding:"required"`
+		WinningTeam   uint          `json:"winningTeam" binding:"required"`
+		PlayerTeamMap map[uint]uint `json:"playerTeamMap" binding:"required"`
+		TeamScoreMap  map[uint]int  `json:"teamScoreMap" binding:"required"`
 	}
 
 	// TODO verify that player IDs belong to project.
@@ -35,15 +34,20 @@ func (r *Router) Post(c *gin.Context) {
 	err := c.Bind(&body)
 	if err == nil {
 		m, err = r.s.CreateMatch(CreateMatchParameter{
-			Date:            time.Now(),
-			GameID:          g.ID,
-			Teams:           body.Teams,
-			PlayerTeamMap:   body.PlayerTeamMap,
-			TeamScoreMap:    body.TeamScoreMap,
-			WinnerMatchTeam: body.WinnerMatchTeam,
+			Date:          time.Now(),
+			GameID:        g.ID,
+			Teams:         body.Teams,
+			PlayerTeamMap: body.PlayerTeamMap,
+			TeamScoreMap:  body.TeamScoreMap,
+			WinningTeam:   body.WinningTeam,
 		})
 	}
-	rest.WriteCreatedResponse(m, err, c)
+
+	if err == nil {
+		c.JSON(http.StatusCreated, m)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
 }
 
 func (r *Router) GetByID(c *gin.Context) {
@@ -54,7 +58,12 @@ func (r *Router) GetByID(c *gin.Context) {
 	if err == nil {
 		m, err = r.s.LoadByID(uint(id))
 	}
-	rest.WriteOkResponse(m, err, c)
+
+	if err == nil {
+		c.JSON(http.StatusOK, m)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
 }
 
 func (r *Router) GetAll(c *gin.Context) {

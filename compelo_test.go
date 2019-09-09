@@ -25,29 +25,47 @@ type suite struct {
 func Test(t *testing.T) {
 	s := suite{t: t, r: api.Setup("file::memory:")}
 
-	s.createProject(1)
-	s.selectProject()
+	s.createProject("My Project", "secret", 1)
+	s.createProjectWithUniqueConstraintViolation("My Project")
+
+	s.selectProject("My Project", "secret")
+	s.selectProjectWithWrongPassword()
+
 	s.createGame("My Game", 1)
+	s.createGameWithUniqueConstraintViolation("My Game")
+
 	s.createPlayer("Player 1", 1)
 	s.createPlayer("Player 2", 2)
-	s.createMatch()
+	s.createPlayerWithUniqueConstraintViolation("Player 2")
+
+	s.createMatch(1)
 	s.getMatchByID()
 }
 
-func (s *suite) createProject(expectedID uint) {
+func (s *suite) createProject(name, pw string, expectedID uint) {
 	b := gin.H{
-		"name":     "My Project",
-		"password": "secret",
+		"name":     name,
+		"password": pw,
 	}
 	w := s.requestWithBody("POST", "/create-project", b)
 	response := &compelo.Project{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
 	assert.Equal(s.t, expectedID, response.ID)
-	assert.Equal(s.t, "My Project", response.Name)
+	assert.Equal(s.t, name, response.Name)
 }
 
-func (s *suite) selectProject() {
+func (s *suite) createProjectWithUniqueConstraintViolation(name string) {
+	b := gin.H{
+		"name":     name,
+		"password": "12345",
+	}
+	w := s.requestWithBody("POST", "/create-project", b)
+	assert.Equal(s.t, http.StatusBadRequest, w.Code)
+	assert.Contains(s.t, w.Body.String(), "UNIQUE constraint failed")
+}
+
+func (s *suite) selectProject(name, pw string) {
 	type token struct {
 		Code   int       `json:"code"`
 		Expire time.Time `json:"expire"`
@@ -55,8 +73,8 @@ func (s *suite) selectProject() {
 	}
 
 	b := gin.H{
-		"name":     "My Project",
-		"password": "secret",
+		"name":     name,
+		"password": pw,
 	}
 	w := s.requestWithBody("POST", "/select-project", b)
 	response := &token{}
@@ -65,6 +83,16 @@ func (s *suite) selectProject() {
 	assert.NotNil(s.t, response.Expire)
 	assert.NotEmpty(s.t, response.Token)
 	s.token = response.Token
+}
+
+func (s *suite) selectProjectWithWrongPassword() {
+	b := gin.H{
+		"name":     "foo",
+		"password": "bar",
+	}
+	w := s.requestWithBody("POST", "/select-project", b)
+	assert.Equal(s.t, http.StatusUnauthorized, w.Code)
+	assert.Contains(s.t, w.Body.String(), "incorrect Username or Password")
 }
 
 func (s *suite) createGame(name string, expectedID uint) {
@@ -79,6 +107,15 @@ func (s *suite) createGame(name string, expectedID uint) {
 	assert.Equal(s.t, expectedID, response.ID)
 }
 
+func (s *suite) createGameWithUniqueConstraintViolation(name string) {
+	b := gin.H{
+		"name": name,
+	}
+	w := s.requestWithBody("POST", "/project/games", b)
+	assert.Equal(s.t, http.StatusBadRequest, w.Code)
+	assert.Contains(s.t, w.Body.String(), "UNIQUE constraint failed")
+}
+
 func (s *suite) createPlayer(name string, expectedID uint) {
 	b := gin.H{
 		"name": name,
@@ -91,9 +128,19 @@ func (s *suite) createPlayer(name string, expectedID uint) {
 	assert.Equal(s.t, expectedID, response.ID)
 }
 
-func (s *suite) createMatch() {
+func (s *suite) createPlayerWithUniqueConstraintViolation(name string) {
 	b := gin.H{
-		"gameId": 1,
+		"name": name,
+	}
+	w := s.requestWithBody("POST", "/project/players", b)
+	assert.Equal(s.t, http.StatusBadRequest, w.Code)
+	assert.Contains(s.t, w.Body.String(), "UNIQUE constraint failed")
+}
+
+func (s *suite) createMatch(expectedID uint) {
+	b := gin.H{
+		"teams":       2,
+		"winningTeam": 2,
 		"playerTeamMap": gin.H{
 			"1": 1,
 			"2": 2,
@@ -102,16 +149,14 @@ func (s *suite) createMatch() {
 			"1": 3,
 			"2": 5,
 		},
-		"teams":             2,
-		"winnerMatchTeamId": 2,
 	}
 	w := s.requestWithBody("POST", "/project/games/1/matches", b)
 	response := &compelo.Match{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
-	assert.Equal(s.t, uint(1), response.ID)
+	assert.Equal(s.t, expectedID, response.ID)
 	assert.Equal(s.t, uint(1), response.GameID)
-	assert.Equal(s.t, uint(2), response.WinnerMatchTeamID)
+	assert.Equal(s.t, uint(2*expectedID), response.WinnerMatchTeamID)
 }
 
 func (s *suite) getMatchByID() {

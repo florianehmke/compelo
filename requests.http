@@ -33,7 +33,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "name": "My Player"
+  "name": "My Player 1"
 }
 
 ### Get Players
@@ -60,12 +60,13 @@ Authorization: Bearer {{auth_token}}
 # ------------- Matches
 
 ### Create Match
-POST localhost:8080/project/games/2/matches
+POST localhost:8080/project/games/1/matches
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "gameId": 1,
+  "teams": 2,
+  "winningTeam": 2,
   "playerTeamMap": {
     "1": 1,
     "2": 2
@@ -73,17 +74,15 @@ Authorization: Bearer {{auth_token}}
   "teamScoreMap": {
     "1": 5,
     "2": 3
-  },
-  "teams": 2,
-  "winnerMatchTeamId": 1
+  }
 }
 
 ### Get Matches
-GET localhost:8080/project/games/2/matches
+GET localhost:8080/project/games/1/matches
 Authorization: Bearer {{auth_token}}
 
 ### Get Matches by ID
-GET localhost:8080/project/games/2/matches/1
+GET localhost:8080/project/games/1/matches/1
 Authorization: Bearer {{auth_token}}
 
 ###

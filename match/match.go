@@ -28,15 +28,16 @@ func NewService(
 }
 
 type CreateMatchParameter struct {
-	ProjectID       uint
-	Date            time.Time
-	GameID          uint
-	Teams           uint
-	PlayerTeamMap   map[uint]uint
-	TeamScoreMap    map[uint]int
-	WinnerMatchTeam uint
+	Date   time.Time
+	GameID uint
+
+	Teams         uint
+	WinningTeam   uint
+	PlayerTeamMap map[uint]uint
+	TeamScoreMap  map[uint]int
 }
 
+// TODO wrap in txn
 func (s *Service) CreateMatch(param CreateMatchParameter) (*compelo.Match, error) {
 	// Verify that the game exists.
 	g, err := s.gameService.LoadGameByID(param.GameID)
@@ -75,7 +76,7 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*compelo.Match, error
 	}
 
 	// Set the "real" match id of the winning team.
-	m.WinnerMatchTeamID = teamMap[param.WinnerMatchTeam].ID
+	m.WinnerMatchTeamID = teamMap[param.WinningTeam].ID
 	err = s.updateMatch(m)
 	return m, err
 }

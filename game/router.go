@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"compelo/project"
-	"compelo/rest"
 )
 
 const (
@@ -36,13 +35,23 @@ func (r *Router) Post(c *gin.Context) {
 		p := c.MustGet(project.Key).(compelo.Project)
 		g, err = r.s.CreateGame(p.ID, body.Name)
 	}
-	rest.WriteCreatedResponse(g, err, c)
+
+	if err == nil {
+		c.JSON(http.StatusCreated, g)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
 }
 
 func (r *Router) GetAll(c *gin.Context) {
 	p := c.MustGet(project.Key).(compelo.Project)
 	games, err := r.s.LoadGamesByProjectID(p.ID)
-	rest.WriteOkResponse(games, err, c)
+
+	if err == nil {
+		c.JSON(http.StatusCreated, games)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
 }
 
 func (r *Router) Middleware(c *gin.Context) {
