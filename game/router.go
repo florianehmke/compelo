@@ -11,7 +11,12 @@ import (
 	"compelo/rest"
 )
 
-const IDParam = "gameId"
+const (
+	IDParam = "gameId"
+
+	// Key identifies the game inside the gin.Context
+	Key = "game"
+)
 
 type Router struct {
 	s *Service
@@ -56,6 +61,8 @@ func (r *Router) Middleware(c *gin.Context) {
 			c.JSON(http.StatusForbidden, gin.H{"message:": "not your game"})
 			c.Abort()
 		}
+
+		c.Set(Key, g)
 		c.Next()
 	}
 }

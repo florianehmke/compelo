@@ -25,16 +25,16 @@ type suite struct {
 func Test(t *testing.T) {
 	s := suite{t: t, r: api.Setup("file::memory:")}
 
-	s.createProject()
+	s.createProject(1)
 	s.selectProject()
-	s.createGame()
+	s.createGame("My Game", 1)
 	s.createPlayer("Player 1", 1)
 	s.createPlayer("Player 2", 2)
 	s.createMatch()
 	s.getMatchByID()
 }
 
-func (s *suite) createProject() {
+func (s *suite) createProject(expectedID uint) {
 	b := gin.H{
 		"name":     "My Project",
 		"password": "secret",
@@ -43,7 +43,7 @@ func (s *suite) createProject() {
 	response := &compelo.Project{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
-	assert.Equal(s.t, uint(1), response.ID)
+	assert.Equal(s.t, expectedID, response.ID)
 	assert.Equal(s.t, "My Project", response.Name)
 }
 
@@ -62,22 +62,21 @@ func (s *suite) selectProject() {
 	response := &token{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusOK, w.Code)
-	assert.Equal(s.t, 200, response.Code)
 	assert.NotNil(s.t, response.Expire)
 	assert.NotEmpty(s.t, response.Token)
 	s.token = response.Token
 }
 
-func (s *suite) createGame() {
+func (s *suite) createGame(name string, expectedID uint) {
 	b := gin.H{
-		"name": "My Game",
+		"name": name,
 	}
 	w := s.requestWithBody("POST", "/project/games", b)
 	response := &compelo.Game{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
-	assert.Equal(s.t, "My Game", response.Name)
-	assert.Equal(s.t, uint(1), response.ID)
+	assert.Equal(s.t, name, response.Name)
+	assert.Equal(s.t, expectedID, response.ID)
 }
 
 func (s *suite) createPlayer(name string, expectedID uint) {
@@ -94,7 +93,6 @@ func (s *suite) createPlayer(name string, expectedID uint) {
 
 func (s *suite) createMatch() {
 	b := gin.H{
-		"name":   "My Player",
 		"gameId": 1,
 		"playerTeamMap": gin.H{
 			"1": 1,

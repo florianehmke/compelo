@@ -12,7 +12,9 @@ import (
 )
 
 const (
-	Key     = "project"
+	// Key identifies the project inside the gin.Context
+	Key = "project"
+
 	idKey   = "projectId"
 	nameKey = "projectName"
 )
