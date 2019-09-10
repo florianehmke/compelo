@@ -32,7 +32,7 @@ export class ProjectListComponent {
     this.modalService
       .open(ProjectSelectModalComponent)
       .result.then(password => {
-        const payload = { payload: { name: project.name, password: password } };
+        const payload = { payload: { ...project, password: password } };
         this.store.dispatch(selectProject(payload));
       });
   }

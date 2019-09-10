@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ProjectService } from './project.service';
@@ -31,15 +31,22 @@ export class ProjectEffects {
       ofType(selectProject),
       switchMap(action =>
         this.service.selectProject(action.payload).pipe(
-          map(response => {
-            localStorage.setItem('compelo-token', response.token);
-            this.router.navigate(['/project']);
-            return selectProjectSuccess(action);
-          }),
+          tap(r => localStorage.setItem('compelo-token', r.token)),
+          tap(() => delete action.payload.password),
+          map(r => selectProjectSuccess(action)),
           catchError(err => of(loadProjectsError(err)))
         )
       )
     )
+  );
+
+  navigate$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(selectProjectSuccess),
+        tap(() => this.router.navigate(['project']))
+      ),
+    { dispatch: false }
   );
 
   constructor(
