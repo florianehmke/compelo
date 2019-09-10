@@ -1,9 +1,10 @@
 package api
 
 import (
-	"compelo/db"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	"compelo/db"
 	"compelo/game"
 	"compelo/match"
 	"compelo/player"
@@ -33,6 +34,7 @@ func createRouter(
 	gameRouter *game.Router,
 ) *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	r.POST("/create-project", projectRouter.CreateProject)
 	r.POST("/select-project", projectRouter.SelectProject)
