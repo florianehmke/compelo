@@ -8,7 +8,10 @@ export interface CreateProjectPayload {
   password: string;
 }
 
-export interface LoginProjectPayload {
-  name: string;
+export interface SelectProjectPayload extends Project {
   password: string;
+}
+
+export interface TokenPayload {
+  token: string;
 }

@@ -2,8 +2,9 @@ import { createAction, props } from '@ngrx/store';
 import {
   CreateProjectPayload,
   ErrorPayload,
-  LoginProjectPayload,
-  Project
+  SelectProjectPayload,
+  Project,
+  Payload
 } from '../../shared/models';
 
 export const createProject = createAction(
@@ -21,11 +22,11 @@ export const createProjectError = createAction(
 
 export const selectProject = createAction(
   '[Project] Select',
-  props<LoginProjectPayload>()
+  props<Payload<SelectProjectPayload>>()
 );
 export const selectProjectSuccess = createAction(
   '[Project] Select Success',
-  props<Project>()
+  props<Payload<Project>>()
 );
 export const selectProjectError = createAction(
   '[Project] Select Error',
@@ -35,7 +36,7 @@ export const selectProjectError = createAction(
 export const loadProjects = createAction('[Project] Load');
 export const loadProjectsSuccess = createAction(
   '[Project] Loaded Success',
-  props<Project[]>()
+  props<Payload<Project[]>>()
 );
 export const loadProjectsError = createAction(
   '[Project] Load Error',

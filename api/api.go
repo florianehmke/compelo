@@ -33,9 +33,13 @@ func createRouter(
 	matchRouter *match.Router,
 	gameRouter *game.Router,
 ) *gin.Engine {
-	r := gin.Default()
-	r.Use(cors.Default())
+	engine := gin.Default()
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:4200"}
+	config.AllowMethods = []string{"OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"}
+	engine.Use(cors.New(config))
 
+	r := engine.Group("/api")
 	r.POST("/create-project", projectRouter.CreateProject)
 	r.POST("/select-project", projectRouter.SelectProject)
 	r.GET("/projects", projectRouter.GetAll)
@@ -55,5 +59,5 @@ func createRouter(
 	g.GET("/matches", matchRouter.GetAll)
 	g.GET("/matches/:id", matchRouter.GetByID)
 
-	return r
+	return engine
 }

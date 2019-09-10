@@ -1,10 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Project } from '../../shared/models';
-import {
-  createProjectSuccess,
-  loadProjectsSuccess,
-  selectProjectSuccess
-} from './project.actions';
+import {loadProjectsSuccess, selectProject, selectProjectSuccess} from './project.actions';
 
 export const FEATURE_KEY = 'project';
 
@@ -20,17 +16,13 @@ export const initialState: State = {
 
 const projectReducer = createReducer(
   initialState,
-  on(createProjectSuccess, (state, project) => ({
+  on(selectProjectSuccess, (state, action) => ({
     ...state,
-    selectedProject: project
+    selectedProject: action.payload
   })),
-  on(selectProjectSuccess, (state, project) => ({
+  on(loadProjectsSuccess, (state, action) => ({
     ...state,
-    selectedProject: project
-  })),
-  on(loadProjectsSuccess, (state, projects) => ({
-    ...state,
-    projects: projects
+    projects: action.payload
   }))
 );
 

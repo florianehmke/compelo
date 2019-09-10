@@ -47,7 +47,7 @@ func (s *suite) createProject(name, pw string, expectedID uint) {
 		"name":     name,
 		"password": pw,
 	}
-	w := s.requestWithBody("POST", "/create-project", b)
+	w := s.requestWithBody("POST", "/api/create-project", b)
 	response := &compelo.Project{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
@@ -60,7 +60,7 @@ func (s *suite) createProjectWithUniqueConstraintViolation(name string) {
 		"name":     name,
 		"password": "12345",
 	}
-	w := s.requestWithBody("POST", "/create-project", b)
+	w := s.requestWithBody("POST", "/api/create-project", b)
 	assert.Equal(s.t, http.StatusBadRequest, w.Code)
 	assert.Contains(s.t, w.Body.String(), "UNIQUE constraint failed")
 }
@@ -76,7 +76,7 @@ func (s *suite) selectProject(name, pw string) {
 		"name":     name,
 		"password": pw,
 	}
-	w := s.requestWithBody("POST", "/select-project", b)
+	w := s.requestWithBody("POST", "/api/select-project", b)
 	response := &token{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusOK, w.Code)
@@ -90,7 +90,7 @@ func (s *suite) selectProjectWithWrongPassword() {
 		"name":     "foo",
 		"password": "bar",
 	}
-	w := s.requestWithBody("POST", "/select-project", b)
+	w := s.requestWithBody("POST", "/api/select-project", b)
 	assert.Equal(s.t, http.StatusUnauthorized, w.Code)
 	assert.Contains(s.t, w.Body.String(), "incorrect Username or Password")
 }
@@ -99,7 +99,7 @@ func (s *suite) createGame(name string, expectedID uint) {
 	b := gin.H{
 		"name": name,
 	}
-	w := s.requestWithBody("POST", "/project/games", b)
+	w := s.requestWithBody("POST", "/api/project/games", b)
 	response := &compelo.Game{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
@@ -111,7 +111,7 @@ func (s *suite) createGameWithUniqueConstraintViolation(name string) {
 	b := gin.H{
 		"name": name,
 	}
-	w := s.requestWithBody("POST", "/project/games", b)
+	w := s.requestWithBody("POST", "/api/project/games", b)
 	assert.Equal(s.t, http.StatusBadRequest, w.Code)
 	assert.Contains(s.t, w.Body.String(), "UNIQUE constraint failed")
 }
@@ -120,7 +120,7 @@ func (s *suite) createPlayer(name string, expectedID uint) {
 	b := gin.H{
 		"name": name,
 	}
-	w := s.requestWithBody("POST", "/project/players", b)
+	w := s.requestWithBody("POST", "/api/project/players", b)
 	response := &compelo.Player{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
@@ -132,7 +132,7 @@ func (s *suite) createPlayerWithUniqueConstraintViolation(name string) {
 	b := gin.H{
 		"name": name,
 	}
-	w := s.requestWithBody("POST", "/project/players", b)
+	w := s.requestWithBody("POST", "/api/project/players", b)
 	assert.Equal(s.t, http.StatusBadRequest, w.Code)
 	assert.Contains(s.t, w.Body.String(), "UNIQUE constraint failed")
 }
@@ -150,7 +150,7 @@ func (s *suite) createMatch(expectedID uint) {
 			"2": 5,
 		},
 	}
-	w := s.requestWithBody("POST", "/project/games/1/matches", b)
+	w := s.requestWithBody("POST", "/api/project/games/1/matches", b)
 	response := &compelo.Match{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusCreated, w.Code)
@@ -160,7 +160,7 @@ func (s *suite) createMatch(expectedID uint) {
 }
 
 func (s *suite) getMatchByID() {
-	w := s.request("GET", "/project/games/1/matches/1")
+	w := s.request("GET", "/api/project/games/1/matches/1")
 	response := &match.CompleteMatch{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusOK, w.Code)
