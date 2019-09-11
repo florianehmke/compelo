@@ -8,16 +8,21 @@ import {
 } from '../../core/project/project.selectors';
 import { State } from '../../core/project/project.reducer';
 import {
+  createProject,
   loadProjects,
   selectProject,
   selectProjectSuccess
 } from '../../core/project/project.actions';
-import { Project } from '../../shared/models';
+import { CreateProjectPayload, Project } from '../../shared/models';
 import { ProjectSelectModalComponent } from './project-select-modal.component';
 
 @Component({
   selector: 'app-project-list',
   template: `
+    <app-project-create
+      (projectCreated)="onProjectCreate($event)"
+    ></app-project-create>
+    <hr />
     <app-project-grid
       [projects]="projects$ | async"
       [selectedProject]="selectedProject$ | async"
@@ -45,5 +50,9 @@ export class ProjectListComponent {
           this.store.dispatch(selectProject(payload));
         });
     }
+  }
+
+  onProjectCreate(payload: CreateProjectPayload) {
+    this.store.dispatch(createProject({ payload }));
   }
 }

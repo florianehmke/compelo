@@ -9,11 +9,11 @@ import {
 
 export const createProject = createAction(
   '[Project] Create',
-  props<CreateProjectPayload>()
+  props<Payload<CreateProjectPayload>>()
 );
 export const createProjectSuccess = createAction(
   '[Project] Create Success',
-  props<Project>()
+  props<Payload<Project>>()
 );
 export const createProjectError = createAction(
   '[Project] Create Error',

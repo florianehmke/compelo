@@ -6,13 +6,15 @@ import { SharedModuleModule } from '../../shared/shared.module';
 import { ProjectListRoutingModule } from './project-list-routing.module';
 import { ProjectGridComponent } from './components/project-grid.component';
 import { ProjectCardComponent } from './components/project-card.component';
+import { ProjectCreateComponent } from './components/project-create.component';
 
 @NgModule({
   declarations: [
     ProjectListComponent,
     ProjectSelectModalComponent,
     ProjectGridComponent,
-    ProjectCardComponent
+    ProjectCardComponent,
+    ProjectCreateComponent
   ],
   exports: [],
   entryComponents: [ProjectSelectModalComponent],
