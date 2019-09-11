@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { getProjects } from '../../core/project/project.selectors';
+import {
+  getProjects,
+  getSelectedProject
+} from '../../core/project/project.selectors';
 import { State } from '../../core/project/project.reducer';
 import {
   loadProjects,
@@ -15,15 +18,16 @@ import { ProjectSelectModalComponent } from './project-select-modal.component';
 @Component({
   selector: 'app-project-list',
   template: `
-    <div *ngFor="let project of projects$ | async">
-      <span (click)="onSelect(project)">
-        {{ project.id }} {{ project.name }}
-      </span>
-    </div>
+    <app-project-grid
+      [projects]="projects$ | async"
+      [selectedProject]="selectedProject$ | async"
+      (projectSelected)="onSelect($event)"
+    ></app-project-grid>
   `
 })
 export class ProjectListComponent {
   projects$ = this.store.select(getProjects);
+  selectedProject$ = this.store.select(getSelectedProject);
 
   constructor(private store: Store<State>, private modalService: NgbModal) {
     this.store.dispatch(loadProjects());

@@ -1,1 +1,17 @@
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap/scss/bootstrap';
+
+.header {
+  height: 42px;
+  padding: 8px;
+  background-color: cornflowerblue;
+  color: white;
+  margin-bottom: 8px;
+}
+
+body {
+  background-color: aliceblue;
+}
+
+.border-black {
+  border-color: black;
+}
