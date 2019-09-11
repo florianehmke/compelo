@@ -6,7 +6,8 @@ import { getProjects } from '../../core/project/project.selectors';
 import { State } from '../../core/project/project.reducer';
 import {
   loadProjects,
-  selectProject
+  selectProject,
+  selectProjectSuccess
 } from '../../core/project/project.actions';
 import { Project } from '../../shared/models';
 import { ProjectSelectModalComponent } from './project-select-modal.component';
@@ -29,11 +30,16 @@ export class ProjectListComponent {
   }
 
   onSelect(project: Project) {
-    this.modalService
-      .open(ProjectSelectModalComponent)
-      .result.then(password => {
-        const payload = { payload: { ...project, password: password } };
-        this.store.dispatch(selectProject(payload));
-      });
+    const token = localStorage.getItem('compelo-token');
+    if (token) {
+      this.store.dispatch(selectProjectSuccess({ payload: project }));
+    } else {
+      this.modalService
+        .open(ProjectSelectModalComponent)
+        .result.then(password => {
+          const payload = { payload: { ...project, password: password } };
+          this.store.dispatch(selectProject(payload));
+        });
+    }
   }
 }
