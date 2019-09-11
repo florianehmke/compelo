@@ -1,11 +1,25 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { AppComponent } from './app.component';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
     path: '',
-    component: AppComponent
+    redirectTo: 'project-list',
+    pathMatch: 'full'
+  },
+  {
+    path: 'project-list',
+    loadChildren: () =>
+      import('./project-list/project-list.module').then(
+        mod => mod.ProjectListModule
+      )
+  },
+  {
+    path: 'project-view',
+    loadChildren: () =>
+      import('./project-view/project-view.module').then(
+        mod => mod.ProjectViewModule
+      )
   }
 ];
 
