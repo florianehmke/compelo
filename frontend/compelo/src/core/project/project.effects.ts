@@ -4,6 +4,9 @@ import { of } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ProjectService } from './project.service';
 import {
+  createProject,
+  createProjectError,
+  createProjectSuccess,
   loadProjects,
   loadProjectsError,
   loadProjectsSuccess,
@@ -35,6 +38,26 @@ export class ProjectEffects {
           tap(() => delete action.payload.password),
           map(r => selectProjectSuccess(action)),
           catchError(err => of(loadProjectsError(err)))
+        )
+      )
+    )
+  );
+
+  createProject$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createProject),
+      switchMap(action =>
+        this.service.createProject(action.payload).pipe(
+          switchMap(createdProject => [
+            createProjectSuccess({ payload: createdProject }),
+            selectProject({
+              payload: {
+                ...action.payload,
+                id: createdProject.id
+              }
+            })
+          ]),
+          catchError(err => of(createProjectError(err)))
         )
       )
     )

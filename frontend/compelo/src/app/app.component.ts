@@ -8,6 +8,15 @@ import { Component } from '@angular/core';
       <router-outlet></router-outlet>
     </div>
   `,
-  styles: []
+
+  styles: [`
+    .header {
+      height: 48px;
+      padding: 8px;
+      background-color: cornflowerblue;
+      color: white;
+      margin-bottom: 32px;
+    }
+  `]
 })
 export class AppComponent {}

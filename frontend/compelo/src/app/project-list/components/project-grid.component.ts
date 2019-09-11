@@ -9,7 +9,6 @@ import { Project } from '../../../shared/models';
         *ngFor="let project of projects"
         (click)="projectSelected.emit(project)"
         [project]="project"
-        [selected]="project.id === selectedProject?.id"
       ></app-project-card>
     </div>
   `

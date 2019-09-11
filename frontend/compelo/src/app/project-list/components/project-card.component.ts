@@ -9,7 +9,15 @@ import { Project } from '../../../shared/models';
         {{ project.name }}
       </div>
     </div>
-  `
+  `,
+  styles: [
+    `
+      .card:hover {
+        border-color: black;
+        cursor: pointer;
+      }
+    `
+  ]
 })
 export class ProjectCardComponent {
   @Input()
