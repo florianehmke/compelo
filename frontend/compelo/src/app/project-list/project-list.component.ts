@@ -15,6 +15,7 @@ import {
 } from '../../core/project/project.actions';
 import { CreateProjectPayload, Project } from '../../shared/models';
 import { ProjectSelectModalComponent } from './project-select-modal.component';
+import { tokenForProjectIdExists } from '../../shared/jwt';
 
 @Component({
   selector: 'app-project-list',
@@ -39,8 +40,7 @@ export class ProjectListComponent {
   }
 
   onSelect(project: Project) {
-    const token = localStorage.getItem('compelo-token');
-    if (token) {
+    if (tokenForProjectIdExists(project.id)) {
       this.store.dispatch(selectProjectSuccess({ payload: project }));
     } else {
       this.modalService

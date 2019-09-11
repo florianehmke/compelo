@@ -67,7 +67,7 @@ export class ProjectEffects {
     () =>
       this.actions$.pipe(
         ofType(selectProjectSuccess),
-        tap(() => this.router.navigate(['project-view']))
+        tap(action => this.router.navigate(['project-view', action.payload.id]))
       ),
     { dispatch: false }
   );
