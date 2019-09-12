@@ -63,5 +63,6 @@ func createCORSMiddleware() gin.HandlerFunc {
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:4200"}
 	config.AllowMethods = []string{"OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"}
+	config.AllowHeaders = []string{"authorization", "content-type"}
 	return cors.New(config)
 }

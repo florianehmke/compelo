@@ -20,11 +20,12 @@ func (db *DB) Close() {
 
 func New(dbPath string) *DB {
 	db, err := gorm.Open("sqlite3", dbPath)
-	db.Exec("PRAGMA foreign_keys = ON")
-
 	if err != nil {
 		panic("failed to connect database")
 	}
+
+	db.Exec("PRAGMA foreign_keys = ON")
+	db.DB().SetMaxOpenConns(1)
 
 	db.AutoMigrate(&compelo.Project{})
 	db.AutoMigrate(&compelo.Player{})
