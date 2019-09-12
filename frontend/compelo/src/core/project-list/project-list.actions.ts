@@ -7,38 +7,38 @@ import {
   Payload
 } from '../../shared/models';
 
+export const loadProjects = createAction('[Projects] Load');
+export const loadProjectsSuccess = createAction(
+  '[Projects] Load Success',
+  props<Payload<Project[]>>()
+);
+export const loadProjectsError = createAction(
+  '[Projects] Load Error',
+  props<ErrorPayload>()
+);
+
 export const createProject = createAction(
-  '[Project] Create',
+  '[Projects] Create',
   props<Payload<CreateProjectPayload>>()
 );
 export const createProjectSuccess = createAction(
-  '[Project] Create Success',
+  '[Projects] Create Success',
   props<Payload<Project>>()
 );
 export const createProjectError = createAction(
-  '[Project] Create Error',
+  '[Projects] Create Error',
   props<ErrorPayload>()
 );
 
 export const selectProject = createAction(
-  '[Project] Select',
+  '[Projects] Select',
   props<Payload<SelectProjectPayload>>()
 );
 export const selectProjectSuccess = createAction(
-  '[Project] Select Success',
+  '[Projects] Select Success',
   props<Payload<Project>>()
 );
 export const selectProjectError = createAction(
-  '[Project] Select Error',
-  props<ErrorPayload>()
-);
-
-export const loadProjects = createAction('[Project] Load');
-export const loadProjectsSuccess = createAction(
-  '[Project] Loaded Success',
-  props<Payload<Project[]>>()
-);
-export const loadProjectsError = createAction(
-  '[Project] Load Error',
+  '[Projects] Select Error',
   props<ErrorPayload>()
 );

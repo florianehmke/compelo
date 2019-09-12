@@ -4,9 +4,9 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ProjectService } from './project.service';
-import { FEATURE_KEY, reducer } from './project.reducer';
-import { ProjectEffects } from './project.effects';
+import { FEATURE_KEY, reducer } from './project-view.reducer';
+import { ProjectViewEffects } from './project-view.effects';
+import { ProjectViewService } from './project-view.service';
 
 @NgModule({
   declarations: [],
@@ -14,8 +14,8 @@ import { ProjectEffects } from './project.effects';
     CommonModule,
     HttpClientModule,
     StoreModule.forFeature(FEATURE_KEY, reducer),
-    EffectsModule.forFeature([ProjectEffects])
+    EffectsModule.forFeature([ProjectViewEffects])
   ],
-  providers: [ProjectService]
+  providers: [ProjectViewService]
 })
-export class ProjectModule {}
+export class ProjectViewModule {}

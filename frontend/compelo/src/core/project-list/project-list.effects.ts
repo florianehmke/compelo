@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ProjectService } from './project.service';
+import { ProjectListService } from './project-list.service';
 import {
   createProject,
   createProjectError,
@@ -12,11 +12,11 @@ import {
   loadProjectsSuccess,
   selectProject,
   selectProjectSuccess
-} from './project.actions';
+} from './project-list.actions';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class ProjectEffects {
+export class ProjectListEffects {
   loadProjects$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadProjects),
@@ -74,7 +74,7 @@ export class ProjectEffects {
 
   constructor(
     private actions$: Actions,
-    private service: ProjectService,
+    private service: ProjectListService,
     private router: Router
   ) {}
 }

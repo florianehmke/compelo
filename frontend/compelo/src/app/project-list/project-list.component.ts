@@ -5,14 +5,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   getProjects,
   getSelectedProject
-} from '../../core/project/project.selectors';
-import { State } from '../../core/project/project.reducer';
+} from '../../core/project-list/project-list.selectors';
+import { State } from '../../core/project-list/project-list.reducer';
 import {
   createProject,
   loadProjects,
   selectProject,
   selectProjectSuccess
-} from '../../core/project/project.actions';
+} from '../../core/project-list/project-list.actions';
 import { CreateProjectPayload, Project } from '../../shared/models';
 import { tokenForProjectIdExists } from '../../shared/jwt';
 import { noop } from '../../shared/util';

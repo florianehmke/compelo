@@ -4,8 +4,9 @@ import { ActionReducer, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { storeLogger } from 'ngrx-store-logger';
 
-import { ProjectModule } from './project/project.module';
 import { environment } from '../environments/environment';
+import { ProjectListModule } from './project-list/project-list.module';
+import { ProjectViewModule } from './project-view/project-view.module';
 
 export function logger(reducer: ActionReducer<any>): any {
   return storeLogger()(reducer);
@@ -18,7 +19,8 @@ export const metaReducers = environment.production ? [] : [logger];
     StoreModule.forRoot({}, { metaReducers }),
     EffectsModule.forRoot([]),
     CommonModule,
-    ProjectModule
+    ProjectListModule,
+    ProjectViewModule
   ]
 })
 export class CoreModule {}
