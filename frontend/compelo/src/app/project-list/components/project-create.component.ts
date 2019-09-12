@@ -48,7 +48,6 @@ export class ProjectCreateComponent {
   password: string;
 
   onSubmit(value: CreateProjectPayload) {
-    console.log(value);
     this.projectCreated.emit(value);
   }
 }

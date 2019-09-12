@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CreateProjectPayload, Game } from '../../../shared/models';
+import { CreateProjectPayload, Player } from '../../../shared/models';
 
 @Component({
-  selector: 'app-game-create',
+  selector: 'app-player-create',
   template: `
     <form (ngSubmit)="onSubmit(form.value); form.reset()" #form="ngForm">
       <div class="row">
         <div class="col-8">
           <input
             type="text"
-            placeholder="Game Name"
+            placeholder="Player Name"
             class="form-control"
             name="name"
             required
@@ -30,13 +30,13 @@ import { CreateProjectPayload, Game } from '../../../shared/models';
     </form>
   `
 })
-export class GameCreateComponent {
+export class PlayerCreateComponent {
   @Output()
-  gameCreated = new EventEmitter<Game>();
+  playerCreated = new EventEmitter<Player>();
 
   name: string;
 
   onSubmit(value: CreateProjectPayload) {
-    this.gameCreated.emit(value);
+    this.playerCreated.emit(value);
   }
 }
