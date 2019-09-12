@@ -5,6 +5,10 @@ import { Router } from '@angular/router';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
+  createGame,
+  createGameError,
+  createPlayer,
+  createPlayerError,
   loadGames,
   loadGamesError,
   loadGamesSuccess,
@@ -27,6 +31,18 @@ export class ProjectViewEffects {
     )
   );
 
+  createGame$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createGame),
+      switchMap(action =>
+        this.service.createGame(action.payload).pipe(
+          map(() => loadGames()),
+          catchError(err => of(createGameError(err)))
+        )
+      )
+    )
+  );
+
   loadPlayers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadPlayers),
@@ -34,6 +50,18 @@ export class ProjectViewEffects {
         this.service.getPlayers().pipe(
           map(players => loadPlayersSuccess({ payload: players })),
           catchError(err => of(loadPlayersError(err)))
+        )
+      )
+    )
+  );
+
+  createPlayer$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createPlayer),
+      switchMap(action =>
+        this.service.createPlayer(action.payload).pipe(
+          map(() => loadPlayers()),
+          catchError(err => of(createPlayerError(err)))
         )
       )
     )
