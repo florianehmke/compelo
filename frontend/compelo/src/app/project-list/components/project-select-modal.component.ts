@@ -22,7 +22,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="onSubmit()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        aria-label="Confirm"
+        (click)="onConfirm()"
+      >
         Confirm
       </button>
     </div>
@@ -33,7 +38,7 @@ export class ProjectSelectModalComponent {
 
   constructor(public activeModal: NgbActiveModal) {}
 
-  onSubmit() {
+  onConfirm() {
     if (this.password) {
       this.activeModal.close(this.password);
     } else {

@@ -15,6 +15,7 @@ export class ProjectViewGuard implements CanActivate {
     if (tokenForProjectIdExists(parseInt(route.paramMap.get('id'), 10))) {
       return true;
     }
+    console.warn('token does not belong to project');
     return this.router.parseUrl('/project-list');
   }
 }

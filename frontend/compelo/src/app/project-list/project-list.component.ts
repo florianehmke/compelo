@@ -14,8 +14,10 @@ import {
   selectProjectSuccess
 } from '../../core/project/project.actions';
 import { CreateProjectPayload, Project } from '../../shared/models';
-import { ProjectSelectModalComponent } from './project-select-modal.component';
 import { tokenForProjectIdExists } from '../../shared/jwt';
+import { noop } from '../../shared/util';
+
+import { ProjectSelectModalComponent } from './components';
 
 @Component({
   selector: 'app-project-list',
@@ -48,7 +50,7 @@ export class ProjectListComponent {
         .result.then(password => {
           const payload = { payload: { ...project, password: password } };
           this.store.dispatch(selectProject(payload));
-        });
+        }, noop);
     }
   }
 
