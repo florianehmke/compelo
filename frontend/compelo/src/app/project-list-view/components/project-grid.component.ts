@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Project } from '../../../shared/models';
+import { Project } from '@shared/models';
 
 @Component({
   selector: 'app-project-grid',

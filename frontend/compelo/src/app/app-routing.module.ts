@@ -10,8 +10,8 @@ const routes: Routes = [
   {
     path: 'project-list',
     loadChildren: () =>
-      import('./project-list/project-list.module').then(
-        mod => mod.ProjectListModule
+      import('./project-list-view/project-list-view.module').then(
+        mod => mod.ProjectListViewModule
       )
   },
   {

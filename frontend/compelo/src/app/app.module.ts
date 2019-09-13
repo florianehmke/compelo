@@ -1,11 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CoreModule } from '@core/core.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CoreModule } from '../core/core.module';
 import { ProjectViewModule } from './project-view/project-view.module';
-import { ProjectListModule } from './project-list/project-list.module';
+import { ProjectListViewModule } from './project-list-view/project-list-view.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +14,7 @@ import { ProjectListModule } from './project-list/project-list.module';
     AppRoutingModule,
     CoreModule,
     ProjectViewModule,
-    ProjectListModule
+    ProjectListViewModule
   ],
   providers: [],
   bootstrap: [AppComponent]

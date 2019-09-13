@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CreateProjectPayload, Game } from '../../../shared/models';
+import { CreateProjectPayload, Game } from '@shared/models';
 
 @Component({
   selector: 'app-game-create',

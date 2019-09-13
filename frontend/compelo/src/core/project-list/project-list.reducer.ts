@@ -1,11 +1,11 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Project } from '../../shared/models';
+import { Project } from '@shared/models';
 import {
   loadProjectsSuccess,
   selectProjectSuccess
 } from './project-list.actions';
 
-export const FEATURE_KEY = 'projects';
+export const FEATURE_KEY = 'project-list';
 
 export interface State {
   projects: Project[];

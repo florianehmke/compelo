@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ErrorPayload, Game, Payload, Player } from '../../shared/models';
+import { ErrorPayload, Game, Payload, Player } from '@shared/models';
 
 export const loadGames = createAction('[Games] Load');
 export const loadGamesSuccess = createAction(

@@ -1,21 +1,20 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import {
   getProjects,
   getSelectedProject
-} from '../../core/project-list/project-list.selectors';
-import { State } from '../../core/project-list/project-list.reducer';
+} from '@core/project-list/project-list.selectors';
+import { State } from '@core/project-list/project-list.reducer';
 import {
   createProject,
   loadProjects,
   selectProject,
   selectProjectSuccess
-} from '../../core/project-list/project-list.actions';
-import { CreateProjectPayload, Project } from '../../shared/models';
-import { tokenForProjectIdExists } from '../../shared/jwt';
-import { noop } from '../../shared/util';
+} from '@core/project-list/project-list.actions';
+import { CreateProjectPayload, Project } from '@shared/models';
+import { tokenForProjectIdExists } from '@shared/jwt';
+import { noop } from '@shared/util';
 
 import { ProjectSelectModalComponent } from './components';
 
@@ -33,7 +32,7 @@ import { ProjectSelectModalComponent } from './components';
     ></app-project-grid>
   `
 })
-export class ProjectListComponent {
+export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);
   selectedProject$ = this.store.select(getSelectedProject);
 

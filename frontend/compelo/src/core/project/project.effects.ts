@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ProjectViewService } from './project-view.service';
 import { Router } from '@angular/router';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+
+import { ProjectService } from './project.service';
 import {
   createGame,
   createGameError,
@@ -15,10 +16,10 @@ import {
   loadPlayers,
   loadPlayersError,
   loadPlayersSuccess
-} from './project-view.actions';
+} from './project.actions';
 
 @Injectable()
-export class ProjectViewEffects {
+export class ProjectEffects {
   loadGames$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadGames),
@@ -69,7 +70,7 @@ export class ProjectViewEffects {
 
   constructor(
     private actions$: Actions,
-    private service: ProjectViewService,
+    private service: ProjectService,
     private router: Router
   ) {}
 }

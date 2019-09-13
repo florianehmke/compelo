@@ -5,7 +5,7 @@ import {
   SelectProjectPayload,
   Project,
   Payload
-} from '../../shared/models';
+} from '@shared/models';
 
 export const loadProjects = createAction('[Projects] Load');
 export const loadProjectsSuccess = createAction(

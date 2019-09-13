@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { FEATURE_KEY, State } from './project-view.reducer';
+import { FEATURE_KEY, State } from './project.reducer';
 
 export const getProjectViewState = createFeatureSelector<State>(FEATURE_KEY);
 

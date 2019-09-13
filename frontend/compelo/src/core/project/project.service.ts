@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-import { environment } from '../../environments/environment';
-import { Game, Player } from '../../shared/models';
+import { environment } from '@env/environment';
+import { Game, Player } from '@shared/models';
 
 @Injectable()
-export class ProjectViewService {
+export class ProjectService {
   private baseUrl = environment.baseUrl + '/project';
 
   constructor(private http: HttpClient) {}

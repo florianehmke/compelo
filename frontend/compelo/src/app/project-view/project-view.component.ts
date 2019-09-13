@@ -1,20 +1,17 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-
-import { State } from '../../core/project-view/project-view.reducer';
-import {
-  getGames,
-  getPlayers,
-  getSelectedGame
-} from '../../core/project-view/project-view.selectors';
 import {
   createGame,
   createPlayer,
+  getGames,
+  getPlayers,
+  getSelectedGame,
   loadGames,
   loadPlayers,
-  selectGame
-} from '../../core/project-view/project-view.actions';
-import { Game, Player } from '../../shared/models';
+  selectGame,
+  State
+} from '@core/project';
+import { Game, Player } from '@shared/models';
 
 @Component({
   selector: 'app-project-view',
@@ -27,6 +24,7 @@ import { Game, Player } from '../../shared/models';
 
         <div class="list-group mt-4">
           <button
+            [routerLink]="['game', game.id]"
             *ngFor="let game of games$ | async"
             type="button"
             class="list-group-item list-group-item-action"

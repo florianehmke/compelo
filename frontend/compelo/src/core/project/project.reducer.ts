@@ -1,12 +1,12 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Game, Player } from '../../shared/models';
+import { Game, Player } from '@shared/models';
 import {
   loadGamesSuccess,
   loadPlayersSuccess,
   selectGame
-} from './project-view.actions';
+} from './project.actions';
 
-export const FEATURE_KEY = 'games';
+export const FEATURE_KEY = 'project';
 
 export interface State {
   games: Game[];
@@ -20,7 +20,7 @@ export const initialState: State = {
   players: []
 };
 
-const projectViewReducer = createReducer(
+const projectReducer = createReducer(
   initialState,
   on(selectGame, (state, action) => ({
     ...state,
@@ -37,5 +37,5 @@ const projectViewReducer = createReducer(
 );
 
 export function reducer(state: State | undefined, action: Action) {
-  return projectViewReducer(state, action);
+  return projectReducer(state, action);
 }

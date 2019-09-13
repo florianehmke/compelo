@@ -6,9 +6,14 @@ import { ProjectViewGuard } from './project-view.guard';
 
 const routes: Routes = [
   {
-    path: ':id',
+    path: ':projectId',
     component: ProjectViewComponent,
     canActivate: [ProjectViewGuard]
+  },
+  {
+    path: ':projectId/game/:gameId',
+    loadChildren: () =>
+      import('./game-view/game-view.module').then(mod => mod.GameViewModule)
   }
 ];
 

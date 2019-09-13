@@ -48,7 +48,7 @@ func (r *Router) GetAll(c *gin.Context) {
 	games, err := r.s.LoadGamesByProjectID(p.ID)
 
 	if err == nil {
-		c.JSON(http.StatusCreated, games)
+		c.JSON(http.StatusOK, games)
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}

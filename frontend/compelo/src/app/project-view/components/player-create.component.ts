@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CreateProjectPayload, Player } from '../../../shared/models';
+import { CreateProjectPayload, Player } from '@shared/models';
 
 @Component({
   selector: 'app-player-create',
