@@ -21,6 +21,9 @@ import { ProjectSelectModalComponent } from './components';
 @Component({
   selector: 'app-project-list',
   template: `
+    <p class="lead">
+      Create / Select Project
+    </p>
     <app-project-create
       (projectCreated)="onProjectCreate($event)"
     ></app-project-create>

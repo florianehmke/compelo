@@ -18,6 +18,9 @@ import { Game, Player } from '@shared/models';
   template: `
     <div class="row">
       <div class="col">
+        <p class="lead">
+          Create / Select Game
+        </p>
         <app-game-create
           (gameCreated)="onGameCreated($event)"
         ></app-game-create>
@@ -34,7 +37,11 @@ import { Game, Player } from '@shared/models';
           </button>
         </div>
       </div>
+      
       <div class="col">
+        <p class="lead">
+          Create Player
+        </p>
         <app-player-create
           (playerCreated)="onPlayerCreated($event)"
         ></app-player-create>
