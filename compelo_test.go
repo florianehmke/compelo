@@ -139,9 +139,8 @@ func (s *suite) createPlayerWithUniqueConstraintViolation(name string) {
 
 func (s *suite) createMatch(expectedID uint) {
 	b := gin.H{
-		"teams":       2,
-		"winningTeam": 2,
-		"playerTeamMap": gin.H{
+		"teams": 2,
+		"teamPlayerMap": gin.H{
 			"1": 1,
 			"2": 2,
 		},
@@ -149,6 +148,7 @@ func (s *suite) createMatch(expectedID uint) {
 			"1": 3,
 			"2": 5,
 		},
+		"winningTeam": 2,
 	}
 	w := s.requestWithBody("POST", "/api/project/games/1/matches", b)
 	response := &compelo.Match{}

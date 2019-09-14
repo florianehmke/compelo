@@ -33,7 +33,7 @@ type CreateMatchParameter struct {
 
 	Teams         uint
 	WinningTeam   uint
-	PlayerTeamMap map[uint]uint
+	TeamPlayerMap map[uint]uint
 	TeamScoreMap  map[uint]int
 }
 
@@ -63,7 +63,7 @@ func (s *Service) CreateMatch(param CreateMatchParameter) (*compelo.Match, error
 
 	// Create the players.
 	playerIdMatchPlayerMap := map[uint]*compelo.MatchPlayer{}
-	for playerID, teamNumber := range param.PlayerTeamMap {
+	for teamNumber, playerID := range param.TeamPlayerMap {
 		p, err := s.playerService.LoadPlayerByID(playerID)
 		if err != nil {
 			return nil, err // FIXME

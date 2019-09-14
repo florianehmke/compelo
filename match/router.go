@@ -23,7 +23,7 @@ func (r *Router) Post(c *gin.Context) {
 	var body struct {
 		Teams         uint          `json:"teams" binding:"required"`
 		WinningTeam   uint          `json:"winningTeam" binding:"required"`
-		PlayerTeamMap map[uint]uint `json:"playerTeamMap" binding:"required"`
+		TeamPlayerMap map[uint]uint `json:"teamPlayerMap" binding:"required"`
 		TeamScoreMap  map[uint]int  `json:"teamScoreMap" binding:"required"`
 	}
 
@@ -37,7 +37,7 @@ func (r *Router) Post(c *gin.Context) {
 			Date:          time.Now(),
 			GameID:        g.ID,
 			Teams:         body.Teams,
-			PlayerTeamMap: body.PlayerTeamMap,
+			TeamPlayerMap: body.TeamPlayerMap,
 			TeamScoreMap:  body.TeamScoreMap,
 			WinningTeam:   body.WinningTeam,
 		})
