@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	log.Fatal(api.Setup("file::memory:").Run())
+	log.Fatal(api.Setup("db.sql").Run())
 }

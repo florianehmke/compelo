@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
-import { Game, Player } from '@shared/models';
+import { Game, Match, Player } from '@shared/models';
+import { CreateMatchPayload } from '@core/project/project.models';
 
 @Injectable()
 export class ProjectService {
@@ -24,5 +25,9 @@ export class ProjectService {
 
   createPlayer(game: Player): Observable<Player> {
     return this.http.post<Player>(`${this.baseUrl}/players`, game);
+  }
+
+  createMatch(payload: CreateMatchPayload, gameID: number): Observable<Match> {
+    return this.http.post<Match>(`${this.baseUrl}/games/${gameID}/matches`, payload);
   }
 }

@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Player } from '@shared/models';
+import { CreateMatchPayload } from '@core/project';
 
 @Component({
   selector: 'app-match-create',
@@ -13,7 +14,7 @@ import { Player } from '@shared/models';
           *ngFor="let team of getTeams(formGroup); let i = index"
         >
           <input
-            type="text"
+            type="number"
             placeholder="Score"
             class="form-control"
             formControlName="score"
@@ -51,19 +52,20 @@ import { Player } from '@shared/models';
   ]
 })
 export class MatchCreateComponent {
-
   @Input()
   players: Player[];
 
   @Input()
   formGroup: FormGroup;
 
-  onSubmit() {
-    // Determine winner
-    // Validate
+  @Output()
+  matchCreated = new EventEmitter<CreateMatchPayload>();
 
-    console.log(this.formGroup.value);
-    console.log(JSON.stringify(this.formGroup.value))
+  onSubmit() {
+    if (this.formGroup.valid) {
+      const value: CreateMatchPayload = this.formGroup.value;
+      this.matchCreated.emit(value);
+    }
   }
 
   getTeams(form) {

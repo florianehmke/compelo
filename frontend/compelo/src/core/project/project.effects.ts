@@ -8,6 +8,9 @@ import { ProjectService } from './project.service';
 import {
   createGame,
   createGameError,
+  createMatch,
+  createMatchError,
+  createMatchSuccess,
   createPlayer,
   createPlayerError,
   loadGames,
@@ -63,6 +66,18 @@ export class ProjectEffects {
         this.service.createPlayer(action.payload).pipe(
           map(() => loadPlayers()),
           catchError(err => of(createPlayerError(err)))
+        )
+      )
+    )
+  );
+
+  createMatch$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createMatch),
+      switchMap(action =>
+        this.service.createMatch(action.payload, 1).pipe( // FIXME replace gameID
+          map(response => createMatchSuccess({ payload: response })),
+          catchError(err => of(createMatchError(err)))
         )
       )
     )

@@ -14,7 +14,7 @@ POST localhost:8080/api/select-project
 Content-Type: application/json
 
 {
-  "name": "My Project 1",
+  "name": "Avengers",
   "password": "123"
 }
 
@@ -65,16 +65,18 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "teams": 2,
-  "winningTeam": 1,
-  "playerTeamMap": {
-    "1": 1,
-    "2": 2
-  },
-  "teamScoreMap": {
-    "1": 5,
-    "2": 3
-  }
+  "teams": [
+    {
+      "playerIds":[2],
+      "score": 3,
+      "winner": false
+    },
+    {
+      "playerIds":[2],
+      "score": 5,
+      "winner": true
+    }
+  ]
 }
 
 ### Get Matches

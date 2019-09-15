@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { getPlayers, getSelectedGame, State } from '@core/project';
+import {
+  createMatch,
+  CreateMatchPayload,
+  getPlayers,
+  getSelectedGame,
+  State
+} from '@core/project';
 import { Store } from '@ngrx/store';
 import {
   MatchFormService,
@@ -22,6 +28,7 @@ import {
     <app-match-create
       [formGroup]="formGroup"
       [players]="players$ | async"
+      (matchCreated)="onMatchCreated($event)"
     ></app-match-create>
   `
 })
@@ -37,5 +44,9 @@ export class GameViewComponent {
 
   onFormSettingsChanged(settings: MatchFormSettings) {
     this.formGroup = this.formService.buildForm(settings);
+  }
+
+  onMatchCreated(payload: CreateMatchPayload) {
+    this.store.dispatch(createMatch({ payload }));
   }
 }
