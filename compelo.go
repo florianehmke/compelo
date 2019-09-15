@@ -39,9 +39,8 @@ type Player struct {
 type Match struct {
 	Model
 
-	Date              time.Time `json:"date" gorm:"not null"`
-	GameID            uint      `json:"gameId" gorm:"type:int REFERENCES games(id) ON DELETE CASCADE"`
-	WinnerMatchTeamID uint      `json:"winnerMatchTeamId"`
+	Date   time.Time `json:"date" gorm:"not null"`
+	GameID uint      `json:"gameId" gorm:"type:int REFERENCES games(id) ON DELETE CASCADE"`
 }
 
 type MatchTeam struct {
@@ -49,6 +48,7 @@ type MatchTeam struct {
 
 	MatchID uint `json:"matchId" gorm:"type:int REFERENCES matches(id) ON DELETE CASCADE"`
 	Score   int
+	Winner  bool
 }
 
 type MatchPlayer struct {

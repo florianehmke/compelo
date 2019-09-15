@@ -1,0 +1,76 @@
+package match
+
+import (
+	"compelo"
+	"compelo/db"
+)
+
+type Repository interface {
+	Create(
+		compelo.Match,
+		map[int]compelo.MatchTeam,
+		map[int][]compelo.MatchPlayer,
+	) (compelo.Match, error)
+
+	LoadAll() []compelo.Match
+	LoadByID(uint) (compelo.Match, error)
+
+	LoadPlayersByMatchID(uint) ([]compelo.MatchPlayer, error)
+	LoadTeamsByMatchID(uint) ([]compelo.MatchTeam, error)
+}
+
+var _ Repository = repository{}
+
+type repository struct {
+	db *db.DB
+}
+
+func (r repository) Create(
+	match compelo.Match,
+	teamMap map[int]compelo.MatchTeam,
+	playerMap map[int][]compelo.MatchPlayer,
+) (compelo.Match, error) {
+	tx := r.db.Begin()
+	tx.Create(&match)
+
+	for i, team := range teamMap {
+		team.MatchID = match.ID
+		if err := tx.Create(&team).Error; err != nil {
+			return match, err
+		}
+
+		for _, p := range playerMap[i] {
+			p.MatchID = match.ID
+			p.MatchTeamID = team.ID
+			if err := tx.Create(&p).Error; err != nil {
+				return match, err
+			}
+		}
+	}
+
+	return match, tx.Commit().Error
+}
+
+func (r repository) LoadAll() []compelo.Match {
+	var matches []compelo.Match
+	r.db.Find(&matches)
+	return matches
+}
+
+func (r repository) LoadByID(id uint) (compelo.Match, error) {
+	var match compelo.Match
+	err := r.db.First(&match, id).Error
+	return match, err
+}
+
+func (r repository) LoadPlayersByMatchID(id uint) ([]compelo.MatchPlayer, error) {
+	var players []compelo.MatchPlayer
+	err := r.db.Where(compelo.MatchPlayer{MatchID: id}).Find(&players).Error
+	return players, err
+}
+
+func (r repository) LoadTeamsByMatchID(id uint) ([]compelo.MatchTeam, error) {
+	var teams []compelo.MatchTeam
+	err := r.db.Where(compelo.MatchTeam{MatchID: id}).Find(&teams).Error
+	return teams, err
+}

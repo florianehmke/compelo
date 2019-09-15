@@ -140,7 +140,7 @@ func (s *suite) createPlayerWithUniqueConstraintViolation(name string) {
 func (s *suite) createMatch(expectedID uint) {
 	b := gin.H{
 		"teams": 2,
-		"teamPlayerMap": gin.H{
+		"playerTeamMap": gin.H{
 			"1": 1,
 			"2": 2,
 		},
@@ -156,7 +156,6 @@ func (s *suite) createMatch(expectedID uint) {
 	assert.Equal(s.t, http.StatusCreated, w.Code)
 	assert.Equal(s.t, expectedID, response.ID)
 	assert.Equal(s.t, uint(1), response.GameID)
-	assert.Equal(s.t, uint(2*expectedID), response.WinnerMatchTeamID)
 }
 
 func (s *suite) getMatchByID() {
@@ -168,7 +167,6 @@ func (s *suite) getMatchByID() {
 	assert.Equal(s.t, 2, len(response.MatchPlayers))
 	assert.Equal(s.t, 2, len(response.MatchTeams))
 	assert.Equal(s.t, uint(1), response.Match.GameID)
-	assert.Equal(s.t, uint(2), response.Match.WinnerMatchTeamID)
 
 	// Team 1
 	assert.Equal(s.t, 3, response.MatchTeams[0].Score)

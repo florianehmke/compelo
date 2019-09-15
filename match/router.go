@@ -21,23 +21,23 @@ func NewRouter(s *Service) *Router {
 
 func (r *Router) Post(c *gin.Context) {
 	var body struct {
-		Teams         uint          `json:"teams" binding:"required"`
-		WinningTeam   uint          `json:"winningTeam" binding:"required"`
-		TeamPlayerMap map[uint]uint `json:"teamPlayerMap" binding:"required"`
-		TeamScoreMap  map[uint]int  `json:"teamScoreMap" binding:"required"`
+		Teams         int          `json:"teams" binding:"required"`
+		WinningTeam   int          `json:"winningTeam" binding:"required"`
+		PlayerTeamMap map[uint]int `json:"playerTeamMap" binding:"required"`
+		TeamScoreMap  map[int]int  `json:"teamScoreMap" binding:"required"`
 	}
 
 	// TODO verify that player IDs belong to project.
 	g := c.MustGet(game.Key).(compelo.Game)
 
-	var m *compelo.Match
+	var m compelo.Match
 	err := c.Bind(&body)
 	if err == nil {
 		m, err = r.s.CreateMatch(CreateMatchParameter{
 			Date:          time.Now(),
 			GameID:        g.ID,
 			Teams:         body.Teams,
-			TeamPlayerMap: body.TeamPlayerMap,
+			PlayerTeamMap: body.PlayerTeamMap,
 			TeamScoreMap:  body.TeamScoreMap,
 			WinningTeam:   body.WinningTeam,
 		})
@@ -67,5 +67,5 @@ func (r *Router) GetByID(c *gin.Context) {
 }
 
 func (r *Router) GetAll(c *gin.Context) {
-	c.JSON(http.StatusOK, r.s.LoadMatches())
+	c.JSON(http.StatusOK, r.s.repository.LoadAll())
 }

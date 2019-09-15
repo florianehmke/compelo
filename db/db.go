@@ -26,6 +26,7 @@ func New(dbPath string) *DB {
 
 	db.Exec("PRAGMA foreign_keys = ON")
 	db.DB().SetMaxOpenConns(1)
+	db.LogMode(true)
 
 	db.AutoMigrate(&compelo.Project{})
 	db.AutoMigrate(&compelo.Player{})
