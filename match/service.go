@@ -91,6 +91,21 @@ type Team struct {
 	Players []compelo.Player `json:"players"`
 }
 
+func (s *Service) LoadByGameID(gameID uint) ([]Match, error) {
+	var matches []Match
+
+	ms, err := s.repository.LoadByGameID(gameID)
+	for _, m := range ms {
+		match, err := s.LoadByID(m.ID)
+		if err != nil {
+			return matches, err
+		}
+		matches = append(matches, match)
+	}
+
+	return matches, err
+}
+
 func (s *Service) LoadByID(id uint) (Match, error) {
 	var match = Match{}
 	var err error

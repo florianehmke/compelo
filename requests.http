@@ -48,7 +48,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "name": "My Game 2"
+  "name": "My Game 1"
 }
 
 ### Get Games
@@ -66,7 +66,7 @@ Authorization: Bearer {{auth_token}}
 
 {
   "teams": 2,
-  "winningTeam": 2,
+  "winningTeam": 1,
   "playerTeamMap": {
     "1": 1,
     "2": 2

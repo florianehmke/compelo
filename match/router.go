@@ -67,5 +67,12 @@ func (r *Router) GetByID(c *gin.Context) {
 }
 
 func (r *Router) GetAll(c *gin.Context) {
-	c.JSON(http.StatusOK, r.s.repository.LoadAll())
+	g := c.MustGet(game.Key).(compelo.Game)
+
+	matches, err := r.s.LoadByGameID(g.ID)
+	if err == nil {
+		c.JSON(http.StatusOK, matches)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
 }
