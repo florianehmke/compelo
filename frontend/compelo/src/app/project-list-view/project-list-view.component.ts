@@ -1,22 +1,21 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  getProjects,
-  getSelectedProject
-} from '@core/project-list/project-list.selectors';
-import { State } from '@core/project-list/project-list.reducer';
-import {
-  createProject,
-  loadProjects,
-  selectProject,
-  selectProjectSuccess
-} from '@core/project-list/project-list.actions';
-import { CreateProjectPayload, Project } from '@shared/models';
+import { Project } from '@shared/models';
 import { tokenForProjectIdExists } from '@shared/jwt';
 import { noop } from '@shared/util';
 
 import { ProjectSelectModalComponent } from './components';
+import {
+  createProject,
+  CreateProjectPayload,
+  getProjects,
+  getSelectedProject,
+  loadProjects,
+  selectProject,
+  selectProjectSuccess,
+  State
+} from '@core/project-list';
 
 @Component({
   selector: 'app-project-list',
@@ -49,7 +48,7 @@ export class ProjectListViewComponent {
     } else {
       this.modalService
         .open(ProjectSelectModalComponent)
-        .result.then(password => {
+        .result.then((password: string) => {
           const payload = { payload: { ...project, password: password } };
           this.store.dispatch(selectProject(payload));
         }, noop);

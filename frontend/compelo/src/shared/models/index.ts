@@ -1,6 +1,4 @@
-export * from './project.models';
-export * from './game.models';
-export * from './player.models';
+export * from './compelo.models';
 
 export interface Payload<T> {
   payload: T;

@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
+import { Project } from '@shared/models';
 import {
   CreateProjectPayload,
-  Project,
   SelectProjectPayload,
   TokenPayload
-} from '@shared/models';
+} from '@core/project-list';
 
 @Injectable()
 export class ProjectListService {

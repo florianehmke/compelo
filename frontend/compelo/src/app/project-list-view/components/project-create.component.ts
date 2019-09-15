@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CreateProjectPayload } from '@shared/models';
+import { CreateProjectPayload } from '@core/project-list';
 
 @Component({
   selector: 'app-project-create',
