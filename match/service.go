@@ -40,7 +40,6 @@ type CreateMatchParameter struct {
 	} `json:"teams" binding:"required"`
 }
 
-// TODO wrap in txn
 func (s *Service) CreateMatch(param CreateMatchParameter) (compelo.Match, error) {
 	m := compelo.Match{GameID: param.GameID, Date: time.Now()}
 

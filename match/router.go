@@ -8,6 +8,7 @@ import (
 
 	"compelo"
 	"compelo/game"
+	"compelo/project"
 )
 
 type Router struct {
@@ -21,8 +22,8 @@ func NewRouter(s *Service) *Router {
 func (r *Router) Post(c *gin.Context) {
 	var param CreateMatchParameter
 
-	// TODO verify that player IDs belong to project.
 	g := c.MustGet(game.Key).(compelo.Game)
+	p := c.MustGet(project.Key).(compelo.Project)
 
 	var m compelo.Match
 	err := c.Bind(&param)
@@ -30,6 +31,16 @@ func (r *Router) Post(c *gin.Context) {
 		param.GameID = g.ID
 		param.Date = time.Now()
 		m, err = r.s.CreateMatch(param)
+	}
+
+	for _, t := range param.Teams {
+		for _, pid := range t.PlayerIDs {
+			player, err := r.s.playerService.LoadPlayerByID(uint(pid))
+			if err != nil || player.ProjectID != p.ID {
+				c.JSON(http.StatusForbidden, gin.H{"message": "not your player"})
+				return
+			}
+		}
 	}
 
 	if err == nil {
