@@ -160,23 +160,28 @@ func (s *suite) createMatch(expectedID uint) {
 
 func (s *suite) getMatchByID() {
 	w := s.request("GET", "/api/project/games/1/matches/1")
-	response := &match.CompleteMatch{}
+	response := &match.Match{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusOK, w.Code)
 	assert.Equal(s.t, uint(1), response.Match.ID)
-	assert.Equal(s.t, 2, len(response.MatchPlayers))
-	assert.Equal(s.t, 2, len(response.MatchTeams))
+	assert.Equal(s.t, 2, len(response.Teams))
 	assert.Equal(s.t, uint(1), response.Match.GameID)
 
 	// Team 1
-	assert.Equal(s.t, 3, response.MatchTeams[0].Score)
-	assert.Equal(s.t, uint(1), response.MatchTeams[0].MatchID)
-	assert.Equal(s.t, uint(1), response.MatchTeams[0].ID)
+	assert.True(s.t, response.Teams[0].Winner)
+	assert.Equal(s.t, 5, response.Teams[0].Score)
+	assert.Equal(s.t, uint(1), response.Teams[0].MatchID)
+	assert.Equal(s.t, uint(2), response.Teams[0].ID)
+	assert.Equal(s.t, 1, len(response.Teams[0].Players))
+	assert.Equal(s.t, uint(2), response.Teams[0].Players[0].ID)
 
 	// Team 2
-	assert.Equal(s.t, 5, response.MatchTeams[1].Score)
-	assert.Equal(s.t, uint(1), response.MatchTeams[1].MatchID)
-	assert.Equal(s.t, uint(2), response.MatchTeams[1].ID)
+	assert.False(s.t, response.Teams[1].Winner)
+	assert.Equal(s.t, 3, response.Teams[1].Score)
+	assert.Equal(s.t, uint(1), response.Teams[1].MatchID)
+	assert.Equal(s.t, uint(1), response.Teams[1].ID)
+	assert.Equal(s.t, 1, len(response.Teams[1].Players))
+	assert.Equal(s.t, uint(1), response.Teams[1].Players[0].ID)
 }
 
 func (s *suite) requestWithBody(method, path string, body gin.H) *httptest.ResponseRecorder {

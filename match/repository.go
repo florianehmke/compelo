@@ -15,8 +15,8 @@ type Repository interface {
 	LoadAll() []compelo.Match
 	LoadByID(uint) (compelo.Match, error)
 
-	LoadPlayersByMatchID(uint) ([]compelo.MatchPlayer, error)
 	LoadTeamsByMatchID(uint) ([]compelo.MatchTeam, error)
+	LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.MatchPlayer, error)
 }
 
 var _ Repository = repository{}
@@ -63,14 +63,14 @@ func (r repository) LoadByID(id uint) (compelo.Match, error) {
 	return match, err
 }
 
-func (r repository) LoadPlayersByMatchID(id uint) ([]compelo.MatchPlayer, error) {
-	var players []compelo.MatchPlayer
-	err := r.db.Where(compelo.MatchPlayer{MatchID: id}).Find(&players).Error
-	return players, err
-}
-
 func (r repository) LoadTeamsByMatchID(id uint) ([]compelo.MatchTeam, error) {
 	var teams []compelo.MatchTeam
 	err := r.db.Where(compelo.MatchTeam{MatchID: id}).Find(&teams).Error
 	return teams, err
+}
+
+func (r repository) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.MatchPlayer, error) {
+	var players []compelo.MatchPlayer
+	err := r.db.Where(compelo.MatchPlayer{MatchID: matchID, MatchTeamID: teamID}).Find(&players).Error
+	return players, err
 }

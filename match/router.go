@@ -54,7 +54,7 @@ func (r *Router) GetByID(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 
-	var m CompleteMatch
+	var m Match
 	if err == nil {
 		m, err = r.s.LoadByID(uint(id))
 	}

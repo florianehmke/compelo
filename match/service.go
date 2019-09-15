@@ -1,11 +1,13 @@
 package match
 
 import (
+	"sort"
+	"time"
+
 	"compelo"
 	"compelo/db"
 	"compelo/game"
 	"compelo/player"
-	"time"
 )
 
 type Service struct {
@@ -79,25 +81,67 @@ func (s *Service) validate(param CreateMatchParameter) error {
 	return nil
 }
 
-type CompleteMatch struct {
-	Match        compelo.Match         `json:"match"`
-	MatchTeams   []compelo.MatchTeam   `json:"teams"`
-	MatchPlayers []compelo.MatchPlayer `json:"players"`
+type Match struct {
+	compelo.Match
+	Teams []Team `json:"teams"`
 }
 
-func (s *Service) LoadByID(id uint) (CompleteMatch, error) {
-	match := CompleteMatch{}
+type Team struct {
+	compelo.MatchTeam
+	Players []compelo.Player `json:"players"`
+}
+
+func (s *Service) LoadByID(id uint) (Match, error) {
+	var match = Match{}
 	var err error
 
 	if match.Match, err = s.repository.LoadByID(id); err != nil {
 		return match, err
 	}
-	if match.MatchTeams, err = s.repository.LoadTeamsByMatchID(id); err != nil {
-		return match, err
-	}
-	if match.MatchPlayers, err = s.repository.LoadPlayersByMatchID(id); err != nil {
+
+	var teams []compelo.MatchTeam
+	if teams, err = s.repository.LoadTeamsByMatchID(id); err != nil {
 		return match, err
 	}
 
-	return match, nil
+	for _, t := range teams {
+		players, err := s.LoadPlayersByMatchIDAndTeamID(id, t.ID)
+		if err != nil {
+			return match, err
+		}
+
+		match.Teams = append(match.Teams, Team{
+			MatchTeam: t,
+			Players:   players,
+		})
+	}
+
+	sort.Slice(match.Teams, func(i, j int) bool {
+		if match.Teams[i].Score == match.Teams[j].Score {
+			return match.Teams[i].ID < match.Teams[j].ID
+		}
+		return match.Teams[i].Score > match.Teams[j].Score
+	})
+	return match, err
+}
+
+func (s *Service) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.Player, error) {
+	var err error
+	var players []compelo.Player
+
+	var mps []compelo.MatchPlayer
+	if mps, err = s.repository.LoadPlayersByMatchIDAndTeamID(matchID, teamID); err != nil {
+		return players, err
+	}
+
+	for _, mp := range mps {
+		var p compelo.Player
+		if p, err = s.playerService.LoadPlayerByID(mp.PlayerID); err == nil {
+			players = append(players, p)
+		} else {
+			return players, err
+		}
+	}
+
+	return players, err
 }

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { getPlayers, getSelectedGame, State } from '@core/project';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-game-view',
@@ -6,4 +8,9 @@ import { Component } from '@angular/core';
     Game
   `
 })
-export class GameViewComponent {}
+export class GameViewComponent {
+  selectedGame$ = this.store.select(getSelectedGame);
+  players$ = this.store.select(getPlayers);
+
+  constructor(private store: Store<State>) {}
+}
