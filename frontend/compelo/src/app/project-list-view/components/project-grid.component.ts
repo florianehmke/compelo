@@ -17,9 +17,6 @@ export class ProjectGridComponent {
   @Input()
   projects: Project[];
 
-  @Input()
-  selectedProject: Project;
-
   @Output()
   projectSelected = new EventEmitter<Project>();
 }

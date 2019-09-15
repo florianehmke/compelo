@@ -1,19 +1,24 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { getSelectedGameId } from '@core/router';
+
 import { FEATURE_KEY, State } from './project.reducer';
 
-export const getProjectViewState = createFeatureSelector<State>(FEATURE_KEY);
+export const getProjectState = createFeatureSelector<State>(FEATURE_KEY);
 
 export const getSelectedGame = createSelector(
-  getProjectViewState,
-  (state: State) => state.selectedGame
+  getSelectedGameId,
+  getProjectState,
+  (id, state) => {
+    return state.games.find(value => value.id === parseInt(id, 10));
+  }
 );
 
 export const getGames = createSelector(
-  getProjectViewState,
+  getProjectState,
   (state: State) => state.games
 );
 
 export const getPlayers = createSelector(
-    getProjectViewState,
-    (state: State) => state.players
+  getProjectState,
+  (state: State) => state.players
 );

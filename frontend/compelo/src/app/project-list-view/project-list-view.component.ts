@@ -10,7 +10,6 @@ import {
   createProject,
   CreateProjectPayload,
   getProjects,
-  getSelectedProject,
   loadProjects,
   selectProject,
   selectProjectSuccess,
@@ -29,14 +28,12 @@ import {
     <hr />
     <app-project-grid
       [projects]="projects$ | async"
-      [selectedProject]="selectedProject$ | async"
       (projectSelected)="onSelect($event)"
     ></app-project-grid>
   `
 })
 export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);
-  selectedProject$ = this.store.select(getSelectedProject);
 
   constructor(private store: Store<State>, private modalService: NgbModal) {
     this.store.dispatch(loadProjects());

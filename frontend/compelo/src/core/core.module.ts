@@ -5,6 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { storeLogger } from 'ngrx-store-logger';
 import { environment } from '@env/environment';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import { ProjectListModule } from './project-list/project-list.module';
 import { ProjectModule } from './project/project.module';
@@ -18,9 +19,10 @@ export const metaReducers = environment.production ? [] : [logger];
 
 @NgModule({
   imports: [
-    StoreModule.forRoot({}, { metaReducers }),
-    EffectsModule.forRoot([]),
     CommonModule,
+    StoreModule.forRoot({ router: routerReducer }, { metaReducers }),
+    StoreRouterConnectingModule.forRoot(),
+    EffectsModule.forRoot([]),
     ProjectListModule,
     ProjectModule
   ],
