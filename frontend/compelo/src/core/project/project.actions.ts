@@ -25,11 +25,6 @@ export const createGameError = createAction(
   props<ErrorPayload>()
 );
 
-export const selectGame = createAction(
-  '[Games] Select',
-  props<Payload<Game>>()
-);
-
 export const loadPlayers = createAction('[Players] Load');
 export const loadPlayersSuccess = createAction(
   '[Players] Load Success',

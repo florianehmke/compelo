@@ -30,6 +30,10 @@ import {
       [players]="players$ | async"
       (matchCreated)="onMatchCreated($event)"
     ></app-match-create>
+    <hr />
+    <p class="lead">
+      Recent Matches
+    </p>
   `
 })
 export class GameViewComponent {

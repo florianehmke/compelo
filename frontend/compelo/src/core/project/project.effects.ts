@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Router } from '@angular/router';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { ProjectService } from './project.service';
@@ -20,6 +20,8 @@ import {
   loadPlayersError,
   loadPlayersSuccess
 } from './project.actions';
+import { State } from './project.reducer';
+import { getSelectedGame } from './project.selectors';
 
 @Injectable()
 export class ProjectEffects {
@@ -74,8 +76,9 @@ export class ProjectEffects {
   createMatch$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createMatch),
-      switchMap(action =>
-        this.service.createMatch(action.payload, 1).pipe( // FIXME replace gameID
+      withLatestFrom(this.store.select(getSelectedGame)),
+      switchMap(([action, game]) =>
+        this.service.createMatch(action.payload, game.id).pipe(
           map(response => createMatchSuccess({ payload: response })),
           catchError(err => of(createMatchError(err)))
         )
@@ -86,6 +89,6 @@ export class ProjectEffects {
   constructor(
     private actions$: Actions,
     private service: ProjectService,
-    private router: Router
+    private store: Store<State>
   ) {}
 }

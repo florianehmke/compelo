@@ -6,9 +6,6 @@ import {
   getGames,
   getPlayers,
   getSelectedGame,
-  loadGames,
-  loadPlayers,
-  selectGame,
   State
 } from '@core/project';
 import { Game, Player } from '@shared/models';
@@ -31,7 +28,6 @@ import { Game, Player } from '@shared/models';
             *ngFor="let game of games$ | async"
             type="button"
             class="list-group-item list-group-item-action"
-            (click)="selectGame(game)"
           >
             {{ game?.name }}
           </button>
@@ -60,13 +56,9 @@ import { Game, Player } from '@shared/models';
 })
 export class ProjectViewComponent {
   games$ = this.store.select(getGames);
-  selectedGame$ = this.store.select(getSelectedGame);
   players$ = this.store.select(getPlayers);
 
-  constructor(private store: Store<State>) {
-    this.store.dispatch(loadGames());
-    this.store.dispatch(loadPlayers());
-  }
+  constructor(private store: Store<State>) {}
 
   onGameCreated(game: Game) {
     this.store.dispatch(createGame({ payload: game }));
@@ -74,9 +66,5 @@ export class ProjectViewComponent {
 
   onPlayerCreated(player: Player) {
     this.store.dispatch(createPlayer({ payload: player }));
-  }
-
-  selectGame(game: Game) {
-    this.store.dispatch(selectGame({ payload: game }));
   }
 }

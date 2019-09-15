@@ -35,9 +35,7 @@ import {
 export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);
 
-  constructor(private store: Store<State>, private modalService: NgbModal) {
-    this.store.dispatch(loadProjects());
-  }
+  constructor(private store: Store<State>, private modalService: NgbModal) {}
 
   onSelect(project: Project) {
     if (tokenForProjectIdExists(project.id)) {
