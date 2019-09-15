@@ -1,11 +1,10 @@
 package match
 
 import (
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/gin-gonic/gin"
 
 	"compelo"
 	"compelo/game"
@@ -20,27 +19,17 @@ func NewRouter(s *Service) *Router {
 }
 
 func (r *Router) Post(c *gin.Context) {
-	var body struct {
-		Teams         int          `json:"teams" binding:"required"`
-		WinningTeam   int          `json:"winningTeam" binding:"required"`
-		PlayerTeamMap map[uint]int `json:"playerTeamMap" binding:"required"`
-		TeamScoreMap  map[int]int  `json:"teamScoreMap" binding:"required"`
-	}
+	var param CreateMatchParameter
 
 	// TODO verify that player IDs belong to project.
 	g := c.MustGet(game.Key).(compelo.Game)
 
 	var m compelo.Match
-	err := c.Bind(&body)
+	err := c.Bind(&param)
 	if err == nil {
-		m, err = r.s.CreateMatch(CreateMatchParameter{
-			Date:          time.Now(),
-			GameID:        g.ID,
-			Teams:         body.Teams,
-			PlayerTeamMap: body.PlayerTeamMap,
-			TeamScoreMap:  body.TeamScoreMap,
-			WinningTeam:   body.WinningTeam,
-		})
+		param.GameID = g.ID
+		param.Date = time.Now()
+		m, err = r.s.CreateMatch(param)
 	}
 
 	if err == nil {

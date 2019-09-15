@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
-const modules: any = [CommonModule, FormsModule, NgbModalModule];
+const modules: any = [
+  CommonModule,
+  FormsModule,
+  ReactiveFormsModule,
+  NgbModalModule
+];
 
 @NgModule({
   imports: [...modules],

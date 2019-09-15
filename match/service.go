@@ -33,52 +33,34 @@ type CreateMatchParameter struct {
 	Date   time.Time
 	GameID uint
 
-	Teams         int
-	WinningTeam   int
-	PlayerTeamMap map[uint]int
-	TeamScoreMap  map[int]int
+	Teams []struct {
+		PlayerIDs []int `json:"playerIds" binding:"required"`
+		Score     int   `json:"score" binding:"required"`
+		Winner    bool  `json:"winner" binding:"required"`
+	} `json:"teams" binding:"required"`
 }
 
 // TODO wrap in txn
 func (s *Service) CreateMatch(param CreateMatchParameter) (compelo.Match, error) {
-	if err := s.validate(param); err != nil {
-		return compelo.Match{}, err
-	}
-
 	m := compelo.Match{GameID: param.GameID, Date: time.Now()}
 
 	teamMap := map[int]compelo.MatchTeam{}
 	playerMap := map[int][]compelo.MatchPlayer{}
 
-	for i := 1; i <= param.Teams; i++ {
+	for i, t := range param.Teams {
 		teamMap[i] = compelo.MatchTeam{
-			Score:  param.TeamScoreMap[i],
-			Winner: i == param.WinningTeam,
+			Score:  t.Score,
+			Winner: t.Winner,
 		}
 
-		for playerID, team := range param.PlayerTeamMap {
-			if team == i {
-				playerMap[i] = append(playerMap[i], compelo.MatchPlayer{
-					PlayerID: playerID,
-				})
-			}
+		for _, pid := range t.PlayerIDs {
+			playerMap[i] = append(playerMap[i], compelo.MatchPlayer{
+				PlayerID: uint(pid),
+			})
+
 		}
 	}
 	return s.repository.Create(m, teamMap, playerMap)
-}
-
-func (s *Service) validate(param CreateMatchParameter) error {
-	if _, err := s.gameService.LoadGameByID(param.GameID); err != nil {
-		return err
-	}
-
-	for playerID, _ := range param.PlayerTeamMap {
-		if _, err := s.playerService.LoadPlayerByID(playerID); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 type Match struct {

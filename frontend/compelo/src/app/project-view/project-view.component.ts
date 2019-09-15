@@ -24,8 +24,8 @@ import { Game, Player } from '@shared/models';
         <app-game-create
           (gameCreated)="onGameCreated($event)"
         ></app-game-create>
-
-        <div class="list-group mt-4">
+        <hr />
+        <div class="list-group">
           <button
             [routerLink]="['game', game.id]"
             *ngFor="let game of games$ | async"
@@ -37,7 +37,7 @@ import { Game, Player } from '@shared/models';
           </button>
         </div>
       </div>
-      
+
       <div class="col">
         <p class="lead">
           Create Player
@@ -45,8 +45,8 @@ import { Game, Player } from '@shared/models';
         <app-player-create
           (playerCreated)="onPlayerCreated($event)"
         ></app-player-create>
-
-        <ul class="list-group mt-4">
+        <hr />
+        <ul class="list-group">
           <li
             *ngFor="let player of players$ | async"
             class="list-group-item list-group-item-light"

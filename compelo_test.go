@@ -139,17 +139,20 @@ func (s *suite) createPlayerWithUniqueConstraintViolation(name string) {
 
 func (s *suite) createMatch(expectedID uint) {
 	b := gin.H{
-		"teams": 2,
-		"playerTeamMap": gin.H{
-			"1": 1,
-			"2": 2,
+		"teams": []gin.H{
+			{
+				"playerIds": []int{1},
+				"score":     3,
+				"winner":    false,
+			},
+			{
+				"playerIds": []int{2},
+				"score":     5,
+				"winner":    true,
+			},
 		},
-		"teamScoreMap": gin.H{
-			"1": 3,
-			"2": 5,
-		},
-		"winningTeam": 2,
 	}
+
 	w := s.requestWithBody("POST", "/api/project/games/1/matches", b)
 	response := &compelo.Match{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
