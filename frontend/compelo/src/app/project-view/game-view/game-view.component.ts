@@ -34,7 +34,7 @@ import {
     <p class="lead">
       Recent Matches
     </p>
-    {{ matches$ | async | json }}
+    <app-match-list [matches]="matches$ | async"> </app-match-list>
   `
 })
 export class GameViewComponent {

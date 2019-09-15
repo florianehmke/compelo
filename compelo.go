@@ -47,8 +47,8 @@ type MatchTeam struct {
 	Model
 
 	MatchID uint `json:"matchId" gorm:"type:int REFERENCES matches(id) ON DELETE CASCADE"`
-	Score   int
-	Winner  bool
+	Score   int  `json:"score"`
+	Winner  bool `json:"winner"`
 }
 
 type MatchPlayer struct {
