@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ActionResolver } from '@core/router';
-import { triggerLoadGames, triggerLoadPlayers } from '@core/project';
+import {
+  triggerLoadGames,
+  triggerLoadMatches,
+  triggerLoadPlayers
+} from '@core/project';
 
 import { GameViewComponent } from './game-view.component';
 
@@ -11,7 +15,7 @@ const routes: Routes = [
     component: GameViewComponent,
     resolve: [ActionResolver],
     data: {
-      actionFactory: [triggerLoadGames, triggerLoadPlayers]
+      actionFactory: [triggerLoadGames, triggerLoadPlayers, triggerLoadMatches]
     }
   }
 ];

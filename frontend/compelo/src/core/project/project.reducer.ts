@@ -1,17 +1,23 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Game, Player } from '@shared/models';
-import { loadGamesSuccess, loadPlayersSuccess } from './project.actions';
+import { Game, Match, Player } from '@shared/models';
+import {
+  loadGamesSuccess,
+  loadMatchesSuccess,
+  loadPlayersSuccess
+} from './project.actions';
 
 export const FEATURE_KEY = 'project';
 
 export interface State {
   games: Game[];
   players: Player[];
+  matches: Match[];
 }
 
 export const initialState: State = {
   games: [],
-  players: []
+  players: [],
+  matches: []
 };
 
 const projectReducer = createReducer(
@@ -23,6 +29,10 @@ const projectReducer = createReducer(
   on(loadPlayersSuccess, (state, action) => ({
     ...state,
     players: action.payload
+  })),
+  on(loadMatchesSuccess, (state, action) => ({
+    ...state,
+    matches: action.payload
   }))
 );
 

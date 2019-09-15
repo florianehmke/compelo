@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {
   createMatch,
   CreateMatchPayload,
+  getMatches,
   getPlayers,
-  getSelectedGame,
   State
 } from '@core/project';
 import { Store } from '@ngrx/store';
@@ -34,11 +34,13 @@ import {
     <p class="lead">
       Recent Matches
     </p>
+    {{ matches$ | async | json }}
   `
 })
 export class GameViewComponent {
-  selectedGame$ = this.store.select(getSelectedGame);
   players$ = this.store.select(getPlayers);
+  matches$ = this.store.select(getMatches);
+
   formGroup = this.formService.buildForm({ teamSize: 1, teamCount: 2 });
 
   constructor(

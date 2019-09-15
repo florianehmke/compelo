@@ -5,10 +5,12 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isArray } from 'util';
 
+export type Actions = Action | Action[];
+
 export type RouteActionFactory<T> = (
   store?: Store<T>,
   route?: ActivatedRouteSnapshot
-) => Observable<Action | Action[]>;
+) => Observable<Actions>;
 
 interface RouteData<T> {
   actionFactory: Array<RouteActionFactory<T>>;
@@ -23,11 +25,7 @@ export class ActionResolver<T> implements Resolve<boolean> {
 
     actionFactory.forEach((factory: RouteActionFactory<T>) =>
       factory(this.store, route)
-        .pipe(
-          map((actions: Action[] | Action) =>
-            isArray(actions) ? actions : [actions]
-          )
-        )
+        .pipe(map(actions => (isArray(actions) ? actions : [actions])))
         .subscribe((actions: Action[]) => {
           actions.forEach((action: Action) => this.store.dispatch(action));
         })

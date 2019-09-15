@@ -16,6 +16,9 @@ import {
   loadGames,
   loadGamesError,
   loadGamesSuccess,
+  loadMatches,
+  loadMatchesError,
+  loadMatchesSuccess,
   loadPlayers,
   loadPlayersError,
   loadPlayersSuccess
@@ -79,8 +82,24 @@ export class ProjectEffects {
       withLatestFrom(this.store.select(getSelectedGame)),
       switchMap(([action, game]) =>
         this.service.createMatch(action.payload, game.id).pipe(
-          map(response => createMatchSuccess({ payload: response })),
+          switchMap(response => [
+            createMatchSuccess({ payload: response }),
+            loadMatches()
+          ]),
           catchError(err => of(createMatchError(err)))
+        )
+      )
+    )
+  );
+
+  loadMatches$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadMatches),
+      withLatestFrom(this.store.select(getSelectedGame)),
+      switchMap(([_, game]) =>
+        this.service.getMatches(game.id).pipe(
+          map(matches => loadMatchesSuccess({ payload: matches })),
+          catchError(err => of(loadMatchesError(err)))
         )
       )
     )

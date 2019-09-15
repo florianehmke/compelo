@@ -49,14 +49,24 @@ export const createPlayerError = createAction(
 );
 
 export const createMatch = createAction(
-  '[Games] Create Match',
+  '[Matches] Create Match',
   props<Payload<CreateMatchPayload>>()
 );
 export const createMatchSuccess = createAction(
-  '[Games] Create Match Success',
+  '[Matches] Create Match Success',
   props<Payload<Match>>()
 );
 export const createMatchError = createAction(
-  '[Games] Create Match Error',
+  '[Matches] Create Match Error',
+  props<ErrorPayload>()
+);
+
+export const loadMatches = createAction('[Matches] Load');
+export const loadMatchesSuccess = createAction(
+  '[Matches] Load Success',
+  props<Payload<Match[]>>()
+);
+export const loadMatchesError = createAction(
+  '[Matches] Load Error',
   props<ErrorPayload>()
 );
