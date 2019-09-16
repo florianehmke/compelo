@@ -11,7 +11,6 @@ import {
 import { Game, Player } from '@shared/models';
 
 @Component({
-  selector: 'app-project-view',
   template: `
     <div class="row">
       <div class="col">

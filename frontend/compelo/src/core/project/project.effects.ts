@@ -31,9 +31,13 @@ export class ProjectEffects {
   loadGames$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadGames),
-      switchMap(() =>
+      switchMap(action =>
         this.service.getGames().pipe(
-          map(games => loadGamesSuccess({ payload: games })),
+          switchMap(games =>
+            action.payload.loadMatches
+              ? [loadGamesSuccess({ payload: games }), loadMatches()]
+              : [loadGamesSuccess({ payload: games })]
+          ),
           catchError(err => of(loadGamesError(err)))
         )
       )
@@ -45,7 +49,7 @@ export class ProjectEffects {
       ofType(createGame),
       switchMap(action =>
         this.service.createGame(action.payload).pipe(
-          map(() => loadGames()),
+          map(() => loadGames({ payload: { loadMatches: false } })),
           catchError(err => of(createGameError(err)))
         )
       )

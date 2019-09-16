@@ -13,7 +13,6 @@ import {
 } from './services/match-form.service';
 
 @Component({
-  selector: 'app-game-view',
   template: `
     <p class="lead">
       Change Match Settings

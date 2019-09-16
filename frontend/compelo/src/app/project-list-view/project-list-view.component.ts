@@ -10,14 +10,12 @@ import {
   createProject,
   CreateProjectPayload,
   getProjects,
-  loadProjects,
   selectProject,
   selectProjectSuccess,
   State
 } from '@core/project-list';
 
 @Component({
-  selector: 'app-project-list',
   template: `
     <p class="lead">
       Create / Select Project
@@ -26,10 +24,10 @@ import {
       (projectCreated)="onProjectCreate($event)"
     ></app-project-create>
     <hr />
-    <app-project-grid
+    <app-project-list
       [projects]="projects$ | async"
       (projectSelected)="onSelect($event)"
-    ></app-project-grid>
+    ></app-project-list>
   `
 })
 export class ProjectListViewComponent {

@@ -4,49 +4,45 @@ import (
 	"time"
 )
 
-//
-// https://github.com/jinzhu/gorm/issues/2006
-//
-
 type Model struct {
-	ID        uint       `json:"id" gorm:"primary_key"`
+	ID        uint       `json:"id"`
 	CreatedAt time.Time  `json:"-"`
 	UpdatedAt time.Time  `json:"-"`
-	DeletedAt *time.Time `json:"-" sql:"index"`
+	DeletedAt *time.Time `json:"-"`
 }
 
 type Project struct {
 	Model
 
-	Name         string `json:"name" gorm:"unique;not null"`
-	PasswordHash []byte `json:"-" gorm:"not null"`
+	Name         string `json:"name"`
+	PasswordHash []byte `json:"-"`
 }
 
 type Game struct {
 	Model
 
-	Name      string `json:"name" gorm:"unique;not null"`
-	ProjectID uint   `json:"projectId" gorm:"type:int REFERENCES projects(id) ON DELETE CASCADE"`
+	Name      string `json:"name"`
+	ProjectID uint   `json:"projectId"`
 }
 
 type Player struct {
 	Model
 
-	Name      string `json:"name" gorm:"unique;not null"`
-	ProjectID uint   `json:"projectId" gorm:"type:int REFERENCES projects(id) ON DELETE CASCADE"`
+	Name      string `json:"name"`
+	ProjectID uint   `json:"projectId"`
 }
 
 type Match struct {
 	Model
 
-	Date   time.Time `json:"date" gorm:"not null"`
-	GameID uint      `json:"gameId" gorm:"type:int REFERENCES games(id) ON DELETE CASCADE"`
+	Date   time.Time `json:"date"`
+	GameID uint      `json:"gameId"`
 }
 
 type MatchTeam struct {
 	Model
 
-	MatchID uint `json:"matchId" gorm:"type:int REFERENCES matches(id) ON DELETE CASCADE"`
+	MatchID uint `json:"matchId"`
 	Score   int  `json:"score"`
 	Winner  bool `json:"winner"`
 }
@@ -54,7 +50,7 @@ type MatchTeam struct {
 type MatchPlayer struct {
 	Model
 
-	MatchID     uint `json:"matchId" gorm:"type:int REFERENCES match_teams(id) ON DELETE CASCADE"`
-	MatchTeamID uint `json:"matchTeamId" gorm:"type:int REFERENCES match_teams(id) ON DELETE CASCADE"`
-	PlayerID    uint `json:"playerId" gorm:"type:int REFERENCES players(id)"`
+	MatchID     uint `json:"matchId"`
+	MatchTeamID uint `json:"matchTeamId"`
+	PlayerID    uint `json:"playerId"`
 }

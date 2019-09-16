@@ -1,8 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import { ErrorPayload, Game, Match, Payload, Player } from '@shared/models';
-import { CreateMatchPayload } from '@core/project/project.models';
+import { CreateMatchPayload, LoadGamesPayload } from './project.models';
 
-export const loadGames = createAction('[Games] Load');
+export const loadGames = createAction(
+  '[Games] Load',
+  props<Payload<LoadGamesPayload>>()
+);
 export const loadGamesSuccess = createAction(
   '[Games] Load Success',
   props<Payload<Game[]>>()

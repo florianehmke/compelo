@@ -8,9 +8,9 @@ export function triggerLoadPlayers(): Observable<Action> {
 }
 
 export function triggerLoadGames(): Observable<Action> {
-  return of(loadGames());
+  return of(loadGames({ payload: { loadMatches: false } }));
 }
 
-export function triggerLoadMatches(): Observable<Action> {
-  return of(loadMatches());
+export function triggerLoadGamesAndMatches(): Observable<Action> {
+  return of(loadGames({ payload: { loadMatches: true } }));
 }

@@ -5,12 +5,6 @@ import { Match } from '@shared/models';
   selector: 'app-match-list',
   template: `
     <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Match</th>
-        </tr>
-      </thead>
       <tbody>
         <tr *ngFor="let match of matches; index as i">
           <td>{{ match.date | date }}</td>

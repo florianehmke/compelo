@@ -1,9 +1,13 @@
 export interface CreateMatchPayload {
-    teams: Team[];
+  teams: Team[];
 }
 
 export interface Team {
-    playerIds: number[]
-    score: number
-    winner: boolean
+  playerIds: number[];
+  score: number;
+  winner: boolean;
+}
+
+export interface LoadGamesPayload {
+  loadMatches: boolean;
 }

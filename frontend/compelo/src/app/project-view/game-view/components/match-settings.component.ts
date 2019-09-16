@@ -6,7 +6,7 @@ import { MatchFormSettings } from '../services/match-form.service';
   template: `
     <form (ngSubmit)="onSubmit(); form.reset()" #form="ngForm">
       <div class="row">
-        <div class="col-4">
+        <div class="col-5">
           <input
             type="text"
             placeholder="Team Count"
@@ -16,7 +16,7 @@ import { MatchFormSettings } from '../services/match-form.service';
             [(ngModel)]="teamCount"
           />
         </div>
-        <div class="col-4">
+        <div class="col-5">
           <input
             type="text"
             placeholder="Team Size"
@@ -26,7 +26,7 @@ import { MatchFormSettings } from '../services/match-form.service';
             [(ngModel)]="teamSize"
           />
         </div>
-        <div class="col-4">
+        <div class="col-2">
           <button
             type="submit"
             class="w-100 btn btn-primary"

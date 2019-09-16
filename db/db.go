@@ -1,7 +1,7 @@
 package db
 
 import (
-	"compelo"
+	"io/ioutil"
 	"log"
 
 	"github.com/jinzhu/gorm"
@@ -24,16 +24,15 @@ func New(dbPath string) *DB {
 		panic("failed to connect database")
 	}
 
-	db.Exec("PRAGMA foreign_keys = ON")
 	db.DB().SetMaxOpenConns(1)
+	db.Exec("PRAGMA foreign_keys = ON")
 	db.LogMode(true)
 
-	db.AutoMigrate(&compelo.Project{})
-	db.AutoMigrate(&compelo.Player{})
-	db.AutoMigrate(&compelo.Game{})
-	db.AutoMigrate(&compelo.Match{})
-	db.AutoMigrate(&compelo.MatchPlayer{})
-	db.AutoMigrate(&compelo.MatchTeam{})
+	query, err := ioutil.ReadFile("db/schema.sql")
+	if err != nil {
+		panic(err)
+	}
+	db.Exec(string(query))
 
 	return &DB{db}
 }

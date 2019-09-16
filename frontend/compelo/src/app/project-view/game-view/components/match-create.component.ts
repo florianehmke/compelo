@@ -33,8 +33,8 @@ import { CreateMatchPayload } from '@core/project';
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-4">
+      <div class="row d-flex flex-row-reverse">
+        <div class="col-2">
           <button type="submit" class="w-100 btn btn-success">
             Submit
           </button>
@@ -62,6 +62,7 @@ export class MatchCreateComponent {
   matchCreated = new EventEmitter<CreateMatchPayload>();
 
   onSubmit() {
+    // FIXME determine winner
     if (this.formGroup.valid) {
       const value: CreateMatchPayload = this.formGroup.value;
       this.matchCreated.emit(value);
