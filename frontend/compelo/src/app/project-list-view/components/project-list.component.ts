@@ -4,16 +4,14 @@ import { Project } from '@shared/models';
 @Component({
   selector: 'app-project-list',
   template: `
-    <div class="list-group">
-      <button
-        type="button"
-        class="list-group-item list-group-item-action"
+    <app-list-group>
+      <app-list-group-button
         *ngFor="let project of projects"
         (click)="projectSelected.emit(project)"
       >
         {{ project?.name }}
-      </button>
-    </div>
+      </app-list-group-button>
+    </app-list-group>
   `
 })
 export class ProjectListComponent {
