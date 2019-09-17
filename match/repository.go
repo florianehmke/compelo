@@ -6,11 +6,7 @@ import (
 )
 
 type Repository interface {
-	Create(
-		compelo.Match,
-		map[int]compelo.Team,
-		map[int][]compelo.Appearance,
-	) (compelo.Match, error)
+	Create(CreateMatchParameter) (compelo.Match, error)
 
 	LoadByGameID(uint) ([]compelo.Match, error)
 	LoadByID(uint) (compelo.Match, error)
@@ -25,26 +21,30 @@ type repository struct {
 	db *db.DB
 }
 
-func (r repository) Create(
-	match compelo.Match,
-	teamMap map[int]compelo.Team,
-	playerMap map[int][]compelo.Appearance,
-) (compelo.Match, error) {
+func (r repository) Create(param CreateMatchParameter) (compelo.Match, error) {
 	tx := r.db.Begin()
+
+	// 1. Create match.
+	match := compelo.Match{GameID: param.GameID, Date: param.Date}
 	tx.Create(&match)
 
-	for i, team := range teamMap {
-		team.MatchID = match.ID
-		if err := tx.Create(&team).Error; err != nil {
-			return match, err
+	// 2. Create teams.
+	for _, team := range param.Teams {
+		t := compelo.Team{
+			MatchID: match.ID,
+			Score:   team.Score,
+			Winner:  team.Winner,
 		}
+		tx.Create(&t)
 
-		for _, p := range playerMap[i] {
-			p.MatchID = match.ID
-			p.TeamID = team.ID
-			if err := tx.Create(&p).Error; err != nil {
-				return match, err
+		// 3. Create appearances for players.
+		for _, playerID := range team.PlayerIDs {
+			c := compelo.Appearance{
+				MatchID:  match.ID,
+				TeamID:   t.ID,
+				PlayerID: uint(playerID),
 			}
+			tx.Create(&c)
 		}
 	}
 

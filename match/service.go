@@ -1,142 +1,133 @@
 package match
 
 import (
-	"sort"
-	"time"
-
 	"compelo"
 	"compelo/db"
 	"compelo/game"
 	"compelo/player"
+	"sort"
+	"time"
 )
 
 type Service struct {
-	repository Repository
-
+	repository    Repository
 	playerService *player.Service
 	gameService   *game.Service
 }
 
-func NewService(
-	db *db.DB,
-	playerService *player.Service,
-	gameService *game.Service,
-) *Service {
+func NewService(db *db.DB, ps *player.Service, gs *game.Service) *Service {
 	return &Service{
 		repository:    repository{db},
-		playerService: playerService,
-		gameService:   gameService,
+		playerService: ps,
+		gameService:   gs,
 	}
-}
-
-type CreateMatchParameter struct {
-	Date   time.Time
-	GameID uint
-
-	Teams []struct {
-		PlayerIDs []int `json:"playerIds" binding:"required"`
-		Score     int   `json:"score" binding:"required"`
-		Winner    bool  `json:"winner" binding:"required"`
-	} `json:"teams" binding:"required"`
 }
 
 func (s *Service) CreateMatch(param CreateMatchParameter) (compelo.Match, error) {
-	m := compelo.Match{GameID: param.GameID, Date: time.Now()}
-
-	teamMap := map[int]compelo.Team{}
-	appearanceMap := map[int][]compelo.Appearance{}
-
-	for i, t := range param.Teams {
-		teamMap[i] = compelo.Team{
-			Score:  t.Score,
-			Winner: t.Winner,
-		}
-
-		for _, pid := range t.PlayerIDs {
-			appearanceMap[i] = append(appearanceMap[i], compelo.Appearance{
-				PlayerID: uint(pid),
-			})
-
-		}
-	}
-	return s.repository.Create(m, teamMap, appearanceMap)
+	return s.repository.Create(param)
 }
 
-type Match struct {
-	compelo.Match
-	Teams []Team `json:"teams"`
+type MatchData struct {
+	ID     uint       `json:"id"`
+	Date   time.Time  `json:"date"`
+	GameID uint       `json:"gameId"`
+	Teams  []TeamData `json:"teams"`
 }
 
-type Team struct {
-	compelo.Team
-	Players []compelo.Player `json:"players"`
+type TeamData struct {
+	ID      uint         `json:"id"`
+	MatchID uint         `json:"matchId"`
+	Score   int          `json:"score"`
+	Winner  bool         `json:"winner"`
+	Players []PlayerData `json:"players"`
 }
 
-func (s *Service) LoadByGameID(gameID uint) ([]Match, error) {
-	var matches []Match
+type PlayerData struct {
+	ID        uint   `json:"id"`
+	Name      string `json:"name"`
+	ProjectID uint   `json:"projectId"`
+}
 
-	ms, err := s.repository.LoadByGameID(gameID)
-	for _, m := range ms {
-		match, err := s.LoadByID(m.ID)
+func (s *Service) LoadByGameID(gameID uint) ([]MatchData, error) {
+	var matchDataList []MatchData
+
+	matches, err := s.repository.LoadByGameID(gameID)
+	for _, match := range matches {
+		matchData, err := s.LoadByID(match.ID)
 		if err != nil {
-			return matches, err
+			return matchDataList, err
 		}
-		matches = append(matches, match)
+		matchDataList = append(matchDataList, matchData)
 	}
 
-	return matches, err
+	return matchDataList, err
 }
 
-func (s *Service) LoadByID(id uint) (Match, error) {
-	var match = Match{}
-	var err error
-
-	if match.Match, err = s.repository.LoadByID(id); err != nil {
-		return match, err
+func (s *Service) LoadByID(id uint) (MatchData, error) {
+	// 1. Get basic match data.
+	match, err := s.repository.LoadByID(id)
+	if err != nil {
+		return MatchData{}, err
+	}
+	matchData := MatchData{
+		ID:     match.ID,
+		Date:   match.Date,
+		GameID: match.GameID,
 	}
 
-	var teams []compelo.Team
-	if teams, err = s.repository.LoadTeamsByMatchID(id); err != nil {
-		return match, err
+	// 2. Get data about teams.
+	teams, err := s.repository.LoadTeamsByMatchID(id)
+	if err != nil {
+		return MatchData{}, err
 	}
-
 	for _, t := range teams {
+		teamData := TeamData{
+			ID:      t.ID,
+			MatchID: t.MatchID,
+			Score:   t.Score,
+			Winner:  t.Winner,
+		}
+
+		// 3. Get data about players.
 		players, err := s.LoadPlayersByMatchIDAndTeamID(id, t.ID)
 		if err != nil {
-			return match, err
+			return MatchData{}, err
 		}
-
-		match.Teams = append(match.Teams, Team{
-			Team:    t,
-			Players: players,
-		})
+		for _, p := range players {
+			playerData := PlayerData{
+				ID:        p.ID,
+				Name:      p.Name,
+				ProjectID: p.ProjectID,
+			}
+			teamData.Players = append(teamData.Players, playerData)
+		}
+		matchData.Teams = append(matchData.Teams, teamData)
 	}
 
-	sort.Slice(match.Teams, func(i, j int) bool {
-		if match.Teams[i].Score == match.Teams[j].Score {
-			return match.Teams[i].ID < match.Teams[j].ID
+	// 4. Sort teams by score.
+	sort.Slice(matchData.Teams, func(i, j int) bool {
+		if matchData.Teams[i].Score == matchData.Teams[j].Score {
+			return matchData.Teams[i].ID < matchData.Teams[j].ID
 		}
-		return match.Teams[i].Score > match.Teams[j].Score
+		return matchData.Teams[i].Score > matchData.Teams[j].Score
 	})
-	return match, err
+
+	return matchData, err
 }
 
 func (s *Service) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.Player, error) {
-	var err error
-	var players []compelo.Player
-
-	var apps []compelo.Appearance
-	if apps, err = s.repository.LoadAppearancesByMatchIDAndTeamID(matchID, teamID); err != nil {
-		return players, err
+	appearances, err := s.repository.LoadAppearancesByMatchIDAndTeamID(matchID, teamID)
+	if err != nil {
+		return nil, err
 	}
 
-	for _, mp := range apps {
-		var p compelo.Player
-		if p, err = s.playerService.LoadPlayerByID(mp.PlayerID); err == nil {
-			players = append(players, p)
-		} else {
-			return players, err
+	var players []compelo.Player
+	for _, appearance := range appearances {
+		p, err := s.playerService.LoadPlayerByID(appearance.PlayerID)
+		if err != nil {
+			return nil, err
 		}
+		players = append(players, p)
 	}
 
 	return players, err

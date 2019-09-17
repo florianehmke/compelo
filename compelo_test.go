@@ -163,12 +163,12 @@ func (s *suite) createMatch(expectedID uint) {
 
 func (s *suite) getMatchByID() {
 	w := s.request("GET", "/api/project/games/1/matches/1")
-	response := &match.Match{}
+	response := &match.MatchData{}
 	mustUnmarshal(s.t, w.Body.Bytes(), response)
 	assert.Equal(s.t, http.StatusOK, w.Code)
-	assert.Equal(s.t, uint(1), response.Match.ID)
+	assert.Equal(s.t, uint(1), response.ID)
 	assert.Equal(s.t, 2, len(response.Teams))
-	assert.Equal(s.t, uint(1), response.Match.GameID)
+	assert.Equal(s.t, uint(1), response.GameID)
 
 	// Team 1
 	assert.True(s.t, response.Teams[0].Winner)

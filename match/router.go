@@ -1,10 +1,11 @@
 package match
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 
 	"compelo"
 	"compelo/game"
@@ -19,20 +20,37 @@ func NewRouter(s *Service) *Router {
 	return &Router{s}
 }
 
-func (r *Router) Post(c *gin.Context) {
-	var param CreateMatchParameter
+type CreateMatchParameter struct {
+	Date   time.Time
+	GameID uint
 
+	Teams []struct {
+		PlayerIDs []int `json:"playerIds" binding:"required"`
+		Score     int   `json:"score" binding:"required"`
+		Winner    bool  `json:"winner" binding:"required"`
+	} `json:"teams" binding:"required"`
+}
+
+func (p *CreateMatchParameter) validate() error {
+	return nil
+}
+
+func (r *Router) Post(c *gin.Context) {
 	g := c.MustGet(game.Key).(compelo.Game)
 	p := c.MustGet(project.Key).(compelo.Project)
 
-	var m compelo.Match
-	err := c.Bind(&param)
-	if err == nil {
-		param.GameID = g.ID
-		param.Date = time.Now()
-		m, err = r.s.CreateMatch(param)
+	var param CreateMatchParameter
+	if err := c.Bind(&param); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
 	}
 
+	if err := param.validate(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	// Make sure that players exist + belong to current project.
 	for _, t := range param.Teams {
 		for _, pid := range t.PlayerIDs {
 			player, err := r.s.playerService.LoadPlayerByID(uint(pid))
@@ -43,6 +61,9 @@ func (r *Router) Post(c *gin.Context) {
 		}
 	}
 
+	param.GameID = g.ID
+	param.Date = time.Now()
+	m, err := r.s.CreateMatch(param)
 	if err == nil {
 		c.JSON(http.StatusCreated, m)
 	} else {
@@ -53,12 +74,12 @@ func (r *Router) Post(c *gin.Context) {
 func (r *Router) GetByID(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
-
-	var m Match
-	if err == nil {
-		m, err = r.s.LoadByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
 	}
 
+	m, err := r.s.LoadByID(uint(id))
 	if err == nil {
 		c.JSON(http.StatusOK, m)
 	} else {

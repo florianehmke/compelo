@@ -26,7 +26,7 @@ func New(dbPath string) *DB {
 
 	db.DB().SetMaxOpenConns(1)
 	db.Exec("PRAGMA foreign_keys = ON")
-	db.LogMode(true)
+	db.LogMode(false)
 
 	query, err := ioutil.ReadFile("db/schema.sql")
 	if err != nil {
