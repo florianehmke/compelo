@@ -62,7 +62,6 @@ export class MatchCreateComponent {
   matchCreated = new EventEmitter<CreateMatchPayload>();
 
   onSubmit() {
-    // FIXME determine winner
     if (this.formGroup.valid) {
       const value: CreateMatchPayload = this.formGroup.value;
       this.matchCreated.emit(value);

@@ -61,9 +61,7 @@ func (r *Router) Post(c *gin.Context) {
 		}
 	}
 
-	param.GameID = g.ID
-	param.Date = time.Now()
-	m, err := r.s.CreateMatch(param)
+	m, err := r.s.CreateMatch(param, g)
 	if err == nil {
 		c.JSON(http.StatusCreated, m)
 	} else {

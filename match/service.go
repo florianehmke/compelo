@@ -23,8 +23,32 @@ func NewService(db *db.DB, ps *player.Service, gs *game.Service) *Service {
 	}
 }
 
-func (s *Service) CreateMatch(param CreateMatchParameter) (compelo.Match, error) {
+func (s *Service) CreateMatch(param CreateMatchParameter, game compelo.Game) (compelo.Match, error) {
+	param.GameID = game.ID
+	param.Date = time.Now()
+	param.determineWinner()
+
 	return s.repository.Create(param)
+}
+
+func (p *CreateMatchParameter) determineWinner() {
+	highScore := 0
+	highScoreCount := 0
+	for _, t := range p.Teams {
+		if t.Score > highScore {
+			highScore = t.Score
+			highScoreCount = 1
+		} else if t.Score == highScore {
+			highScoreCount += 1
+		}
+	}
+	if highScoreCount == 1 {
+		for _, t := range p.Teams {
+			if t.Score == highScore {
+				t.Winner = true
+			}
+		}
+	}
 }
 
 type MatchData struct {
