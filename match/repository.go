@@ -8,15 +8,15 @@ import (
 type Repository interface {
 	Create(
 		compelo.Match,
-		map[int]compelo.MatchTeam,
-		map[int][]compelo.MatchPlayer,
+		map[int]compelo.Team,
+		map[int][]compelo.Appearance,
 	) (compelo.Match, error)
 
 	LoadByGameID(uint) ([]compelo.Match, error)
 	LoadByID(uint) (compelo.Match, error)
 
-	LoadTeamsByMatchID(uint) ([]compelo.MatchTeam, error)
-	LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.MatchPlayer, error)
+	LoadTeamsByMatchID(uint) ([]compelo.Team, error)
+	LoadAppearancesByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.Appearance, error)
 }
 
 var _ Repository = repository{}
@@ -27,8 +27,8 @@ type repository struct {
 
 func (r repository) Create(
 	match compelo.Match,
-	teamMap map[int]compelo.MatchTeam,
-	playerMap map[int][]compelo.MatchPlayer,
+	teamMap map[int]compelo.Team,
+	playerMap map[int][]compelo.Appearance,
 ) (compelo.Match, error) {
 	tx := r.db.Begin()
 	tx.Create(&match)
@@ -41,7 +41,7 @@ func (r repository) Create(
 
 		for _, p := range playerMap[i] {
 			p.MatchID = match.ID
-			p.MatchTeamID = team.ID
+			p.TeamID = team.ID
 			if err := tx.Create(&p).Error; err != nil {
 				return match, err
 			}
@@ -63,14 +63,14 @@ func (r repository) LoadByID(id uint) (compelo.Match, error) {
 	return match, err
 }
 
-func (r repository) LoadTeamsByMatchID(id uint) ([]compelo.MatchTeam, error) {
-	var teams []compelo.MatchTeam
-	err := r.db.Where(compelo.MatchTeam{MatchID: id}).Find(&teams).Error
+func (r repository) LoadTeamsByMatchID(id uint) ([]compelo.Team, error) {
+	var teams []compelo.Team
+	err := r.db.Where(compelo.Team{MatchID: id}).Find(&teams).Error
 	return teams, err
 }
 
-func (r repository) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.MatchPlayer, error) {
-	var players []compelo.MatchPlayer
-	err := r.db.Where(compelo.MatchPlayer{MatchID: matchID, MatchTeamID: teamID}).Find(&players).Error
+func (r repository) LoadAppearancesByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.Appearance, error) {
+	var players []compelo.Appearance
+	err := r.db.Where(compelo.Appearance{MatchID: matchID, TeamID: teamID}).Find(&players).Error
 	return players, err
 }

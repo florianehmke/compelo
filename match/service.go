@@ -43,23 +43,23 @@ type CreateMatchParameter struct {
 func (s *Service) CreateMatch(param CreateMatchParameter) (compelo.Match, error) {
 	m := compelo.Match{GameID: param.GameID, Date: time.Now()}
 
-	teamMap := map[int]compelo.MatchTeam{}
-	playerMap := map[int][]compelo.MatchPlayer{}
+	teamMap := map[int]compelo.Team{}
+	appearanceMap := map[int][]compelo.Appearance{}
 
 	for i, t := range param.Teams {
-		teamMap[i] = compelo.MatchTeam{
+		teamMap[i] = compelo.Team{
 			Score:  t.Score,
 			Winner: t.Winner,
 		}
 
 		for _, pid := range t.PlayerIDs {
-			playerMap[i] = append(playerMap[i], compelo.MatchPlayer{
+			appearanceMap[i] = append(appearanceMap[i], compelo.Appearance{
 				PlayerID: uint(pid),
 			})
 
 		}
 	}
-	return s.repository.Create(m, teamMap, playerMap)
+	return s.repository.Create(m, teamMap, appearanceMap)
 }
 
 type Match struct {
@@ -68,7 +68,7 @@ type Match struct {
 }
 
 type Team struct {
-	compelo.MatchTeam
+	compelo.Team
 	Players []compelo.Player `json:"players"`
 }
 
@@ -95,7 +95,7 @@ func (s *Service) LoadByID(id uint) (Match, error) {
 		return match, err
 	}
 
-	var teams []compelo.MatchTeam
+	var teams []compelo.Team
 	if teams, err = s.repository.LoadTeamsByMatchID(id); err != nil {
 		return match, err
 	}
@@ -107,8 +107,8 @@ func (s *Service) LoadByID(id uint) (Match, error) {
 		}
 
 		match.Teams = append(match.Teams, Team{
-			MatchTeam: t,
-			Players:   players,
+			Team:    t,
+			Players: players,
 		})
 	}
 
@@ -125,12 +125,12 @@ func (s *Service) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo
 	var err error
 	var players []compelo.Player
 
-	var mps []compelo.MatchPlayer
-	if mps, err = s.repository.LoadPlayersByMatchIDAndTeamID(matchID, teamID); err != nil {
+	var apps []compelo.Appearance
+	if apps, err = s.repository.LoadAppearancesByMatchIDAndTeamID(matchID, teamID); err != nil {
 		return players, err
 	}
 
-	for _, mp := range mps {
+	for _, mp := range apps {
 		var p compelo.Player
 		if p, err = s.playerService.LoadPlayerByID(mp.PlayerID); err == nil {
 			players = append(players, p)

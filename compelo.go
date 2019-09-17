@@ -32,6 +32,14 @@ type Player struct {
 	ProjectID uint   `json:"projectId"`
 }
 
+type Rating struct {
+	Model
+
+	Rating   float64 `json:"rating"`
+	GameID   uint    `json:"gameId"`
+	PlayerID uint    `json:"playerId"`
+}
+
 type Match struct {
 	Model
 
@@ -39,7 +47,7 @@ type Match struct {
 	GameID uint      `json:"gameId"`
 }
 
-type MatchTeam struct {
+type Team struct {
 	Model
 
 	MatchID uint `json:"matchId"`
@@ -47,10 +55,10 @@ type MatchTeam struct {
 	Winner  bool `json:"winner"`
 }
 
-type MatchPlayer struct {
+type Appearance struct {
 	Model
 
-	MatchID     uint `json:"matchId"`
-	MatchTeamID uint `json:"matchTeamId"`
-	PlayerID    uint `json:"playerId"`
+	MatchID  uint `json:"matchId"`
+	TeamID   uint `json:"teamId"`
+	PlayerID uint `json:"playerId"`
 }
