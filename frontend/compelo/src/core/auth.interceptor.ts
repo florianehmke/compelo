@@ -6,6 +6,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { loadToken } from '@shared/jwt';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -13,11 +14,11 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const idToken = localStorage.getItem('compelo-token');
+    const token = loadToken();
 
-    if (idToken) {
+    if (token) {
       const cloned = req.clone({
-        headers: req.headers.append('Authorization', 'Bearer ' + idToken)
+        headers: req.headers.append('Authorization', 'Bearer ' + token)
       });
 
       return next.handle(cloned);

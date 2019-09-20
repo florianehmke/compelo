@@ -1,7 +1,6 @@
 package game
 
 import (
-	"compelo"
 	"net/http"
 	"strconv"
 
@@ -25,17 +24,20 @@ func NewRouter(s *Service) *Router {
 	return &Router{s}
 }
 
+type createGameParameter struct {
+	Name string `json:"name" binding:"required"`
+}
+
 func (r *Router) Post(c *gin.Context) {
-	var body struct {
-		Name string `json:"name" binding:"required"`
-	}
-	err := c.Bind(&body)
-	var g *compelo.Game
-	if err == nil {
-		p := c.MustGet(project.Key).(compelo.Project)
-		g, err = r.s.CreateGame(p.ID, body.Name)
+	p := c.MustGet(project.Key).(project.Project)
+
+	var param createGameParameter
+	if err := c.Bind(&param); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
 	}
 
+	g, err := r.s.CreateGame(p.ID, param.Name)
 	if err == nil {
 		c.JSON(http.StatusCreated, g)
 	} else {
@@ -44,9 +46,9 @@ func (r *Router) Post(c *gin.Context) {
 }
 
 func (r *Router) GetAll(c *gin.Context) {
-	p := c.MustGet(project.Key).(compelo.Project)
-	games, err := r.s.LoadGamesByProjectID(p.ID)
+	p := c.MustGet(project.Key).(project.Project)
 
+	games, err := r.s.LoadGamesByProjectID(p.ID)
 	if err == nil {
 		c.JSON(http.StatusOK, games)
 	} else {
@@ -55,23 +57,25 @@ func (r *Router) GetAll(c *gin.Context) {
 }
 
 func (r *Router) Middleware(c *gin.Context) {
+	p := c.MustGet(project.Key).(project.Project)
+
 	gameID := c.Param(IDParam)
 	id, err := strconv.Atoi(gameID)
-
-	if err == nil {
-		g, err := r.s.LoadGameByID(uint(id))
-		if err != nil {
-			c.JSON(http.StatusNotFound, err)
-			c.Abort()
-		}
-
-		p := c.MustGet(project.Key).(compelo.Project)
-		if p.ID != g.ProjectID {
-			c.JSON(http.StatusForbidden, gin.H{"message:": "not your game"})
-			c.Abort()
-		}
-
-		c.Set(Key, g)
-		c.Next()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.Abort()
 	}
+
+	g, err := r.s.LoadGameByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, err)
+		c.Abort()
+	}
+	if p.ID != g.ProjectID {
+		c.JSON(http.StatusForbidden, gin.H{"message:": "not your game"})
+		c.Abort()
+	}
+
+	c.Set(Key, g)
+	c.Next()
 }

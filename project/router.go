@@ -1,14 +1,15 @@
 package project
 
 import (
-	"compelo"
-	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+
+	"compelo/db"
 )
 
 const (
@@ -28,18 +29,19 @@ func NewRouter(s *Service) *Router {
 	return &Router{s, createMiddleware(s)}
 }
 
+type createProjectParameter struct {
+	Name     string `json:"name" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 func (r *Router) CreateProject(c *gin.Context) {
-	var body struct {
-		Name     string `json:"name" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}
-	err := c.Bind(&body)
-
-	var p *compelo.Project
-	if err == nil {
-		p, err = r.s.CreateProject(body.Name, hashAndSalt([]byte(body.Password)))
+	var param createProjectParameter
+	err := c.Bind(&param)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 
+	p, err := r.s.CreateProject(param.Name, hashAndSalt([]byte(param.Password)))
 	if err == nil {
 		c.JSON(http.StatusCreated, p)
 	} else {
@@ -67,7 +69,7 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour * 24,
 		IdentityKey: idKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if p, ok := data.(*compelo.Project); ok {
+			if p, ok := data.(*Project); ok {
 				return jwt.MapClaims{
 					idKey:   p.ID,
 					nameKey: p.Name,
@@ -77,9 +79,9 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			return &compelo.Project{
+			return &Project{
 				Name: claims[nameKey].(string),
-				Model: compelo.Model{
+				Model: db.Model{
 					ID: uint(claims[idKey].(float64)),
 				},
 			}
@@ -103,7 +105,7 @@ func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
 			return &p, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if fromToken, ok := data.(*compelo.Project); ok {
+			if fromToken, ok := data.(*Project); ok {
 				fromDB, err := s.LoadByName(fromToken.Name)
 				if err != nil {
 					return false

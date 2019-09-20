@@ -3,6 +3,7 @@ import { Game, Match, Player } from '@shared/models';
 import {
   loadGamesSuccess,
   loadMatchesSuccess,
+  loadPlayersWithStatsSuccess,
   loadPlayersSuccess
 } from './project.actions';
 
@@ -11,12 +12,14 @@ export const FEATURE_KEY = 'project';
 export interface State {
   games: Game[];
   players: Player[];
+  playersWithStats: Player[];
   matches: Match[];
 }
 
 export const initialState: State = {
   games: [],
   players: [],
+  playersWithStats: [],
   matches: []
 };
 
@@ -29,6 +32,10 @@ const projectReducer = createReducer(
   on(loadPlayersSuccess, (state, action) => ({
     ...state,
     players: action.payload
+  })),
+  on(loadPlayersWithStatsSuccess, (state, action) => ({
+    ...state,
+    playersWithStats: action.payload
   })),
   on(loadMatchesSuccess, (state, action) => ({
     ...state,

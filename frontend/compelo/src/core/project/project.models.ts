@@ -5,9 +5,12 @@ export interface CreateMatchPayload {
 export interface Team {
   playerIds: number[];
   score: number;
-  winner: boolean;
 }
 
-export interface LoadGamesPayload {
-  loadMatches: boolean;
+export interface LoadMatchesPayload {
+  gameId: number;
+}
+
+export interface LoadPlayersWithStatusPayload {
+  gameId: number;
 }

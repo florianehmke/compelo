@@ -34,4 +34,8 @@ export class ProjectService {
   getMatches(gameID: number): Observable<Match[]> {
     return this.http.get<Match[]>(`${this.baseUrl}/games/${gameID}/matches`);
   }
+
+  getPlayersWithStats(gameID: number): Observable<Player[]> {
+    return this.http.get<Player[]>(`${this.baseUrl}/games/${gameID}/players`);
+  }
 }

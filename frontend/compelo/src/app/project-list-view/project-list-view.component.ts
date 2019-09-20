@@ -17,9 +17,6 @@ import {
 
 @Component({
   template: `
-    <p class="lead">
-      Create / Select Project
-    </p>
     <app-project-create
       (projectCreated)="onProjectCreate($event)"
     ></app-project-create>

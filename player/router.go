@@ -1,10 +1,11 @@
 package player
 
 import (
-	"compelo"
-	"compelo/project"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"compelo/project"
 )
 
 type Router struct {
@@ -15,17 +16,20 @@ func NewRouter(s *Service) *Router {
 	return &Router{s}
 }
 
+type createPlayerParameter struct {
+	Name string `json:"name" binding:"required"`
+}
+
 func (r *Router) Post(c *gin.Context) {
-	var body struct {
-		Name string `json:"name" binding:"required"`
-	}
-	err := c.Bind(&body)
-	var player *compelo.Player
-	if err == nil {
-		p := c.MustGet(project.Key).(compelo.Project)
-		player, err = r.s.CreatePlayer(p.ID, body.Name)
+	p := c.MustGet(project.Key).(project.Project)
+
+	var param createPlayerParameter
+	err := c.Bind(&param)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 
+	player, err := r.s.CreatePlayer(p.ID, param.Name)
 	if err == nil {
 		c.JSON(http.StatusCreated, player)
 	} else {
@@ -34,9 +38,9 @@ func (r *Router) Post(c *gin.Context) {
 }
 
 func (r *Router) GetAll(c *gin.Context) {
-	p := c.MustGet(project.Key).(compelo.Project)
-	players, err := r.s.LoadPlayersByProjectID(p.ID)
+	p := c.MustGet(project.Key).(project.Project)
 
+	players, err := r.s.LoadPlayersByProjectID(p.ID)
 	if err == nil {
 		c.JSON(http.StatusOK, players)
 	} else {

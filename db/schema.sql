@@ -51,7 +51,7 @@ CREATE TABLE ratings
     created_at DATETIME,
     updated_at DATETIME,
     deleted_at DATETIME,
-    rating     REAL,
+    rating     INTEGER NOT NULL,
     game_id    INTEGER NOT NULL,
     player_id  INTEGER NOT NULL,
     FOREIGN KEY (game_id) REFERENCES games (id) ON DELETE CASCADE,
@@ -81,13 +81,14 @@ CREATE INDEX idx_matches_deleted_at
 
 CREATE TABLE appearances
 (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    created_at DATETIME,
-    updated_at DATETIME,
-    deleted_at DATETIME,
-    match_id   INTEGER NOT NULL,
-    team_id    INTEGER NOT NULL,
-    player_id  INTEGER NOT NULL,
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at   DATETIME,
+    updated_at   DATETIME,
+    deleted_at   DATETIME,
+    match_id     INTEGER NOT NULL,
+    team_id      INTEGER NOT NULL,
+    player_id    INTEGER NOT NULL,
+    rating_delta INTEGER NOT NULL,
     FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE,
     FOREIGN KEY (team_id) REFERENCES teams (id) ON DELETE CASCADE,
     FOREIGN KEY (player_id) REFERENCES players (id)
@@ -100,13 +101,14 @@ CREATE INDEX idx_appearances_deleted_at
 
 CREATE TABLE teams
 (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    created_at DATETIME,
-    updated_at DATETIME,
-    deleted_at DATETIME,
-    match_id   INTEGER NOT NULL,
-    score      INTEGER,
-    winner     INTEGER,
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at   DATETIME,
+    updated_at   DATETIME,
+    deleted_at   DATETIME,
+    match_id     INTEGER NOT NULL,
+    score        INTEGER,
+    winner       INTEGER,
+    rating_delta INTEGER NOT NULL,
     FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE
 );
 

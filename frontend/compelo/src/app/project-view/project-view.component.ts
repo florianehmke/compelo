@@ -5,7 +5,6 @@ import {
   createPlayer,
   getGames,
   getPlayers,
-  getSelectedGame,
   State
 } from '@core/project';
 import { Game, Player } from '@shared/models';
@@ -14,20 +13,13 @@ import { Game, Player } from '@shared/models';
   template: `
     <div class="row">
       <div class="col">
-        <p class="lead">
-          Create / Select Game
-        </p>
         <app-game-create
           (gameCreated)="onGameCreated($event)"
         ></app-game-create>
         <hr />
         <app-game-list [games]="games$ | async"></app-game-list>
       </div>
-
       <div class="col">
-        <p class="lead">
-          Create Player
-        </p>
         <app-player-create
           (playerCreated)="onPlayerCreated($event)"
         ></app-player-create>

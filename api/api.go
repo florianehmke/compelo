@@ -1,6 +1,8 @@
 package api
 
 import (
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
@@ -9,6 +11,7 @@ import (
 	"compelo/match"
 	"compelo/player"
 	"compelo/project"
+	"compelo/stats"
 )
 
 func Setup(dbPath string) *gin.Engine {
@@ -18,12 +21,14 @@ func Setup(dbPath string) *gin.Engine {
 	playerService := player.NewService(database)
 	gameService := game.NewService(database)
 	matchService := match.NewService(database, playerService, gameService)
+	statsService := stats.NewService(database, playerService)
 
 	return createRouter(
 		project.NewRouter(projectService),
 		player.NewRouter(playerService),
 		match.NewRouter(matchService),
 		game.NewRouter(gameService),
+		stats.NewRouter(statsService),
 	)
 }
 
@@ -32,6 +37,7 @@ func createRouter(
 	playerRouter *player.Router,
 	matchRouter *match.Router,
 	gameRouter *game.Router,
+	statsRouter *stats.Router,
 ) *gin.Engine {
 	engine := gin.Default()
 	engine.Use(createCORSMiddleware())
@@ -54,7 +60,7 @@ func createRouter(
 	g.Use(gameRouter.Middleware)
 	g.POST("/matches", matchRouter.Post)
 	g.GET("/matches", matchRouter.GetAll)
-	g.GET("/matches/:id", matchRouter.GetByID)
+	g.GET("/players", statsRouter.GetAll)
 
 	return engine
 }
@@ -64,5 +70,6 @@ func createCORSMiddleware() gin.HandlerFunc {
 	config.AllowOrigins = []string{"http://localhost:4200"}
 	config.AllowMethods = []string{"OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"}
 	config.AllowHeaders = []string{"authorization", "content-type"}
+	config.MaxAge = 12 * time.Hour
 	return cors.New(config)
 }

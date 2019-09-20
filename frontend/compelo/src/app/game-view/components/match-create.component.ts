@@ -6,6 +6,15 @@ import { CreateMatchPayload } from '@core/project';
 @Component({
   selector: 'app-match-create',
   template: `
+    <p class="lead">
+      Create Match
+      <app-icon
+        icon="wrench"
+        class="float-right"
+        [button]="true"
+        (click)="onSettingsClick()"
+      ></app-icon>
+    </p>
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" *ngIf="players">
       <div class="row" formArrayName="teams">
         <div
@@ -33,12 +42,14 @@ import { CreateMatchPayload } from '@core/project';
           </div>
         </div>
       </div>
-      <div class="row d-flex flex-row-reverse">
-        <div class="col-2">
-          <button type="submit" class="w-100 btn btn-success">
-            Submit
-          </button>
-        </div>
+      <div class="d-flex flex-row-reverse">
+        <app-button
+          type="submit"
+          icon="plus"
+          [disabled]="!formGroup.valid"
+          label="Submit"
+        >
+        </app-button>
       </div>
     </form>
   `,
@@ -61,6 +72,9 @@ export class MatchCreateComponent {
   @Output()
   matchCreated = new EventEmitter<CreateMatchPayload>();
 
+  @Output()
+  settingsClick = new EventEmitter();
+
   onSubmit() {
     if (this.formGroup.valid) {
       const value: CreateMatchPayload = this.formGroup.value;
@@ -78,5 +92,9 @@ export class MatchCreateComponent {
 
   compareByID(p1, p2): boolean {
     return p1 && p2 && p1.id === p2.id;
+  }
+
+  onSettingsClick() {
+    this.settingsClick.emit();
   }
 }

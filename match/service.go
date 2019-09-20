@@ -1,12 +1,13 @@
 package match
 
 import (
-	"compelo"
+	"sort"
+	"time"
+
 	"compelo/db"
 	"compelo/game"
 	"compelo/player"
-	"sort"
-	"time"
+	"compelo/rating"
 )
 
 type Service struct {
@@ -23,15 +24,64 @@ func NewService(db *db.DB, ps *player.Service, gs *game.Service) *Service {
 	}
 }
 
-func (s *Service) CreateMatch(param CreateMatchParameter, game compelo.Game) (compelo.Match, error) {
-	param.GameID = game.ID
-	param.Date = time.Now()
+func (s *Service) createMatch(param createMatchParameter, game game.Game) (Match, error) {
+	param.gameID = game.ID
+	param.date = time.Now()
 	param.determineWinner()
+	param.calculateTeamElo(s.playerService, game.ID)
 
-	return s.repository.Create(param)
+	// Create the match.
+	m, err := s.repository.create(param)
+	if err != nil {
+		return Match{}, err
+	}
+
+	// Update the ratings of the players who participated.
+	if err := s.updatePlayerRatings(param, game); err != nil {
+		return Match{}, err
+	}
+
+	return m, nil
 }
 
-func (p *CreateMatchParameter) determineWinner() {
+func (s *Service) updatePlayerRatings(param createMatchParameter, game game.Game) error {
+	for _, t := range param.Teams {
+		for _, playerId := range t.PlayerIDs {
+			_, err := s.playerService.UpdateRating(uint(playerId), game.ID, t.ratingDelta)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (p *createMatchParameter) calculateTeamElo(playerService *player.Service, gameID uint) {
+	rm := rating.NewRatedMatch()
+	for i, t := range p.Teams {
+		sum := 0
+		for _, pid := range t.PlayerIDs {
+			r, err := playerService.LoadRating(uint(pid), gameID)
+			if err != nil {
+				return
+			}
+			sum += r.Rating
+		}
+		avg := sum / len(t.PlayerIDs)
+
+		// The rating service expects a "rank" to sort players.
+		// Here we just use the negative score instead, should
+		// result in the same thing for most games..
+		rm.AddPlayer(i, -t.Score, avg)
+	}
+	rm.Calculate()
+
+	for i := range p.Teams {
+		p.Teams[i].ratingDelta = rm.GetRatingDelta(i)
+	}
+}
+
+func (p *createMatchParameter) determineWinner() {
 	highScore := 0
 	highScoreCount := 0
 	for _, t := range p.Teams {
@@ -43,9 +93,9 @@ func (p *CreateMatchParameter) determineWinner() {
 		}
 	}
 	if highScoreCount == 1 {
-		for _, t := range p.Teams {
-			if t.Score == highScore {
-				t.Winner = true
+		for i := range p.Teams {
+			if p.Teams[i].Score == highScore {
+				p.Teams[i].Winner = true
 			}
 		}
 	}
@@ -59,11 +109,12 @@ type MatchData struct {
 }
 
 type TeamData struct {
-	ID      uint         `json:"id"`
-	MatchID uint         `json:"matchId"`
-	Score   int          `json:"score"`
-	Winner  bool         `json:"winner"`
-	Players []PlayerData `json:"players"`
+	ID          uint         `json:"id"`
+	MatchID     uint         `json:"matchId"`
+	Score       int          `json:"score"`
+	Winner      bool         `json:"winner"`
+	RatingDelta int          `json:"ratingDelta"`
+	Players     []PlayerData `json:"players"`
 }
 
 type PlayerData struct {
@@ -72,24 +123,29 @@ type PlayerData struct {
 	ProjectID uint   `json:"projectId"`
 }
 
-func (s *Service) LoadByGameID(gameID uint) ([]MatchData, error) {
+func (s *Service) LoadMatchesByGameID(gameID uint) ([]MatchData, error) {
 	var matchDataList []MatchData
 
-	matches, err := s.repository.LoadByGameID(gameID)
+	matches, err := s.repository.loadByGameID(gameID)
 	for _, match := range matches {
-		matchData, err := s.LoadByID(match.ID)
+		matchData, err := s.LoadMatchByID(match.ID)
 		if err != nil {
 			return matchDataList, err
 		}
 		matchDataList = append(matchDataList, matchData)
 	}
 
+	// Sort matches by date.
+	sort.Slice(matchDataList, func(i, j int) bool {
+		return matchDataList[i].Date.After(matchDataList[j].Date)
+	})
+
 	return matchDataList, err
 }
 
-func (s *Service) LoadByID(id uint) (MatchData, error) {
+func (s *Service) LoadMatchByID(id uint) (MatchData, error) {
 	// 1. Get basic match data.
-	match, err := s.repository.LoadByID(id)
+	match, err := s.repository.loadByID(id)
 	if err != nil {
 		return MatchData{}, err
 	}
@@ -100,20 +156,21 @@ func (s *Service) LoadByID(id uint) (MatchData, error) {
 	}
 
 	// 2. Get data about teams.
-	teams, err := s.repository.LoadTeamsByMatchID(id)
+	teams, err := s.repository.loadTeamsByMatchID(id)
 	if err != nil {
 		return MatchData{}, err
 	}
 	for _, t := range teams {
 		teamData := TeamData{
-			ID:      t.ID,
-			MatchID: t.MatchID,
-			Score:   t.Score,
-			Winner:  t.Winner,
+			ID:          t.ID,
+			MatchID:     t.MatchID,
+			Score:       t.Score,
+			Winner:      t.Winner,
+			RatingDelta: t.RatingDelta,
 		}
 
 		// 3. Get data about players.
-		players, err := s.LoadPlayersByMatchIDAndTeamID(id, t.ID)
+		players, err := s.loadPlayersByMatchIDAndTeamID(id, t.ID)
 		if err != nil {
 			return MatchData{}, err
 		}
@@ -139,13 +196,13 @@ func (s *Service) LoadByID(id uint) (MatchData, error) {
 	return matchData, err
 }
 
-func (s *Service) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]compelo.Player, error) {
-	appearances, err := s.repository.LoadAppearancesByMatchIDAndTeamID(matchID, teamID)
+func (s *Service) loadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]player.Player, error) {
+	appearances, err := s.repository.loadAppearancesByMatchIDAndTeamID(matchID, teamID)
 	if err != nil {
 		return nil, err
 	}
 
-	var players []compelo.Player
+	var players []player.Player
 	for _, appearance := range appearances {
 		p, err := s.playerService.LoadPlayerByID(appearance.PlayerID)
 		if err != nil {

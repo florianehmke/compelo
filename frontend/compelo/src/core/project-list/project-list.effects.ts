@@ -14,6 +14,7 @@ import {
   selectProjectSuccess
 } from './project-list.actions';
 import { Router } from '@angular/router';
+import { storeToken } from '@shared/jwt';
 
 @Injectable()
 export class ProjectListEffects {
@@ -34,9 +35,9 @@ export class ProjectListEffects {
       ofType(selectProject),
       switchMap(action =>
         this.service.selectProject(action.payload).pipe(
-          tap(r => localStorage.setItem('compelo-token', r.token)),
+          tap(response => storeToken(response.token)),
           tap(() => delete action.payload.password),
-          map(r => selectProjectSuccess(action)),
+          map(() => selectProjectSuccess(action)),
           catchError(err => of(loadProjectsError(err)))
         )
       )

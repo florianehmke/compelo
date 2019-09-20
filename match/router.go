@@ -1,16 +1,17 @@
 package match
 
 import (
+	"errors"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 
-	"compelo"
 	"compelo/game"
 	"compelo/project"
 )
+
+const IDParam = "matchId"
 
 type Router struct {
 	s *Service
@@ -20,26 +21,46 @@ func NewRouter(s *Service) *Router {
 	return &Router{s}
 }
 
-type CreateMatchParameter struct {
-	Date   time.Time
-	GameID uint
+type createMatchParameter struct {
+	gameID uint      `json:"-"`
+	date   time.Time `json:"-"`
 
 	Teams []struct {
 		PlayerIDs []int `json:"playerIds" binding:"required"`
 		Score     int   `json:"score" binding:"required"`
-		Winner    bool  `json:"winner" binding:"required"`
+		Winner    bool  `json:"-"`
+
+		ratingDelta int `json:"-"`
 	} `json:"teams" binding:"required"`
 }
 
-func (p *CreateMatchParameter) validate() error {
+func (p *createMatchParameter) validate() error {
+	if len(p.Teams) < 2 {
+		return errors.New("at least two teams required")
+	}
+	teamSize := len(p.Teams[0].PlayerIDs)
+	for _, t := range p.Teams {
+		if len(t.PlayerIDs) != teamSize {
+			return errors.New("all teams need the same amount of players")
+		}
+	}
+	playerMap := map[int]bool{}
+	for _, t := range p.Teams {
+		for _, pid := range t.PlayerIDs {
+			if _, ok := playerMap[pid]; ok {
+				return errors.New("player can only be in one team")
+			}
+			playerMap[pid] = true
+		}
+	}
 	return nil
 }
 
 func (r *Router) Post(c *gin.Context) {
-	g := c.MustGet(game.Key).(compelo.Game)
-	p := c.MustGet(project.Key).(compelo.Project)
+	g := c.MustGet(game.Key).(game.Game)
+	p := c.MustGet(project.Key).(project.Project)
 
-	var param CreateMatchParameter
+	var param createMatchParameter
 	if err := c.Bind(&param); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -61,7 +82,7 @@ func (r *Router) Post(c *gin.Context) {
 		}
 	}
 
-	m, err := r.s.CreateMatch(param, g)
+	m, err := r.s.createMatch(param, g)
 	if err == nil {
 		c.JSON(http.StatusCreated, m)
 	} else {
@@ -69,26 +90,10 @@ func (r *Router) Post(c *gin.Context) {
 	}
 }
 
-func (r *Router) GetByID(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	}
-
-	m, err := r.s.LoadByID(uint(id))
-	if err == nil {
-		c.JSON(http.StatusOK, m)
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-	}
-}
-
 func (r *Router) GetAll(c *gin.Context) {
-	g := c.MustGet(game.Key).(compelo.Game)
+	g := c.MustGet(game.Key).(game.Game)
 
-	matches, err := r.s.LoadByGameID(g.ID)
+	matches, err := r.s.LoadMatchesByGameID(g.ID)
 	if err == nil {
 		c.JSON(http.StatusOK, matches)
 	} else {

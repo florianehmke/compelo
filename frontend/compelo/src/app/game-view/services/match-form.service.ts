@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 
 export interface MatchFormSettings {
-    teamCount: number;
-    teamSize: number;
+  teamCount: number;
+  teamSize: number;
 }
 
 @Injectable()
@@ -24,7 +29,7 @@ export class MatchFormService {
   private createTeamForm(teamSize: number): FormGroup {
     const playerArray = this.fb.array([]);
     for (let i = 0; i < teamSize; i++) {
-      playerArray.push(new FormControl());
+      playerArray.push(new FormControl(null, Validators.required));
     }
 
     return this.fb.group({

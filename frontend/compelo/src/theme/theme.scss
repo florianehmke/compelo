@@ -1,3 +1,7 @@
-body {
-  background-color: aliceblue;
+.header {
+  background-color: $compelo_primary;
+}
+
+.icon-btn:hover {
+  color: $compelo_gray;
 }

@@ -7,8 +7,7 @@ import { Team } from '@shared/models';
 export class TeamPipe implements PipeTransform {
   transform(team: Team, ...args: any[]): string {
     if (team) {
-      const players = team.players.map(p => p.name).join(',');
-      return `${players} (${team.score})`;
+      return team.players.map(p => p.name).join(', ');
     }
     return '';
   }

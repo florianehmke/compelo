@@ -1,1 +1,16 @@
+// Theme Variables
+$compelo_primary: #083D77;
+$compelo_secondary: #4B719C;
+$compelo_red: #FF6978;
+$compelo_light: #F4F4F4;
+$compelo_gray: #6B8AAE;
+
+// Override Bootstrap variables
+$primary: $compelo_primary;
+$secondary: $compelo_secondary;
+$body-bg: $compelo_light;
+$body-color: $compelo_primary;
+$text-muted: $compelo_gray;
+
+// Bootstrap Settings
 $enable-rounded: false;

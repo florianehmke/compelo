@@ -1,26 +1,28 @@
 import { Component } from '@angular/core';
+import { getSelectedGame, State as ProjectState } from '@core/project';
+import { State as ProjectListState } from '@core/project';
+
+import { Store } from '@ngrx/store';
+import { getSelectedProject } from '@core/project-list';
 
 @Component({
   selector: 'app-root',
   template: `
-    <div class="header lead"><a [routerLink]="['/']">> compelo</a></div>
+    <app-header
+      [game]="game$ | async"
+      [project]="project$ | async"
+    ></app-header>
     <div class="container">
       <router-outlet></router-outlet>
     </div>
-  `,
-
-  styles: [
-    `
-      .header {
-        height: 48px;
-        padding: 8px;
-        background-color: cornflowerblue;
-        margin-bottom: 32px;
-      }
-      a {
-        color: white;
-      }
-    `
-  ]
+  `
 })
-export class AppComponent {}
+export class AppComponent {
+  game$ = this.projectStore.select(getSelectedGame);
+  project$ = this.projectStore.select(getSelectedProject);
+
+  constructor(
+    private projectStore: Store<ProjectState>,
+    private projectListStore: Store<ProjectListState>
+  ) {}
+}

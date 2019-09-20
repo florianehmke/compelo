@@ -5,6 +5,7 @@ import { CreateProjectPayload } from '@core/project-list';
 @Component({
   selector: 'app-player-create',
   template: `
+    <p class="lead">Create Player</p>
     <form (ngSubmit)="onSubmit(form.value); form.reset()" #form="ngForm">
       <div class="row">
         <div class="col-8">
@@ -18,14 +19,14 @@ import { CreateProjectPayload } from '@core/project-list';
           />
         </div>
         <div class="col-4">
-          <button
+          <app-button
+            class="w-100"
             type="submit"
-            class="w-100 btn btn-success"
-            [class.disabled]="!form.form.valid"
+            icon="plus"
             [disabled]="!form.form.valid"
+            label="Create"
           >
-            Create
-          </button>
+          </app-button>
         </div>
       </div>
     </form>
