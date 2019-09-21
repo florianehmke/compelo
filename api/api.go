@@ -1,20 +1,20 @@
 package api
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"compelo/db"
+	"compelo/frontend"
 	"compelo/game"
 	"compelo/match"
 	"compelo/player"
 	"compelo/project"
 	"compelo/stats"
 )
-
-const frontendPath = "./frontend/compelo/dist/compelo/"
 
 func Setup(dbPath string) *gin.Engine {
 	database := db.New(dbPath)
@@ -42,11 +42,18 @@ func createRouter(
 	statsRouter *stats.Router,
 ) *gin.Engine {
 	engine := gin.Default()
-	engine.Static("/app", frontendPath)
-	engine.NoRoute(func(c *gin.Context) { c.File(frontendPath + "index.html") })
+
+	// Frontend, embedded in vfs
+	engine.StaticFS("/app", frontend.Frontend)
+	engine.NoRoute(func(c *gin.Context) {
+		c.Request.URL.Path = "/" // -> let frontend handle route
+		http.FileServer(frontend.Frontend).ServeHTTP(c.Writer, c.Request)
+	})
 
 	r := engine.Group("/api")
+	r.Use(createCORSMiddleware())
 
+	// Projects
 	r.POST("/create-project", projectRouter.CreateProject)
 	r.POST("/select-project", projectRouter.SelectProject)
 	r.GET("/projects", projectRouter.GetAll)

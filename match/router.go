@@ -22,15 +22,15 @@ func NewRouter(s *Service) *Router {
 }
 
 type createMatchParameter struct {
-	gameID uint      `json:"-"`
-	date   time.Time `json:"-"`
+	gameID uint
+	date   time.Time
 
 	Teams []struct {
 		PlayerIDs []int `json:"playerIds" binding:"required"`
 		Score     int   `json:"score" binding:"required"`
 		Winner    bool  `json:"-"`
 
-		ratingDelta int `json:"-"`
+		ratingDelta int
 	} `json:"teams" binding:"required"`
 }
 
