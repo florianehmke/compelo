@@ -14,6 +14,8 @@ import (
 	"compelo/stats"
 )
 
+const frontendPath = "./frontend/compelo/dist/compelo/"
+
 func Setup(dbPath string) *gin.Engine {
 	database := db.New(dbPath)
 
@@ -40,9 +42,11 @@ func createRouter(
 	statsRouter *stats.Router,
 ) *gin.Engine {
 	engine := gin.Default()
-	engine.Use(createCORSMiddleware())
+	engine.Static("/app", frontendPath)
+	engine.NoRoute(func(c *gin.Context) { c.File(frontendPath + "index.html") })
 
 	r := engine.Group("/api")
+
 	r.POST("/create-project", projectRouter.CreateProject)
 	r.POST("/select-project", projectRouter.SelectProject)
 	r.GET("/projects", projectRouter.GetAll)
