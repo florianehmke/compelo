@@ -1,5 +1,10 @@
 .PHONY: frontend compelo
 
+TAG?=$(shell git describe --tags)
+export TAG
+export GOOS=linux
+export GOARCH=amd64
+
 GOCMD := go
 EXECUTEABLE := compelo
 FRONTEND_PATH := frontend/compelo
@@ -29,6 +34,15 @@ frontend: frontend-prepare frontend-build
 build: frontend
 	$(GOCMD) generate ./db
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
+
+build-docker:
+	docker build \
+	 	-t florianehmke/compelo:latest \
+	 	-t florianehmke/compelo:$(TAG) .
+
+push-docker: build-docker
+	docker push florianehmke/compelo:latest
+	docker push florianehmke/compelo:$(TAG)
 
 clean:
 	rm -f $(EXECUTEABLE)
