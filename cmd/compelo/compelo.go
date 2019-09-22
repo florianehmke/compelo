@@ -35,5 +35,5 @@ func main() {
 		log.Println("Using default value instead: '8080'.")
 	}
 
-	log.Fatal(api.Setup(dbPath, secret).Run(":" + port))
+	log.Fatal(api.Setup(dbPath, secret, dev).Run(":" + port))
 }

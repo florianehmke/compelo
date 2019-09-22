@@ -16,7 +16,7 @@ import (
 	"compelo/stats"
 )
 
-func Setup(dbPath string, secret string) *gin.Engine {
+func Setup(dbPath string, secret string, dev bool) *gin.Engine {
 	database := db.New(dbPath)
 
 	projectService := project.NewService(database)
@@ -31,6 +31,7 @@ func Setup(dbPath string, secret string) *gin.Engine {
 		match.NewRouter(matchService),
 		game.NewRouter(gameService),
 		stats.NewRouter(statsService),
+		dev,
 	)
 }
 
@@ -40,6 +41,7 @@ func createRouter(
 	matchRouter *match.Router,
 	gameRouter *game.Router,
 	statsRouter *stats.Router,
+	withCORS bool,
 ) *gin.Engine {
 	engine := gin.Default()
 
@@ -51,7 +53,9 @@ func createRouter(
 	})
 
 	r := engine.Group("/api")
-	r.Use(createCORSMiddleware())
+	if withCORS {
+		r.Use(createCORSMiddleware())
+	}
 
 	// Projects
 	r.POST("/create-project", projectRouter.CreateProject)
