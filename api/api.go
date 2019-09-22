@@ -41,8 +41,12 @@ func createRouter(
 	matchRouter *match.Router,
 	gameRouter *game.Router,
 	statsRouter *stats.Router,
-	withCORS bool,
+	dev bool,
 ) *gin.Engine {
+	if !dev {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	engine := gin.Default()
 
 	// Frontend, embedded in vfs
@@ -53,7 +57,7 @@ func createRouter(
 	})
 
 	r := engine.Group("/api")
-	if withCORS {
+	if dev {
 		r.Use(createCORSMiddleware())
 	}
 

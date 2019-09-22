@@ -27,6 +27,7 @@ frontend: frontend-prepare frontend-build
 	$(GOCMD) generate ./frontend
 
 build: frontend
+	$(GOCMD) generate ./db
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
 
 clean:

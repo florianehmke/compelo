@@ -1,3 +1,4 @@
+//go:generate go run scripts_generate.go
 package db
 
 import (
@@ -28,11 +29,15 @@ func New(dbPath string) *DB {
 	db.Exec("PRAGMA foreign_keys = ON")
 	db.LogMode(false)
 
-	query, err := ioutil.ReadFile("db/schema.sql")
+	f, err := Scripts.Open("schema.sql")
 	if err != nil {
 		panic(err)
 	}
-	db.Exec(string(query))
+	schema, err := ioutil.ReadAll(f)
+	if err != nil {
+		panic(err)
+	}
+	db.Exec(string(schema))
 
 	return &DB{db}
 }
