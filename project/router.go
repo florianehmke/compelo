@@ -20,16 +20,41 @@ const (
 	nameKey = "projectName"
 )
 
+type JWTConfig struct {
+	Secret        string
+	Realm         string
+	TimeoutSec    int
+	MaxRefreshSec int
+}
+
+func DefaultJWTConfig() JWTConfig {
+	return JWTConfig{
+		Realm:         "compelo",
+		TimeoutSec:    60 * 60,
+		MaxRefreshSec: 60 * 60,
+	}
+}
+
+func (c JWTConfig) WithSecret(secret string) JWTConfig {
+	c.Secret = secret
+	return c
+}
+
 type Router struct {
 	s   *Service
 	jwt *jwt.GinJWTMiddleware
 }
 
-func NewRouter(s *Service, secret string) *Router {
-	return &Router{s, createMiddleware(s, secret)}
+func NewRouter(s *Service, config JWTConfig) *Router {
+	return &Router{s, createMiddleware(s, config)}
 }
 
 type createProjectParameter struct {
+	Name     string `json:"name" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type selectProjectParameter struct {
 	Name     string `json:"name" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
@@ -61,12 +86,12 @@ func (r *Router) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, r.s.LoadProjects())
 }
 
-func createMiddleware(s *Service, secret string) *jwt.GinJWTMiddleware {
+func createMiddleware(s *Service, config JWTConfig) *jwt.GinJWTMiddleware {
 	mw, err := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:       "compelo",
-		Key:         []byte(secret),
-		Timeout:     time.Hour * 24,
-		MaxRefresh:  time.Hour * 24,
+		Realm:       config.Realm,
+		Key:         []byte(config.Secret),
+		Timeout:     time.Second * time.Duration(config.TimeoutSec),
+		MaxRefresh:  time.Second * time.Duration(config.MaxRefreshSec),
 		IdentityKey: idKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if p, ok := data.(*Project); ok {
@@ -87,18 +112,15 @@ func createMiddleware(s *Service, secret string) *jwt.GinJWTMiddleware {
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var body struct {
-				Name     string `json:"name" binding:"required"`
-				Password string `json:"password" binding:"required"`
-			}
-			if err := c.ShouldBind(&body); err != nil {
+			var param selectProjectParameter
+			if err := c.ShouldBind(&param); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
-			p, err := s.LoadByName(body.Name)
+			p, err := s.LoadByName(param.Name)
 			if err != nil {
 				return nil, jwt.ErrFailedAuthentication
 			}
-			err = bcrypt.CompareHashAndPassword(p.PasswordHash, []byte(body.Password))
+			err = bcrypt.CompareHashAndPassword(p.PasswordHash, []byte(param.Password))
 			if err != nil {
 				return nil, jwt.ErrFailedAuthentication
 			}

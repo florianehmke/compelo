@@ -16,7 +16,7 @@ import (
 	"compelo/stats"
 )
 
-func Setup(dbPath, secret string) *gin.Engine {
+func Setup(dbPath string, secret string) *gin.Engine {
 	database := db.New(dbPath)
 
 	projectService := project.NewService(database)
@@ -26,7 +26,7 @@ func Setup(dbPath, secret string) *gin.Engine {
 	statsService := stats.NewService(database, playerService)
 
 	return createRouter(
-		project.NewRouter(projectService, secret),
+		project.NewRouter(projectService, project.DefaultJWTConfig().WithSecret(secret)),
 		player.NewRouter(playerService),
 		match.NewRouter(matchService),
 		game.NewRouter(gameService),

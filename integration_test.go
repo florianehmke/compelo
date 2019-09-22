@@ -120,7 +120,8 @@ func TestAPI(t *testing.T) {
 		},
 	}
 
-	ts := newTestSuite(t, api.Setup("file::memory:"), testData)
+	ts := newTestSuite(t, api.Setup("file::memory:", "test"), testData)
+
 	ts.createProject()
 	ts.listProjects()
 	ts.selectProject()
