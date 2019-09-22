@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Player } from '@shared/models';
-import { CreateProjectPayload } from '@core/project-list';
 
 @Component({
   selector: 'app-player-create',
   template: `
     <p class="lead">Create Player</p>
-    <form (ngSubmit)="onSubmit(form.value); form.reset()" #form="ngForm">
+    <form (ngSubmit)="onSubmit(); form.reset()" #form="ngForm">
       <div class="row">
         <div class="col-8">
           <input
@@ -38,7 +37,7 @@ export class PlayerCreateComponent {
 
   name: string;
 
-  onSubmit(value: CreateProjectPayload) {
-    this.playerCreated.emit(value);
+  onSubmit() {
+    this.playerCreated.emit({ name: this.name });
   }
 }

@@ -2,8 +2,6 @@
 
 TAG?=$(shell git describe --tags)
 export TAG
-export GOOS=linux
-export GOARCH=amd64
 
 GOCMD := go
 EXECUTEABLE := compelo

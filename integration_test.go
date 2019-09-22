@@ -165,8 +165,8 @@ func (s *testSuite) listProjects() {
 
 func (s *testSuite) selectProject() {
 	b := gin.H{
-		"name":     s.testData.projectName,
-		"password": s.testData.projectPW,
+		"projectName": s.testData.projectName,
+		"password":    s.testData.projectPW,
 	}
 	w := s.requestWithBody("POST", "/api/select-project", b)
 

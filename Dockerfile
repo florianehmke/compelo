@@ -9,6 +9,7 @@ RUN set -e \
 
 COPY Makefile go.mod go.sum /usr/src/
 COPY api /usr/src/api
+COPY auth /usr/src/auth
 COPY cmd /usr/src/cmd
 COPY db /usr/src/db
 COPY frontend /usr/src/frontend
@@ -20,6 +21,9 @@ COPY rating /usr/src/rating
 COPY stats /usr/src/stats
 
 WORKDIR /usr/src
+
+ENV GOOS=linux
+ENV GOARCH=amd64
 RUN make
 
 ### APP Image

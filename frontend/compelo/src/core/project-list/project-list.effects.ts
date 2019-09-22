@@ -37,7 +37,14 @@ export class ProjectListEffects {
         this.service.selectProject(action.payload).pipe(
           tap(response => storeToken(response.token)),
           tap(() => delete action.payload.password),
-          map(() => selectProjectSuccess(action)),
+          map(() =>
+            selectProjectSuccess({
+              payload: {
+                id: action.payload.projectId,
+                name: action.payload.projectName
+              }
+            })
+          ),
           catchError(err => of(loadProjectsError(err)))
         )
       )
@@ -53,8 +60,9 @@ export class ProjectListEffects {
             createProjectSuccess({ payload: createdProject }),
             selectProject({
               payload: {
-                ...action.payload,
-                id: createdProject.id
+                password: action.payload.password,
+                projectName: action.payload.name,
+                projectId: createdProject.id
               }
             })
           ]),

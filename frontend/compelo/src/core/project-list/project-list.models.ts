@@ -4,11 +4,7 @@ export interface CreateProjectPayload {
 }
 
 export interface SelectProjectPayload {
-    id?: number;
-    name: string;
+    projectId: number;
+    projectName: string;
     password: string;
-}
-
-export interface TokenPayload {
-    token: string;
 }

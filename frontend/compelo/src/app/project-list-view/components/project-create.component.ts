@@ -5,7 +5,7 @@ import { CreateProjectPayload } from '@core/project-list';
   selector: 'app-project-create',
   template: `
     <p class="lead">Create / Select Project</p>
-    <form (ngSubmit)="onSubmit(form.value); form.reset()" #form="ngForm">
+    <form (ngSubmit)="onSubmit(); form.reset()" #form="ngForm">
       <div class="row">
         <div class="col-5">
           <input
@@ -48,7 +48,10 @@ export class ProjectCreateComponent {
   name: string;
   password: string;
 
-  onSubmit(value: CreateProjectPayload) {
-    this.projectCreated.emit(value);
+  onSubmit() {
+    this.projectCreated.emit({
+      name: this.name,
+      password: this.password
+    });
   }
 }

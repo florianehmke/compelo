@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Game } from '@shared/models';
-import { CreateProjectPayload } from '@core/project-list';
 
 @Component({
   selector: 'app-game-create',
@@ -8,7 +7,7 @@ import { CreateProjectPayload } from '@core/project-list';
     <p class="lead">
       Create / Select Game
     </p>
-    <form (ngSubmit)="onSubmit(form.value); form.reset()" #form="ngForm">
+    <form (ngSubmit)="onSubmit(); form.reset()" #form="ngForm">
       <div class="row">
         <div class="col-8">
           <input
@@ -40,7 +39,7 @@ export class GameCreateComponent {
 
   name: string;
 
-  onSubmit(value: CreateProjectPayload) {
-    this.gameCreated.emit(value);
+  onSubmit() {
+    this.gameCreated.emit({ name: this.name });
   }
 }
