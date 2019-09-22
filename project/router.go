@@ -25,8 +25,8 @@ type Router struct {
 	jwt *jwt.GinJWTMiddleware
 }
 
-func NewRouter(s *Service) *Router {
-	return &Router{s, createMiddleware(s)}
+func NewRouter(s *Service, secret string) *Router {
+	return &Router{s, createMiddleware(s, secret)}
 }
 
 type createProjectParameter struct {
@@ -61,10 +61,10 @@ func (r *Router) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, r.s.LoadProjects())
 }
 
-func createMiddleware(s *Service) *jwt.GinJWTMiddleware {
+func createMiddleware(s *Service, secret string) *jwt.GinJWTMiddleware {
 	mw, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "compelo",
-		Key:         []byte("secret key"), // FIXME export
+		Key:         []byte(secret),
 		Timeout:     time.Hour * 24,
 		MaxRefresh:  time.Hour * 24,
 		IdentityKey: idKey,
