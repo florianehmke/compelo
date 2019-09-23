@@ -7,7 +7,7 @@ import { CreateProjectPayload } from '@core/project-list';
     <p class="lead">Create / Select Project</p>
     <form (ngSubmit)="onSubmit(); form.reset()" #form="ngForm">
       <div class="row">
-        <div class="col-5">
+        <div class="col-md-5">
           <input
             type="text"
             placeholder="Project Name"
@@ -17,7 +17,7 @@ import { CreateProjectPayload } from '@core/project-list';
             [(ngModel)]="name"
           />
         </div>
-        <div class="col-5">
+        <div class="col-md-5">
           <input
             type="password"
             placeholder="Password"
@@ -27,7 +27,7 @@ import { CreateProjectPayload } from '@core/project-list';
             [(ngModel)]="password"
           />
         </div>
-        <div class="col-2">
+        <div class="col-md-2">
           <app-button
             class="w-100"
             type="submit"

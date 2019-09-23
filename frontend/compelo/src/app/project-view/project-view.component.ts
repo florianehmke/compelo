@@ -12,14 +12,14 @@ import { Game, Player } from '@shared/models';
 @Component({
   template: `
     <div class="row">
-      <div class="col">
+      <div class="col-md-6 mb-3">
         <app-game-create
           (gameCreated)="onGameCreated($event)"
         ></app-game-create>
         <hr />
         <app-game-list [games]="games$ | async"></app-game-list>
       </div>
-      <div class="col">
+      <div class="col-md-6">
         <app-player-create
           (playerCreated)="onPlayerCreated($event)"
         ></app-player-create>
