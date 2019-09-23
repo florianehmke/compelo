@@ -28,7 +28,8 @@ export class ProjectService {
   }
 
   createMatch(payload: CreateMatchPayload, gameID: number): Observable<Match> {
-    return this.http.post<Match>(`${this.baseUrl}/games/${gameID}/matches`, payload);
+    const url = `${this.baseUrl}/games/${gameID}/matches`;
+    return this.http.post<Match>(url, payload);
   }
 
   getMatches(gameID: number): Observable<Match[]> {

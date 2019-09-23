@@ -1,11 +1,16 @@
-import {HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, throwError} from 'rxjs';
-import {loadToken, removeToken, storeToken} from '@shared/jwt';
-import {catchError, filter, switchMap, take} from 'rxjs/operators';
-import {AuthService} from '@core/auth.service';
-import {TokenPayload} from '@shared/models';
-import {Router} from '@angular/router';
+import {
+  HttpErrorResponse,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { loadToken, removeToken, storeToken } from '@shared/jwt';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { AuthService } from '@core/auth.service';
+import { TokenPayload } from '@shared/models';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

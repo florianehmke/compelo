@@ -29,7 +29,8 @@ import { Game, Project } from '@shared/models';
         padding: 8px;
         margin-bottom: 32px;
       }
-      a, span {
+      a,
+      span {
         color: white;
       }
     `
