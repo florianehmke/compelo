@@ -16,6 +16,8 @@ import {
 import { Router } from '@angular/router';
 import { storeToken } from '@shared/jwt';
 
+import { AuthService } from '../auth.service';
+
 @Injectable()
 export class ProjectListEffects {
   loadProjects$ = createEffect(() =>
@@ -34,7 +36,7 @@ export class ProjectListEffects {
     this.actions$.pipe(
       ofType(selectProject),
       switchMap(action =>
-        this.service.selectProject(action.payload).pipe(
+        this.authService.projectLogin(action.payload).pipe(
           tap(response => storeToken(response.token)),
           tap(() => delete action.payload.password),
           map(() =>
@@ -84,6 +86,7 @@ export class ProjectListEffects {
   constructor(
     private actions$: Actions,
     private service: ProjectListService,
+    private authService: AuthService,
     private router: Router
   ) {}
 }

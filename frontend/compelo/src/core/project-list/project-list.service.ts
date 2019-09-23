@@ -18,8 +18,4 @@ export class ProjectListService {
   createProject(project: CreateProjectPayload): Observable<Project> {
     return this.http.post<Project>(`${this.baseUrl}/create-project`, project);
   }
-
-  selectProject(req: AuthRequest): Observable<TokenPayload> {
-    return this.http.post<TokenPayload>(`${this.baseUrl}/select-project`, req);
-  }
 }
