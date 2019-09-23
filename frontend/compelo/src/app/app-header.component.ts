@@ -4,22 +4,33 @@ import { Game, Project } from '@shared/models';
 @Component({
   selector: 'app-header',
   template: `
-    <div class="header lead">
-      <a [routerLink]="['/']">
-        > compelo
-      </a>
-      <ng-container *ngIf="project">
-        <span>> </span>
-        <a [routerLink]="['project-view', project?.id]">
-          {{ project?.name }}
+    <div class="header lead d-flex justify-content-between">
+      <div>
+        <a [routerLink]="['/']">
+          > compelo
         </a>
-      </ng-container>
-      <ng-container *ngIf="game && project">
-        <span>> </span>
-        <a [routerLink]="['project-view', project?.id, 'game', game?.id]">
-          {{ game?.name }}
+        <ng-container *ngIf="project">
+          <span>> </span>
+          <a [routerLink]="['project-view', project?.id]">
+            {{ project?.name }}
+          </a>
+        </ng-container>
+        <ng-container *ngIf="game && project">
+          <span>> </span>
+          <a [routerLink]="['project-view', project?.id, 'game', game?.id]">
+            {{ game?.name }}
+          </a>
+        </ng-container>
+      </div>
+      <div class="mr-3">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/florianehmke/compelo"
+        >
+          <app-icon button="true" icon="github" prefix="fab"></app-icon>
         </a>
-      </ng-container>
+      </div>
     </div>
   `,
   styles: [

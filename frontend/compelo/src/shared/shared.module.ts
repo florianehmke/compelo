@@ -27,4 +27,4 @@ const modules: any = [
   declarations: [],
   providers: []
 })
-export class SharedModuleModule {}
+export class SharedModule {}

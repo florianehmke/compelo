@@ -9,6 +9,7 @@ import {
   faTimes,
   faWrench
 } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import { IconComponent } from './icon.component';
 
@@ -20,6 +21,6 @@ import { IconComponent } from './icon.component';
 })
 export class IconModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faWrench, faSave, faTimes, faPlus);
+    library.addIcons(faWrench, faSave, faTimes, faPlus, faGithub);
   }
 }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModuleModule } from '@shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 
 import { ProjectListViewComponent } from './project-list-view.component';
 import { ProjectListViewRoutingModule } from './project-list-view-routing.module';
@@ -9,6 +9,6 @@ import { components, entryComponents } from './components';
   declarations: [ProjectListViewComponent, ...components],
   exports: [],
   entryComponents: [...entryComponents],
-  imports: [SharedModuleModule, ProjectListViewRoutingModule]
+  imports: [SharedModule, ProjectListViewRoutingModule]
 })
 export class ProjectListViewModule {}
