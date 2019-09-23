@@ -4,7 +4,8 @@ import {
   loadGamesSuccess,
   loadMatchesSuccess,
   loadPlayersWithStatsSuccess,
-  loadPlayersSuccess
+  loadPlayersSuccess,
+  filterMatches
 } from './project.actions';
 
 export const FEATURE_KEY = 'project';
@@ -14,13 +15,15 @@ export interface State {
   players: Player[];
   playersWithStats: Player[];
   matches: Match[];
+  matchFilter: string;
 }
 
 export const initialState: State = {
   games: [],
   players: [],
   playersWithStats: [],
-  matches: []
+  matches: [],
+  matchFilter: ''
 };
 
 const projectReducer = createReducer(
@@ -40,6 +43,10 @@ const projectReducer = createReducer(
   on(loadMatchesSuccess, (state, action) => ({
     ...state,
     matches: action.payload
+  })),
+  on(filterMatches, (state, action) => ({
+    ...state,
+    matchFilter: action.payload.filter
   }))
 );
 

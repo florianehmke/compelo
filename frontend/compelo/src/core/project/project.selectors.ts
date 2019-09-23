@@ -30,5 +30,13 @@ export const getPlayersWithStats = createSelector(
 
 export const getMatches = createSelector(
   getProjectState,
-  (state: State) => state.matches
+  (state: State) =>
+    state.matches.filter(match => {
+      const searchTerm = state.matchFilter.toLowerCase();
+      return match.teams.some(team => {
+        return team.players.some(player => {
+          return player.name.toLowerCase().includes(searchTerm);
+        });
+      });
+    })
 );

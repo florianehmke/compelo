@@ -1,10 +1,18 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Match } from '@shared/models';
 
 @Component({
   selector: 'app-match-list',
   template: `
-    <p class="lead">Recent Matches</p>
+    <div class="d-flex justify-content-between">
+      <p class="lead">Recent Matches</p>
+      <input
+        type="text"
+        class="form-control-sm"
+        placeholder="Filter by Player"
+        (input)="filterChange.emit($event.target.value)"
+      />
+    </div>
     <table class="table table-bordered bg-white">
       <tbody>
         <tr *ngFor="let match of matches | slice: from():to()">
@@ -61,6 +69,9 @@ import { Match } from '@shared/models';
 export class MatchListComponent {
   @Input()
   matches: Match[];
+
+  @Output()
+  filterChange = new EventEmitter<string>();
 
   page = 1;
   pageSize = 7;
