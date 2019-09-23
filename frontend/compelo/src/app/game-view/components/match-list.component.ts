@@ -45,6 +45,8 @@ import { Match } from '@shared/models';
     <ngb-pagination
       [(page)]="page"
       [pageSize]="pageSize"
+      [maxSize]="5"
+      [boundaryLinks]="false"
       [collectionSize]="matches.length"
     ></ngb-pagination>
   `,
