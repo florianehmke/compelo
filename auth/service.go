@@ -25,8 +25,8 @@ type Config struct {
 func DefaultConfig() Config {
 	return Config{
 		Realm:         "compelo",
-		TimeoutSec:    60 * 60,
-		MaxRefreshSec: 60 * 60,
+		TimeoutSec:    60,
+		MaxRefreshSec: 60 * 30,
 	}
 }
 

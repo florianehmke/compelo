@@ -10,6 +10,7 @@ import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { ProjectListModule } from './project-list/project-list.module';
 import { ProjectModule } from './project/project.module';
 import { AuthInterceptor } from './auth.interceptor';
+import { AuthService } from './auth.service';
 
 export function logger(reducer: ActionReducer<any>): any {
   return storeLogger()(reducer);
@@ -27,6 +28,7 @@ export const metaReducers = environment.production ? [] : [logger];
     ProjectModule
   ],
   providers: [
+    AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

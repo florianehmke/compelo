@@ -12,7 +12,8 @@ export class ProjectViewGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (tokenForProjectIdExists(parseInt(route.paramMap.get('projectId'), 10))) {
+    const projectId = parseInt(route.paramMap.get('projectId'), 10);
+    if (tokenForProjectIdExists(projectId)) {
       return true;
     }
     console.warn('token does not belong to project');

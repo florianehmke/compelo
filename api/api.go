@@ -52,6 +52,7 @@ func Setup(dbPath string, secret string, dev bool) *gin.Engine {
 
 	// API
 	r := engine.Group("/api")
+	r.GET("/refresh", authMW.RefreshHandler)
 
 	// Projects
 	r.POST("/create-project", projectRouter.CreateProject)

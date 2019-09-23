@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModuleModule } from '@shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 
 import { ProjectViewComponent } from './project-view.component';
 import { ProjectViewRoutingModule } from './project-view-routing.module';
@@ -10,6 +10,6 @@ import { components } from './components';
   declarations: [ProjectViewComponent, ...components],
   exports: [],
   providers: [ProjectViewGuard],
-  imports: [SharedModuleModule, ProjectViewRoutingModule]
+  imports: [SharedModule, ProjectViewRoutingModule]
 })
 export class ProjectViewModule {}

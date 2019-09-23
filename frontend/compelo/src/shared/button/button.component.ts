@@ -13,8 +13,10 @@ export type ButtonStyle = 'primary' | 'success' | 'danger';
       [disabled]="disabled"
       [class.disabled]="disabled"
     >
-      {{ label }}
-      <app-icon *ngIf="icon" [icon]="icon" class="ml-1"></app-icon>
+      <span class="text-nowrap"
+        >{{ label }}
+        <app-icon *ngIf="icon" [icon]="icon" class="ml-1"></app-icon>
+      </span>
     </button>
   `
 })

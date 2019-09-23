@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {
   createMatch,
   CreateMatchPayload,
+  filterMatches,
   getMatches,
   getPlayers,
   getPlayersWithStats,
@@ -35,7 +36,10 @@ import {
     <hr />
     <div class="row">
       <div class="col-md-7" *ngIf="matches$ | async as matches">
-        <app-match-list [matches]="matches"></app-match-list>
+        <app-match-list
+          [matches]="matches"
+          (filterChange)="onFilterChange($event)"
+        ></app-match-list>
       </div>
       <div class="col-md-5" *ngIf="playersWithStats$ | async as players">
         <app-leaderboard [players]="players"></app-leaderboard>
@@ -62,5 +66,9 @@ export class GameViewComponent {
 
   onMatchCreated(payload: CreateMatchPayload) {
     this.store.dispatch(createMatch({ payload }));
+  }
+
+  onFilterChange(filter: string) {
+    this.store.dispatch(filterMatches({ payload: { filter } }));
   }
 }
