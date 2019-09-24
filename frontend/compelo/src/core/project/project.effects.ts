@@ -1,18 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+  catchError,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { of } from 'rxjs';
+import { ToastService } from '@shared/toast';
 
 import { ProjectService } from './project.service';
 import {
   createGame,
   createGameError,
+  createGameSuccess,
   createMatch,
   createMatchError,
   createMatchSuccess,
   createPlayer,
   createPlayerError,
+  createPlayerSuccess,
   loadGames,
   loadGamesError,
   loadGamesSuccess,
@@ -48,7 +57,10 @@ export class ProjectEffects {
       ofType(createGame),
       switchMap(action =>
         this.service.createGame(action.payload).pipe(
-          map(() => loadGames()),
+          switchMap(response => [
+            createGameSuccess({ payload: response }),
+            loadGames()
+          ]),
           catchError(err => of(createGameError(err)))
         )
       )
@@ -84,7 +96,10 @@ export class ProjectEffects {
       ofType(createPlayer),
       switchMap(action =>
         this.service.createPlayer(action.payload).pipe(
-          map(() => loadPlayers()),
+          switchMap(response => [
+            createPlayerSuccess({ payload: response }),
+            loadPlayers()
+          ]),
           catchError(err => of(createPlayerError(err)))
         )
       )
@@ -120,9 +135,19 @@ export class ProjectEffects {
     )
   );
 
+  notifications$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(createMatchSuccess, createPlayerSuccess, createGameSuccess),
+        tap(action => this.toastService.success('Created!'))
+      ),
+    { dispatch: false }
+  );
+
   constructor(
     private actions$: Actions,
     private service: ProjectService,
-    private store: Store<State>
+    private store: Store<State>,
+    private toastService: ToastService
   ) {}
 }

@@ -79,6 +79,7 @@ export class MatchCreateComponent {
     if (this.formGroup.valid) {
       const value: CreateMatchPayload = this.formGroup.value;
       this.matchCreated.emit(value);
+      this.formGroup.reset();
     }
   }
 
