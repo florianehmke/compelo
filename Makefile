@@ -33,6 +33,9 @@ build: frontend
 	$(GOCMD) generate ./db
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
 
+build-dev:
+	$(GOCMD) build -o $(EXECUTEABLE) -tags=dev ./cmd/compelo
+
 build-docker:
 	docker build \
 	 	-t florianehmke/compelo:latest \
