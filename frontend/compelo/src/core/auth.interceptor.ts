@@ -11,10 +11,15 @@ import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@core/auth.service';
 import { TokenPayload } from '@shared/models';
 import { Router } from '@angular/router';
+import { ToastService } from '@shared/toast';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
   private isRefreshing = false;
   private refreshTokenSubject = new BehaviorSubject<any>(null);
@@ -62,8 +67,8 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleFailedRefresh() {
-    console.log('refresh failed, removing token');
     removeToken();
+    this.toastService.danger('Token expired! Login again..');
     this.router.navigate(['/']);
   }
 

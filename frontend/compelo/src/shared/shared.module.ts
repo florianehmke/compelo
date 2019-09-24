@@ -9,16 +9,23 @@ import {
 import { ListGroupModule } from './list-group/list-group.module';
 import { IconModule } from './icon/icon.module';
 import { ButtonModule } from './button/button.module';
+import { ToastModule } from './toast/toast.module';
 
 const modules: any = [
+  // angular
   CommonModule,
   FormsModule,
   ReactiveFormsModule,
+
+  // ng-bootstrap
   NgbModalModule,
   NgbPaginationModule,
+
+  // custom
   ButtonModule,
   IconModule,
-  ListGroupModule
+  ListGroupModule,
+  ToastModule
 ];
 
 @NgModule({

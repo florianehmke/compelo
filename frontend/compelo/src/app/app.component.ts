@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { getSelectedGame, State as ProjectState } from '@core/project';
-import { State as ProjectListState } from '@core/project';
 
 import { Store } from '@ngrx/store';
 import { getSelectedProject } from '@core/project-list';
@@ -8,6 +7,7 @@ import { getSelectedProject } from '@core/project-list';
 @Component({
   selector: 'app-root',
   template: `
+    <app-toast></app-toast>
     <app-header
       [game]="game$ | async"
       [project]="project$ | async"
@@ -21,8 +21,5 @@ export class AppComponent {
   game$ = this.projectStore.select(getSelectedGame);
   project$ = this.projectStore.select(getSelectedProject);
 
-  constructor(
-    private projectStore: Store<ProjectState>,
-    private projectListStore: Store<ProjectListState>
-  ) {}
+  constructor(private projectStore: Store<ProjectState>) {}
 }
