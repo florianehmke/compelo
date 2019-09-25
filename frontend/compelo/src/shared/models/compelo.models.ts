@@ -15,9 +15,12 @@ export interface Player {
   name: string;
 
   rating?: number;
-  gameCount?: number;
   peakRating?: number;
   lowestRating?: number;
+  gameCount?: number;
+  winCount?: number;
+  drawCount?: number;
+  lossCount?: number;
   ratingProgress?: Rating[];
 }
 

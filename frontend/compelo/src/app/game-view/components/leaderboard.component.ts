@@ -10,7 +10,9 @@ import { Player } from '@shared/models';
         <tr>
           <th scope="col">Name</th>
           <th scope="col" class="text-center">Rating</th>
-          <th scope="col" class="text-right">Games</th>
+          <th scope="col" class="text-center">W</th>
+          <th scope="col" class="text-center">D</th>
+          <th scope="col" class="text-center">L</th>
         </tr>
       </thead>
       <tbody>
@@ -21,7 +23,9 @@ import { Player } from '@shared/models';
             <span> {{ player?.rating }} </span>
             <small class="text-muted">{{ player?.peakRating }}</small>
           </td>
-          <td class="text-right">{{ player?.gameCount }}</td>
+          <td class="text-center">{{ player?.winCount }}</td>
+          <td class="text-center">{{ player?.drawCount }}</td>
+          <td class="text-center">{{ player?.lossCount }}</td>
         </tr>
       </tbody>
     </table>

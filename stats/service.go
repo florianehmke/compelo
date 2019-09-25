@@ -1,11 +1,12 @@
 package stats
 
 import (
+	"sort"
+	"time"
+
 	"compelo/db"
 	"compelo/player"
 	"compelo/rating"
-	"sort"
-	"time"
 )
 
 type Service struct {
@@ -25,6 +26,9 @@ type Player struct {
 	PeakRating     int      `json:"peakRating"`
 	LowestRating   int      `json:"lowestRating"`
 	GameCount      int      `json:"gameCount"`
+	WinCount       int      `json:"winCount"`
+	DrawCount      int      `json:"drawCount"`
+	LossCount      int      `json:"lossCount"`
 	RatingProgress []Rating `json:"ratingProgress"`
 }
 
@@ -55,7 +59,10 @@ func (s *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
 			PeakRating:   rating.InitialRating,
 			LowestRating: rating.InitialRating,
 		}
-		if err := s.loadRatingProgress(&pws); err != nil {
+		if err := s.applyRatingStats(&pws); err != nil {
+			return nil, err
+		}
+		if err := s.applyGameStats(&pws); err != nil {
 			return nil, err
 		}
 		players = append(players, pws)
@@ -67,15 +74,15 @@ func (s *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
 	return players, nil
 }
 
-const selectRatings = `
-	SELECT m.date, t.rating_delta
-	FROM matches m
-			 JOIN appearances a ON m.id = a.match_id
-			 JOIN teams t ON a.team_id = t.id
-	WHERE a.player_id = ?
-	ORDER BY m.date ASC`
+func (s *Service) applyRatingStats(player *Player) (err error) {
+	selectRatings := `
+		SELECT m.date, t.rating_delta
+		FROM matches m
+				 JOIN appearances a ON m.id = a.match_id
+				 JOIN teams t ON a.team_id = t.id
+		WHERE a.player_id = ?
+		ORDER BY m.date ASC`
 
-func (s *Service) loadRatingProgress(player *Player) (err error) {
 	rows, err := s.db.Raw(selectRatings, player.ID).Rows()
 	if err != nil {
 		return err
@@ -105,6 +112,52 @@ func (s *Service) loadRatingProgress(player *Player) (err error) {
 			player.LowestRating = current
 		}
 	}
-	player.GameCount = len(player.RatingProgress)
+	return nil
+}
+
+func (s *Service) applyGameStats(player *Player) (err error) {
+	selectRatings := `
+		SELECT t.result
+		FROM players p
+				 JOIN appearances a ON p.id = a.player_id
+				 JOIN teams t ON a.team_id = t.id
+		WHERE p.id = ?`
+
+	rows, err := s.db.Raw(selectRatings, player.ID).Rows()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		err = rows.Close()
+	}()
+
+	var results []string
+	for rows.Next() {
+		var r string
+		err := rows.Scan(&r)
+		if err != nil {
+			return err
+		}
+		results = append(results, r)
+	}
+
+	wins := 0
+	draws := 0
+	losses := 0
+	for _, r := range results {
+		switch r {
+		case "Win":
+			wins += 1
+		case "Draw":
+			draws += 1
+		case "Loss":
+			losses += 1
+		}
+	}
+
+	player.GameCount = len(results)
+	player.WinCount = wins
+	player.DrawCount = draws
+	player.LossCount = losses
 	return nil
 }

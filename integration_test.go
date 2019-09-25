@@ -69,6 +69,9 @@ type testStats struct {
 	peakRating   int
 	lowestRating int
 	gameCount    int
+	winCount     int
+	drawCount    int
+	lossCount    int
 }
 
 func TestAPI(t *testing.T) {
@@ -137,24 +140,36 @@ func TestAPI(t *testing.T) {
 				peakRating:   1523,
 				lowestRating: 1500,
 				gameCount:    3,
+				winCount:     2,
+				drawCount:    1,
+				lossCount:    0,
 			},
 			"Peter": {
 				rating:       1523,
 				peakRating:   1523,
 				lowestRating: 1500,
 				gameCount:    3,
+				winCount:     2,
+				drawCount:    1,
+				lossCount:    0,
 			},
 			"Kevin": {
 				rating:       1470,
 				peakRating:   1500,
 				lowestRating: 1470,
 				gameCount:    3,
+				winCount:     0,
+				drawCount:    1,
+				lossCount:    2,
 			},
 			"Arnold": {
 				rating:       1484,
 				peakRating:   1500,
 				lowestRating: 1484,
 				gameCount:    2,
+				winCount:     0,
+				drawCount:    1,
+				lossCount:    1,
 			},
 		},
 	}
@@ -327,6 +342,9 @@ func (s *testSuite) loadPlayerStats() {
 		s.assertEqual(s.testData.stats[v.Name].peakRating, v.PeakRating)
 		s.assertEqual(s.testData.stats[v.Name].lowestRating, v.LowestRating)
 		s.assertEqual(s.testData.stats[v.Name].gameCount, v.GameCount)
+		s.assertEqual(s.testData.stats[v.Name].winCount, v.WinCount)
+		s.assertEqual(s.testData.stats[v.Name].drawCount, v.DrawCount)
+		s.assertEqual(s.testData.stats[v.Name].lossCount, v.LossCount)
 	}
 }
 
