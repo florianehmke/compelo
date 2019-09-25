@@ -9,27 +9,15 @@ FRONTEND_PATH := frontend/compelo
 
 all: build
 
-vet:
-	$(GOCMD) vet -tags=dev ./...
-
-format:
+quality:
 	$(GOCMD) fmt ./...
-
-test:
+	$(GOCMD) vet -tags=dev ./...
 	$(GOCMD) test -tags=dev ./...
 
-quality: format vet test
-
-frontend-prepare:
+build:
 	cd $(FRONTEND_PATH) && npm install
-
-frontend-build:
 	cd $(FRONTEND_PATH) && ng build --prod --base-href /app/
-
-frontend: frontend-prepare frontend-build
 	$(GOCMD) generate ./frontend
-
-build: frontend
 	$(GOCMD) generate ./db
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
 
@@ -51,3 +39,4 @@ clean:
 distclean: clean
 	rm -f -r frontend/compelo/dist
 	rm -f frontend/frontend_vfsdata.go
+	rm -f db/scripts_vfsdata.go
