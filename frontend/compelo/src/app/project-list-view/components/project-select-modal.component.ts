@@ -4,33 +4,36 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-project-select-modal',
   template: `
-    <div class="modal-header">
-      <h4 class="modal-title">Enter Password</h4>
-      <button
-        type="button"
-        class="close"
-        aria-label="Close"
-        (click)="activeModal.dismiss('Cross click')"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" [(ngModel)]="password" />
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="modal-header">
+        <h4 class="modal-title">Enter Password</h4>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="activeModal.dismiss('Cross click')"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-primary"
-        aria-label="Confirm"
-        (click)="onConfirm()"
-      >
-        Confirm
-      </button>
-    </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input
+            name="password"
+            type="password"
+            class="form-control"
+            ngbAutoFocus
+            [(ngModel)]="password"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" aria-label="Confirm">
+          Confirm
+        </button>
+      </div>
+    </form>
   `
 })
 export class ProjectSelectModalComponent {
@@ -38,7 +41,7 @@ export class ProjectSelectModalComponent {
 
   constructor(public activeModal: NgbActiveModal) {}
 
-  onConfirm() {
+  onSubmit() {
     if (this.password) {
       this.activeModal.close(this.password);
     } else {
