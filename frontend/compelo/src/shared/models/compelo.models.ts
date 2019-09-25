@@ -35,7 +35,7 @@ export interface Match {
 
 export interface Team {
   score: number;
-  winner: boolean;
+  result: 'Win' | 'Loss' | 'Draw';
   ratingDelta: number;
   players: Player[];
 }

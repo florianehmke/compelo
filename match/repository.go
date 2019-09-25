@@ -16,10 +16,10 @@ type Match struct {
 type Team struct {
 	db.Model
 
-	MatchID     uint `json:"matchId"`
-	Score       int  `json:"score"`
-	Winner      bool `json:"winner"`
-	RatingDelta int  `json:"ratingDelta"`
+	MatchID     uint   `json:"matchId"`
+	Score       int    `json:"score"`
+	Result      string `json:"result"`
+	RatingDelta int    `json:"ratingDelta"`
 }
 
 type Appearance struct {
@@ -41,6 +41,18 @@ type Repository interface {
 	loadAppearancesByMatchIDAndTeamID(matchID, teamID uint) ([]Appearance, error)
 }
 
+type result int
+
+const (
+	Loss result = iota
+	Draw
+	Win
+)
+
+func (r result) String() string {
+	return []string{"Loss", "Draw", "Win"}[r]
+}
+
 var _ Repository = repository{}
 
 type repository struct {
@@ -59,7 +71,7 @@ func (r repository) create(param createMatchParameter) (Match, error) {
 		t := Team{
 			MatchID:     match.ID,
 			Score:       team.Score,
-			Winner:      team.Winner,
+			Result:      team.result,
 			RatingDelta: team.ratingDelta,
 		}
 		tx.Create(&t)

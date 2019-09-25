@@ -28,8 +28,8 @@ type createMatchParameter struct {
 	Teams []struct {
 		PlayerIDs []int `json:"playerIds" binding:"required"`
 		Score     int   `json:"score" binding:"required"`
-		Winner    bool  `json:"-"`
 
+		result      string
 		ratingDelta int
 	} `json:"teams" binding:"required"`
 }

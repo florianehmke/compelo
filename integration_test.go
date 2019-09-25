@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"sort"
 	"strconv"
 	"testing"
 	"time"
@@ -44,7 +45,7 @@ type testData struct {
 	gameID   uint // filled during test
 
 	players []testPlayer
-	match   testMatch
+	matches []testMatch
 
 	stats map[string]testStats
 }
@@ -60,6 +61,7 @@ type testMatch struct {
 type testTeam struct {
 	players []int
 	score   int
+	result  string
 }
 
 type testStats struct {
@@ -80,42 +82,79 @@ func TestAPI(t *testing.T) {
 			{name: "Kevin"},
 			{name: "Arnold"},
 		},
-		match: testMatch{
-			teams: []testTeam{
-				{
-					players: []int{1, 2},
-					score:   2,
+		matches: []testMatch{
+			{
+				teams: []testTeam{
+					{
+						players: []int{1, 2},
+						score:   1,
+						result:  "Draw",
+					},
+					{
+						players: []int{3, 4},
+						score:   1,
+						result:  "Draw",
+					},
 				},
-				{
-					players: []int{3, 4},
-					score:   1,
+			},
+			{
+				teams: []testTeam{
+					{
+						players: []int{1, 2},
+						score:   2,
+						result:  "Win",
+					},
+					{
+						players: []int{3, 4},
+						score:   1,
+						result:  "Loss",
+					},
+				},
+			},
+			{
+				teams: []testTeam{
+					{
+						players: []int{1},
+						score:   2,
+						result:  "Win",
+					},
+					{
+						players: []int{2},
+						score:   2,
+						result:  "Win",
+					},
+					{
+						players: []int{3},
+						score:   1,
+						result:  "Loss",
+					},
 				},
 			},
 		},
 		stats: map[string]testStats{
 			"Hans": {
-				rating:       1516,
-				peakRating:   1516,
+				rating:       1523,
+				peakRating:   1523,
 				lowestRating: 1500,
-				gameCount:    1,
+				gameCount:    3,
 			},
 			"Peter": {
-				rating:       1516,
-				peakRating:   1516,
+				rating:       1523,
+				peakRating:   1523,
 				lowestRating: 1500,
-				gameCount:    1,
+				gameCount:    3,
 			},
 			"Kevin": {
-				rating:       1484,
+				rating:       1470,
 				peakRating:   1500,
-				lowestRating: 1484,
-				gameCount:    1,
+				lowestRating: 1470,
+				gameCount:    3,
 			},
 			"Arnold": {
 				rating:       1484,
 				peakRating:   1500,
 				lowestRating: 1484,
-				gameCount:    1,
+				gameCount:    2,
 			},
 		},
 	}
@@ -132,7 +171,7 @@ func TestAPI(t *testing.T) {
 	ts.createGame()
 	ts.listGames()
 
-	ts.createMatch()
+	ts.createMatches()
 	ts.listMatches()
 
 	ts.loadPlayerStats()
@@ -224,24 +263,26 @@ func (s *testSuite) listGames() {
 	s.testData.gameID = response[0].ID
 }
 
-func (s *testSuite) createMatch() {
-	var teams []gin.H
-	for _, t := range s.testData.match.teams {
-		teams = append(teams, gin.H{
-			"playerIds": t.players,
-			"score":     t.score,
-		})
+func (s *testSuite) createMatches() {
+	for _, m := range s.testData.matches {
+		var teams []gin.H
+		for _, t := range m.teams {
+			teams = append(teams, gin.H{
+				"playerIds": t.players,
+				"score":     t.score,
+			})
+		}
+		body := gin.H{"teams": teams}
+
+		gameID := strconv.Itoa(int(s.testData.gameID))
+		w := s.requestWithBody("POST", "/api/project/games/"+gameID+"/matches", body)
+
+		response := &match.Match{}
+		s.assertEqual(http.StatusCreated, w.Code)
+		s.mustUnmarshal(w.Body.Bytes(), response)
+		s.assertTrue(response.ID > 0)
+		s.assertEqual(response.GameID, s.testData.gameID)
 	}
-	body := gin.H{"teams": teams}
-
-	gameID := strconv.Itoa(int(s.testData.gameID))
-	w := s.requestWithBody("POST", "/api/project/games/"+gameID+"/matches", body)
-
-	response := &match.Match{}
-	s.assertEqual(http.StatusCreated, w.Code)
-	s.mustUnmarshal(w.Body.Bytes(), response)
-	s.assertTrue(response.ID > 0)
-	s.assertEqual(response.GameID, s.testData.gameID)
 }
 
 func (s *testSuite) listMatches() {
@@ -251,12 +292,24 @@ func (s *testSuite) listMatches() {
 	var response []match.MatchData
 	s.assertEqual(http.StatusOK, w.Code)
 	s.mustUnmarshal(w.Body.Bytes(), &response)
-	s.assertTrue(len(response) == 1)
-	s.assertTrue(len(response[0].Teams) == 2)
+	s.assertTrue(len(response) == len(s.testData.matches))
 
-	for i, t := range response[0].Teams {
-		s.assertTrue(t.Score == s.testData.match.teams[i].score)
-		s.assertTrue(len(t.Players) == len(s.testData.match.teams[i].players))
+	// Sort results by ID so that they are
+	// in the same order as the test data.
+	sort.Slice(response, func(i, j int) bool {
+		return response[i].ID < (response[j].ID)
+	})
+
+	for i, expectedMatch := range s.testData.matches {
+		actualMatch := response[i]
+		s.assertEqual(len(expectedMatch.teams), len(actualMatch.Teams))
+
+		for j, expectedTeam := range expectedMatch.teams {
+			actualTeam := actualMatch.Teams[j]
+			s.assertEqual(len(expectedTeam.players), len(actualTeam.Players))
+			s.assertEqual(expectedTeam.score, actualTeam.Score)
+			s.assertEqual(expectedTeam.result, actualTeam.Result)
+		}
 	}
 }
 

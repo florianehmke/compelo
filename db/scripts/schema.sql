@@ -105,10 +105,10 @@ CREATE TABLE teams
     created_at   DATETIME,
     updated_at   DATETIME,
     deleted_at   DATETIME,
-    match_id     INTEGER NOT NULL,
-    score        INTEGER,
-    winner       INTEGER,
-    rating_delta INTEGER NOT NULL,
+    match_id     INTEGER      NOT NULL,
+    score        INTEGER      NOT NULL,
+    result       VARCHAR(255) NOT NULL,
+    rating_delta INTEGER      NOT NULL,
     FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE
 );
 

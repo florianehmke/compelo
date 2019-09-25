@@ -92,11 +92,17 @@ func (p *createMatchParameter) determineWinner() {
 			highScoreCount += 1
 		}
 	}
-	if highScoreCount == 1 {
+	if highScoreCount < len(p.Teams) {
 		for i := range p.Teams {
 			if p.Teams[i].Score == highScore {
-				p.Teams[i].Winner = true
+				p.Teams[i].result = Win.String()
+			} else {
+				p.Teams[i].result = Loss.String()
 			}
+		}
+	} else {
+		for i := range p.Teams {
+			p.Teams[i].result = Draw.String()
 		}
 	}
 }
@@ -112,7 +118,7 @@ type TeamData struct {
 	ID          uint         `json:"id"`
 	MatchID     uint         `json:"matchId"`
 	Score       int          `json:"score"`
-	Winner      bool         `json:"winner"`
+	Result      string       `json:"result"`
 	RatingDelta int          `json:"ratingDelta"`
 	Players     []PlayerData `json:"players"`
 }
@@ -165,7 +171,7 @@ func (s *Service) LoadMatchByID(id uint) (MatchData, error) {
 			ID:          t.ID,
 			MatchID:     t.MatchID,
 			Score:       t.Score,
-			Winner:      t.Winner,
+			Result:      t.Result,
 			RatingDelta: t.RatingDelta,
 		}
 

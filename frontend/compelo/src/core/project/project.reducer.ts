@@ -30,23 +30,23 @@ const projectReducer = createReducer(
   initialState,
   on(loadGamesSuccess, (state, action) => ({
     ...state,
-    games: action.payload
+    games: action.payload || []
   })),
   on(loadPlayersSuccess, (state, action) => ({
     ...state,
-    players: action.payload
+    players: action.payload || []
   })),
   on(loadPlayersWithStatsSuccess, (state, action) => ({
     ...state,
-    playersWithStats: action.payload
+    playersWithStats: action.payload || []
   })),
   on(loadMatchesSuccess, (state, action) => ({
     ...state,
-    matches: action.payload
+    matches: action.payload || []
   })),
   on(filterMatches, (state, action) => ({
     ...state,
-    matchFilter: action.payload.filter
+    matchFilter: action.payload.filter || ''
   }))
 );
 
