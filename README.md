@@ -1,6 +1,6 @@
 # compelo
 
-![CircleCI](https://img.shields.io/circleci/build/github/florianehmke/compelo?style=flat-square) ![Docker Build Status](https://img.shields.io/docker/build/florianehmke/compelo?style=flat-square)
+[![CircleCI](https://img.shields.io/circleci/build/github/florianehmke/compelo?style=flat-square)](https://circleci.com/gh/florianehmke/compelo) [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/florianehmke/compelo?style=flat-square)](https://cloud.docker.com/repository/docker/florianehmke/compelo)
 
 Program for elevating team spirit.
 
