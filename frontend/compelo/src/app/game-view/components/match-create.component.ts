@@ -19,7 +19,7 @@ import { CreateMatchPayload } from '@core/project';
       <div class="row" formArrayName="teams">
         <div
           class="col"
-          [formGroupName]="i"
+          [formGroupName]="i.toString()"
           *ngFor="let team of getTeams(formGroup); let i = index"
         >
           <input
@@ -31,7 +31,7 @@ import { CreateMatchPayload } from '@core/project';
           <div formArrayName="playerIds">
             <select
               class="custom-select"
-              [formControlName]="j"
+              [formControlName]="j.toString()"
               [compareWith]="compareByID"
               *ngFor="let player of getPlayers(team); let j = index"
             >

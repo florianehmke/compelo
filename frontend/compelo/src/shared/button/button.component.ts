@@ -1,5 +1,5 @@
 import { Attribute, Component, Input } from '@angular/core';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 export type ButtonStyle = 'primary' | 'success' | 'danger';
 
@@ -31,7 +31,7 @@ export class ButtonComponent {
   disabled = false;
 
   @Input()
-  icon: IconProp;
+  icon: IconName;
 
   constructor(@Attribute('type') public type: string = 'button') {}
 
