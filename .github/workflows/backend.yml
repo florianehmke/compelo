@@ -13,6 +13,14 @@ jobs:
         go-version: 1.12
       id: go
 
+    - name: Set up node 10
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+
+    - name: Install Dependencies
+      run: cd frontend/compelo && npm install
+
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
 
