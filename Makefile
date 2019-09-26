@@ -14,7 +14,7 @@ frontend-quality: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run format:check
 	cd $(FRONTEND_PATH) && npm run lint
 
-frontend: frontend-prepare:
+frontend: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run build-prod
 
 backend-quality:
