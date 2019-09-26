@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'app-icon',
@@ -17,10 +17,10 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 })
 export class IconComponent {
   @Input()
-  icon: IconProp;
+  icon: IconName;
 
   @Input()
-  prefix = 'fas';
+  prefix: IconPrefix = 'fas';
 
   @Input()
   button = false;

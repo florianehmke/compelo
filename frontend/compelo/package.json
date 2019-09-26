@@ -5,21 +5,20 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
     "lint": "ng lint",
-    "format": "prettier \"**/*.{ts,html}\" --write",
-    "e2e": "ng e2e"
+    "format:write": "prettier \"**/*.{ts,html}\" --write",
+    "format:check": "prettier \"**/*.{ts,html}\" --check"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~8.0.0",
-    "@angular/common": "~8.0.0",
-    "@angular/compiler": "~8.0.0",
-    "@angular/core": "~8.0.0",
-    "@angular/forms": "~8.0.0",
-    "@angular/platform-browser": "~8.0.0",
-    "@angular/platform-browser-dynamic": "~8.0.0",
-    "@angular/router": "~8.0.0",
+    "@angular/animations": "~8.2.8",
+    "@angular/common": "~8.2.8",
+    "@angular/compiler": "~8.2.8",
+    "@angular/core": "~8.2.8",
+    "@angular/forms": "~8.2.8",
+    "@angular/platform-browser": "~8.2.8",
+    "@angular/platform-browser-dynamic": "~8.2.8",
+    "@angular/router": "~8.2.8",
     "@fortawesome/angular-fontawesome": "^0.5.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.23",
     "@fortawesome/free-brands-svg-icons": "^5.11.1",
@@ -32,18 +31,19 @@
     "bootstrap": "^4.3.1",
     "ngrx-store-logger": "^0.2.4",
     "rxjs": "~6.4.0",
-    "tslib": "^1.9.0",
+    "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.800.0",
-    "@angular/cli": "~8.0.2",
-    "@angular/compiler-cli": "~8.0.0",
-    "@angular/language-service": "~8.0.0",
+    "@angular-devkit/build-angular": "~0.803.6",
+    "@angular/cli": "~8.3.6",
+    "@angular/compiler-cli": "~8.2.8",
+    "@angular/language-service": "~8.2.8",
     "@types/node": "~8.9.4",
+    "codelyzer": "^5.0.0",
     "prettier": "^1.18.2",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.4.3"
+    "typescript": "~3.5.3"
   }
 }

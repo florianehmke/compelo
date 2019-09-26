@@ -38,12 +38,12 @@ export class ProjectListViewComponent {
     } else {
       this.modalService
         .open(ProjectSelectModalComponent)
-        .result.then((password: string) => {
+        .result.then((pw: string) => {
           const payload = {
             payload: {
               projectId: project.id,
               projectName: project.name,
-              password: password
+              password: pw
             }
           };
           this.store.dispatch(selectProject(payload));

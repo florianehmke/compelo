@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { ToastService } from '@shared/toast/toast.service';
 
 @Component({
@@ -13,9 +13,11 @@ import { ToastService } from '@shared/toast/toast.service';
     >
       {{ toast.message }}
     </ngb-toast>
-  `,
-  host: { '[class.ngb-toasts]': 'true' }
+  `
 })
 export class ToastComponent {
+  @HostBinding('class.ngb-toasts')
+  classNgbToasts = true;
+
   constructor(public toastService: ToastService) {}
 }
