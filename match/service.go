@@ -27,7 +27,7 @@ func NewService(db *db.DB, ps *player.Service, gs *game.Service) *Service {
 func (s *Service) createMatch(param createMatchParameter, game game.Game) (Match, error) {
 	param.gameID = game.ID
 	param.date = time.Now()
-	param.determineWinner()
+	param.determineResult()
 	param.calculateTeamElo(s.playerService, game.ID)
 
 	// Create the match.
@@ -81,7 +81,7 @@ func (p *createMatchParameter) calculateTeamElo(playerService *player.Service, g
 	}
 }
 
-func (p *createMatchParameter) determineWinner() {
+func (p *createMatchParameter) determineResult() {
 	highScore := 0
 	highScoreCount := 0
 	for _, t := range p.Teams {

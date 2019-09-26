@@ -61,10 +61,21 @@ type repository struct {
 
 func (r repository) create(param createMatchParameter) (Match, error) {
 	tx := r.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Error; err != nil {
+		return Match{}, err
+	}
 
 	// 1. Create match.
 	match := Match{GameID: param.gameID, Date: param.date}
-	tx.Create(&match)
+	if err := tx.Create(&match).Error; err != nil {
+		tx.Rollback()
+		return Match{}, err
+	}
 
 	// 2. Create teams.
 	for _, team := range param.Teams {
@@ -74,7 +85,10 @@ func (r repository) create(param createMatchParameter) (Match, error) {
 			Result:      team.result,
 			RatingDelta: team.ratingDelta,
 		}
-		tx.Create(&t)
+		if err := tx.Create(&t).Error; err != nil {
+			tx.Rollback()
+			return Match{}, err
+		}
 
 		// 3. Create appearances for players.
 		for _, playerID := range team.PlayerIDs {
@@ -84,11 +98,18 @@ func (r repository) create(param createMatchParameter) (Match, error) {
 				PlayerID:    uint(playerID),
 				RatingDelta: team.ratingDelta,
 			}
-			tx.Create(&c)
+			if err := tx.Create(&c).Error; err != nil {
+				tx.Rollback()
+				return Match{}, err
+			}
 		}
 	}
 
-	return match, tx.Commit().Error
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return Match{}, err
+	}
+	return match, nil
 }
 
 func (r repository) loadByGameID(id uint) ([]Match, error) {
