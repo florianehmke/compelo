@@ -23,15 +23,15 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "frontend/compelo/package.json" }}
             - v1-dependencies-
 
       - run: npm install
 
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - frontend/compelo/node_modules
+          key: v1-dependencies-{{ checksum "frontend/compelo/package.json" }}
 
       - run: make frontend-quality
       - run: make frontend

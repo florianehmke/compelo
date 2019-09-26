@@ -23,6 +23,7 @@ backend-quality:
 	$(GOCMD) test -tags=dev ./...
 
 backend:
+	mkdir -p $(FRONTEND_PATH)/dist
 	$(GOCMD) generate ./frontend
 	$(GOCMD) generate ./db
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
