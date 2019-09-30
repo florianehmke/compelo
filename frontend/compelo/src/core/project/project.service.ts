@@ -4,11 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import { Game, Match, Player } from '@shared/models';
 import { CreateMatchPayload } from '@core/project/project.models';
+import { projectIdFromToken } from '@shared/jwt';
 
 @Injectable()
 export class ProjectService {
-  private baseUrl = environment.baseUrl + '/project';
-
   constructor(private http: HttpClient) {}
 
   getGames(): Observable<Game[]> {
@@ -38,5 +37,10 @@ export class ProjectService {
 
   getPlayersWithStats(gameID: number): Observable<Player[]> {
     return this.http.get<Player[]>(`${this.baseUrl}/games/${gameID}/players`);
+  }
+
+  get baseUrl(): string {
+    const projectId = projectIdFromToken();
+    return `${environment.baseUrl}/projects/${projectId}`;
   }
 }

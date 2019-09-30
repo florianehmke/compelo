@@ -36,7 +36,7 @@ export class ProjectListEffects {
     this.actions$.pipe(
       ofType(selectProject),
       switchMap(action =>
-        this.authService.projectLogin(action.payload).pipe(
+        this.authService.login(action.payload).pipe(
           tap(response => storeToken(response.token)),
           tap(() => delete action.payload.password),
           map(() =>

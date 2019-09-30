@@ -10,8 +10,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  projectLogin(req: AuthRequest): Observable<TokenPayload> {
-    return this.http.post<TokenPayload>(`${this.baseUrl}/select-project`, req);
+  login(req: AuthRequest): Observable<TokenPayload> {
+    return this.http.post<TokenPayload>(`${this.baseUrl}/login`, req);
   }
 
   refresh(): Observable<TokenPayload> {
