@@ -21,12 +21,6 @@ export interface Player {
   winCount?: number;
   drawCount?: number;
   lossCount?: number;
-  ratingProgress?: Rating[];
-}
-
-export interface Rating {
-  rating: number;
-  date: string;
 }
 
 export interface Match {

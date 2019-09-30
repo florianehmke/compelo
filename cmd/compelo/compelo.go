@@ -3,24 +3,27 @@ package main
 import (
 	"flag"
 	"log"
+	"net/http"
 	"os"
 
-	"compelo/api"
+	"compelo/api/handler"
+	"compelo/api/router"
+	"compelo/internal/compelo"
 )
 
 func main() {
 	dev := false
 	flag.BoolVar(&dev, "dev", false, "dev mode")
 	flag.Parse()
-
-	secret, ok := os.LookupEnv("COMPELO_SECRET")
-	if !ok {
-		if !dev {
-			log.Fatal("COMPELO_SECRET environment variable is required.")
-		} else {
-			secret = "unsecure_dev_secret"
-		}
-	}
+	//
+	//secret, ok := os.LookupEnv("COMPELO_SECRET")
+	//if !ok {
+	//	if !dev {
+	//		log.Fatal("COMPELO_SECRET environment variable is required.")
+	//	} else {
+	//		secret = "unsecure_dev_secret"
+	//	}
+	//}
 
 	dbPath, ok := os.LookupEnv("COMPELO_DB_PATH")
 	if !ok {
@@ -35,5 +38,6 @@ func main() {
 		log.Println("Using default value instead: '8080'.")
 	}
 
-	log.Fatal(api.Setup(dbPath, secret, dev).Run(":" + port))
+	svc := compelo.NewService(dbPath)
+	log.Fatal(http.ListenAndServe(":"+port, router.New(handler.New(svc))))
 }

@@ -1,52 +1,30 @@
-package stats
+package compelo
 
 import (
 	"sort"
-	"time"
 
-	"compelo/db"
-	"compelo/player"
-	"compelo/rating"
+	"compelo/pkg/rating"
 )
 
-type Service struct {
-	db *db.DB
-	ps *player.Service
-}
-
-func NewService(db *db.DB, ps *player.Service) *Service {
-	return &Service{db: db, ps: ps}
-}
-
 type Player struct {
-	ID             uint     `json:"id"`
-	Name           string   `json:"name"`
-	ProjectID      uint     `json:"projectId"`
-	Rating         int      `json:"rating"`
-	PeakRating     int      `json:"peakRating"`
-	LowestRating   int      `json:"lowestRating"`
-	GameCount      int      `json:"gameCount"`
-	WinCount       int      `json:"winCount"`
-	DrawCount      int      `json:"drawCount"`
-	LossCount      int      `json:"lossCount"`
-	RatingProgress []Rating `json:"ratingProgress"`
+	ID           uint   `json:"id"`
+	Name         string `json:"name"`
+	ProjectID    uint   `json:"projectId"`
+	Rating       int    `json:"rating"`
+	PeakRating   int    `json:"peakRating"`
+	LowestRating int    `json:"lowestRating"`
+	GameCount    int    `json:"gameCount"`
+	WinCount     int    `json:"winCount"`
+	DrawCount    int    `json:"drawCount"`
+	LossCount    int    `json:"lossCount"`
 }
 
-type Rating struct {
-	Rating int       `json:"rating"`
-	Date   time.Time `json:"date"`
-}
-
-func (s *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
-	var ratings []player.Rating
-	err := s.db.Where(player.Rating{GameID: gameID}).Find(&ratings).Error
-	if err != nil {
-		return nil, err
-	}
+func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
+	ratings := svc.LoadRatingsByGameID(gameID)
 
 	var players []Player
 	for _, r := range ratings {
-		p, err := s.ps.LoadPlayerByID(r.PlayerID)
+		p, err := svc.LoadPlayerByID(r.PlayerID)
 		if err != nil {
 			return nil, err
 		}
@@ -59,10 +37,10 @@ func (s *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
 			PeakRating:   rating.InitialRating,
 			LowestRating: rating.InitialRating,
 		}
-		if err := s.applyRatingStats(&pws); err != nil {
+		if err := svc.applyRatingStats(&pws); err != nil {
 			return nil, err
 		}
-		if err := s.applyGameStats(&pws); err != nil {
+		if err := svc.applyGameStats(&pws); err != nil {
 			return nil, err
 		}
 		players = append(players, pws)
@@ -76,7 +54,7 @@ func (s *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
 
 func (s *Service) applyRatingStats(player *Player) (err error) {
 	selectRatings := `
-		SELECT m.date, t.rating_delta
+		SELECT t.rating_delta
 		FROM matches m
 				 JOIN appearances a ON m.id = a.match_id
 				 JOIN teams t ON a.team_id = t.id
@@ -91,20 +69,19 @@ func (s *Service) applyRatingStats(player *Player) (err error) {
 		err = rows.Close()
 	}()
 
+	var deltas []int
 	for rows.Next() {
-		var r Rating
-		err := rows.Scan(&r.Date, &r.Rating)
+		var delta int
+		err := rows.Scan(&delta)
 		if err != nil {
 			return err
 		}
-		player.RatingProgress = append(player.RatingProgress, r)
+		deltas = append(deltas, delta)
 	}
 
 	current := rating.InitialRating
-	for i, v := range player.RatingProgress {
-		current = current + v.Rating
-		player.RatingProgress[i].Rating = current
-
+	for _, delta := range deltas {
+		current = current + delta
 		if current > player.PeakRating {
 			player.PeakRating = current
 		}

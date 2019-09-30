@@ -1,7 +1,7 @@
 # ------------- Project
 
 ### Create Project
-POST localhost:8080/api/create-project
+POST localhost:8080/api/projects
 Content-Type: application/json
 
 {
@@ -28,7 +28,7 @@ GET localhost:8080/api/projects
 # ------------- Players
 
 ### Create Player
-POST localhost:8080/api/project/players
+POST localhost:8080/api/projects/1/players
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -37,13 +37,13 @@ Authorization: Bearer {{auth_token}}
 }
 
 ### Get Players
-GET localhost:8080/api/project/players
+GET localhost:8080/api/projects/1/players
 Authorization: Bearer {{auth_token}}
 
 # ------------- Games
 
 ### Create Game
-POST localhost:8080/api/project/games
+POST localhost:8080/api/projects/1/games
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -52,7 +52,7 @@ Authorization: Bearer {{auth_token}}
 }
 
 ### Get Games
-GET localhost:8080/api/project/games
+GET localhost:8080/api/projects/1/games
 Authorization: Bearer {{auth_token}}
 
 ###
