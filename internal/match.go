@@ -1,6 +1,7 @@
 package compelo
 
 import (
+	"errors"
 	"sort"
 	"time"
 
@@ -18,6 +19,28 @@ type CreateMatchParameter struct {
 		Score       int    `json:"score"`
 		RatingDelta int    `json:"-"`
 	} `json:"teams"`
+}
+
+func (p *CreateMatchParameter) validate() error {
+	if len(p.Teams) < 2 {
+		return errors.New("at least two teams required")
+	}
+	teamSize := len(p.Teams[0].PlayerIDs)
+	for _, t := range p.Teams {
+		if len(t.PlayerIDs) != teamSize {
+			return errors.New("all teams need the same amount of players")
+		}
+	}
+	playerMap := map[int]bool{}
+	for _, t := range p.Teams {
+		for _, pid := range t.PlayerIDs {
+			if _, ok := playerMap[pid]; ok {
+				return errors.New("player can only be in one team")
+			}
+			playerMap[pid] = true
+		}
+	}
+	return nil
 }
 
 func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
