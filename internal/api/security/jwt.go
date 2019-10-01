@@ -18,7 +18,8 @@ type JWT struct {
 
 func NewJWT(svc *compelo.Service, timeoutSec int, secretKey string) *JWT {
 	cfg := &jwtConfig{
-		timeoutSec: timeoutSec,
+		timeout:    time.Second * time.Duration(timeoutSec),
+		maxRefresh: time.Hour * 7 * 24,
 		secretKey:  []byte(secretKey),
 	}
 	cfg.initialize()
@@ -29,7 +30,8 @@ func NewJWT(svc *compelo.Service, timeoutSec int, secretKey string) *JWT {
 }
 
 type jwtConfig struct {
-	timeoutSec int
+	timeout    time.Duration
+	maxRefresh time.Duration
 	secretKey  []byte
 
 	jwtAuth  *jwtauth.JWTAuth
@@ -79,11 +81,12 @@ func (j *JWT) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(j.cfg.timeout)
 	claims := &Claims{
 		ProjectID: project.ID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
 		},
 	}
 
@@ -91,6 +94,56 @@ func (j *JWT) Login(w http.ResponseWriter, r *http.Request) {
 	tokenString, err := token.SignedString(j.cfg.secretKey)
 	if err != nil {
 		json.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	json.Write(w, http.StatusOK, LoginResponse{
+		Token:  tokenString,
+		Expire: expirationTime.Format(time.RFC3339),
+	})
+}
+
+func (j *JWT) Refresh(w http.ResponseWriter, r *http.Request) {
+	tknStr := jwtauth.TokenFromHeader(r)
+	if tknStr == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	claims := &Claims{}
+	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return j.cfg.secretKey, nil
+	})
+	if !tkn.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	_, err = j.svc.LoadProjectByID(claims.ProjectID)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if time.Now().Sub(time.Unix(claims.IssuedAt, 0)) > j.cfg.maxRefresh {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	expirationTime := time.Now().Add(j.cfg.timeout)
+	claims.ExpiresAt = expirationTime.Unix()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(j.cfg.secretKey)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 

@@ -22,6 +22,11 @@ Content-Type: application/json
     client.global.set("auth_token", response.body.token);
   %}
 
+### Refresh
+POST localhost:8080/api/refresh
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
 ### Get Projects
 GET localhost:8080/api/projects
 

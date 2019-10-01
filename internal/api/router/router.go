@@ -25,6 +25,7 @@ func New(h *handler.Handler, s *security.JWT) http.Handler {
 
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/login", s.Login)
+		r.Post("/refresh", s.Refresh)
 		r.Post("/projects", h.CreateProject)
 		r.Get("/projects", h.GetAllProjects)
 		r.Route("/projects/{"+handler.ProjectID+"}", func(r chi.Router) {
