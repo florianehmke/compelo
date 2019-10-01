@@ -52,7 +52,7 @@ func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) 
 	return players, nil
 }
 
-func (s *Service) applyRatingStats(player *PlayerStats) (err error) {
+func (svc *Service) applyRatingStats(player *PlayerStats) (err error) {
 	selectRatings := `
 		SELECT t.rating_delta
 		FROM matches m
@@ -61,7 +61,7 @@ func (s *Service) applyRatingStats(player *PlayerStats) (err error) {
 		WHERE a.player_id = ?
 		ORDER BY m.date ASC`
 
-	rows, err := s.db.Raw(selectRatings, player.ID).Rows()
+	rows, err := svc.db.Raw(selectRatings, player.ID).Rows()
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (s *Service) applyRatingStats(player *PlayerStats) (err error) {
 	return nil
 }
 
-func (s *Service) applyGameStats(player *PlayerStats) (err error) {
+func (svc *Service) applyGameStats(player *PlayerStats) (err error) {
 	selectRatings := `
 		SELECT t.result
 		FROM players p
@@ -100,7 +100,7 @@ func (s *Service) applyGameStats(player *PlayerStats) (err error) {
 				 JOIN teams t ON a.team_id = t.id
 		WHERE p.id = ?`
 
-	rows, err := s.db.Raw(selectRatings, player.ID).Rows()
+	rows, err := svc.db.Raw(selectRatings, player.ID).Rows()
 	if err != nil {
 		return err
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 
+	"compelo/frontend"
 	"compelo/internal/api/handler"
 	"compelo/internal/api/security"
 )
@@ -42,7 +43,20 @@ func New(h *handler.Handler, s *security.JWT) http.Handler {
 			})
 		})
 	})
+	r.HandleFunc("/*", frontendHandler)
 	return r
+}
+
+func frontendHandler(w http.ResponseWriter, r *http.Request) {
+	f, err := frontend.Frontend.Open(r.URL.Path)
+	if err != nil {
+		r.URL.Path = "/"
+	} else {
+		if err := f.Close(); err != nil {
+			panic(err)
+		}
+	}
+	http.FileServer(frontend.Frontend).ServeHTTP(w, r)
 }
 
 func corsMiddleware() *cors.Cors {

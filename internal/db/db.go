@@ -30,25 +30,6 @@ func (db *DB) Close() {
 	}
 }
 
-func (db *DB) DoInTransaction(fn func(*DB) error) error {
-	tx := db.Begin()
-	if tx.Error != nil {
-		return tx.Error
-	}
-	err := fn(&DB{tx})
-	if err != nil {
-		xerr := tx.Rollback().Error
-		if xerr != nil {
-			return xerr
-		}
-		return err
-	}
-	if err = tx.Commit().Error; err != nil {
-		return err
-	}
-	return nil
-}
-
 func New(dbPath string) *DB {
 	db, err := gorm.Open("sqlite3", dbPath)
 	if err != nil {
@@ -70,4 +51,23 @@ func New(dbPath string) *DB {
 	db.Exec(string(schema))
 
 	return &DB{db}
+}
+
+func (db *DB) DoInTransaction(fn func(*DB) error) error {
+	tx := db.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	err := fn(&DB{tx})
+	if err != nil {
+		xerr := tx.Rollback().Error
+		if xerr != nil {
+			return xerr
+		}
+		return err
+	}
+	if err = tx.Commit().Error; err != nil {
+		return err
+	}
+	return nil
 }

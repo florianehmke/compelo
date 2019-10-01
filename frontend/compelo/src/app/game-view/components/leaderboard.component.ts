@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Player } from '@shared/models';
+import { PlayerStats } from '@shared/models';
 
 @Component({
   selector: 'app-leaderboard',
@@ -33,5 +33,5 @@ import { Player } from '@shared/models';
 })
 export class LeaderboardComponent {
   @Input()
-  players: Player[];
+  players: PlayerStats[];
 }
