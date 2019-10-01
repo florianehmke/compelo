@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi"
 
 	"compelo/internal/db"
+	"compelo/pkg/json"
 )
 
 const (
@@ -21,35 +22,35 @@ func (h *Handler) CreateProject(w http.ResponseWriter, r *http.Request) {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 	}
-	if err := unmarshal(r.Body, &body); err != nil {
-		writeError(w, http.StatusBadRequest, err)
+	if err := json.Unmarshal(r.Body, &body); err != nil {
+		json.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
 	p, err := h.svc.CreateProject(body.Name, body.Password)
 	if err == nil {
-		writeJSON(w, http.StatusCreated, p)
+		json.Write(w, http.StatusCreated, p)
 	} else {
-		writeError(w, http.StatusBadRequest, err)
+		json.Error(w, http.StatusBadRequest, err)
 	}
 }
 
 func (h *Handler) GetAllProjects(w http.ResponseWriter, r *http.Request) {
 	projects := h.svc.LoadAllProjects()
-	writeJSON(w, http.StatusOK, projects)
+	json.Write(w, http.StatusOK, projects)
 }
 
 func (h *Handler) ProjectCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.Atoi(chi.URLParam(r, ProjectID))
 		if err != nil {
-			writeError(w, http.StatusBadRequest, err)
+			json.Error(w, http.StatusBadRequest, err)
 			return
 		}
 		project, err := h.svc.LoadProjectByID(uint(id))
 		if err != nil {
 			msg := fmt.Sprintf("could not set project with id %d in context", id)
-			writeError(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
+			json.Error(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
 			return
 		}
 		ctx := context.WithValue(r.Context(), ProjectKey, project)

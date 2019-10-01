@@ -25,7 +25,7 @@ backend-quality:
 backend:
 	mkdir -p $(FRONTEND_PATH)/dist
 	$(GOCMD) generate ./frontend
-	$(GOCMD) generate ./db
+	$(GOCMD) generate ./internal/db
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
 
 # Builds application with dev tag, meaning that sql files and
@@ -51,4 +51,4 @@ clean:
 distclean: clean
 	rm -f -r frontend/compelo/dist
 	rm -f frontend/frontend_vfsdata.go
-	rm -f db/scripts_vfsdata.go
+	rm -f internal/db/scripts_vfsdata.go

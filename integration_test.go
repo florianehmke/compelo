@@ -10,36 +10,37 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 
-	"compelo/api"
-	"compelo/game"
-	"compelo/match"
-	"compelo/player"
-	"compelo/project"
-	"compelo/stats"
+	"compelo/internal"
+	"compelo/internal/api/handler"
+	"compelo/internal/api/router"
+	"compelo/internal/api/security"
+	"compelo/internal/db"
 )
+
+type JSON map[string]interface{}
 
 type testSuite struct {
 	testing  *testing.T
-	router   *gin.Engine
+	handler  http.Handler
 	testData testData
 	token    string
 }
 
-func newTestSuite(t *testing.T, r *gin.Engine, ts testData) *testSuite {
+func newTestSuite(t *testing.T, handler http.Handler, ts testData) *testSuite {
 	return &testSuite{
 		testing:  t,
-		router:   r,
+		handler:  handler,
 		testData: ts,
 	}
 }
 
 type testData struct {
-	projectName string
-	projectPW   string
-	projectID   uint // filled during test
+	projectName     string
+	projectPW       string
+	projectID       uint   // filled during test
+	projectIDString string // filled during test
 
 	gameName string
 	gameID   uint // filled during test
@@ -174,7 +175,12 @@ func TestAPI(t *testing.T) {
 		},
 	}
 
-	ts := newTestSuite(t, api.Setup("file::memory:", "test", false), testData)
+	svc := compelo.NewService("file::memory:")
+	hdl := handler.New(svc)
+	sec := security.NewJWT(svc, 60, "test")
+	mux := router.New(hdl, sec)
+
+	ts := newTestSuite(t, mux, testData)
 
 	ts.createProject()
 	ts.listProjects()
@@ -193,13 +199,13 @@ func TestAPI(t *testing.T) {
 }
 
 func (s *testSuite) createProject() {
-	b := gin.H{
+	b := JSON{
 		"name":     s.testData.projectName,
 		"password": s.testData.projectPW,
 	}
-	w := s.requestWithBody("POST", "/api/create-project", b)
+	w := s.requestWithBody("POST", "/api/projects", b)
 
-	response := &project.Project{}
+	response := &db.Project{}
 	s.assertEqual(http.StatusCreated, w.Code)
 	s.mustUnmarshal(w.Body.Bytes(), response)
 	s.assertTrue(response.ID > 0)
@@ -209,20 +215,21 @@ func (s *testSuite) createProject() {
 func (s *testSuite) listProjects() {
 	w := s.request("GET", "/api/projects")
 
-	var response []project.Project
+	var response []db.Project
 	s.assertEqual(http.StatusOK, w.Code)
 	s.mustUnmarshal(w.Body.Bytes(), &response)
 	s.assertTrue(len(response) == 1)
 	s.assertEqual(response[0].Name, s.testData.projectName)
 	s.testData.projectID = response[0].ID
+	s.testData.projectIDString = strconv.Itoa(int(response[0].ID))
 }
 
 func (s *testSuite) selectProject() {
-	b := gin.H{
+	b := JSON{
 		"projectName": s.testData.projectName,
 		"password":    s.testData.projectPW,
 	}
-	w := s.requestWithBody("POST", "/api/select-project", b)
+	w := s.requestWithBody("POST", "/api/login", b)
 
 	type token struct {
 		Code   int       `json:"code"`
@@ -239,18 +246,18 @@ func (s *testSuite) selectProject() {
 
 func (s *testSuite) createPlayers() {
 	for _, p := range s.testData.players {
-		b := gin.H{
+		b := JSON{
 			"name": p.name,
 		}
-		w := s.requestWithBody("POST", "/api/project/players", b)
+		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectIDString+"/players", b)
 		s.assertEqual(http.StatusCreated, w.Code)
 	}
 }
 
 func (s *testSuite) listPlayers() {
-	w := s.request("GET", "/api/project/players")
+	w := s.request("GET", "/api/projects/1/players")
 
-	var response []player.Player
+	var response []db.Player
 	s.assertEqual(http.StatusOK, w.Code)
 	s.mustUnmarshal(w.Body.Bytes(), &response)
 	s.assertTrue(len(response) == len(s.testData.players))
@@ -260,17 +267,17 @@ func (s *testSuite) listPlayers() {
 }
 
 func (s *testSuite) createGame() {
-	b := gin.H{
+	b := JSON{
 		"name": s.testData.gameName,
 	}
-	w := s.requestWithBody("POST", "/api/project/games", b)
+	w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectIDString+"/games", b)
 	s.assertEqual(http.StatusCreated, w.Code)
 }
 
 func (s *testSuite) listGames() {
-	w := s.request("GET", "/api/project/games")
+	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games")
 
-	var response []game.Game
+	var response []db.Game
 	s.assertEqual(http.StatusOK, w.Code)
 	s.mustUnmarshal(w.Body.Bytes(), &response)
 	s.assertTrue(len(response) == 1)
@@ -280,19 +287,19 @@ func (s *testSuite) listGames() {
 
 func (s *testSuite) createMatches() {
 	for _, m := range s.testData.matches {
-		var teams []gin.H
+		var teams []JSON
 		for _, t := range m.teams {
-			teams = append(teams, gin.H{
+			teams = append(teams, JSON{
 				"playerIds": t.players,
 				"score":     t.score,
 			})
 		}
-		body := gin.H{"teams": teams}
+		body := JSON{"teams": teams}
 
 		gameID := strconv.Itoa(int(s.testData.gameID))
-		w := s.requestWithBody("POST", "/api/project/games/"+gameID+"/matches", body)
+		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/matches", body)
 
-		response := &match.Match{}
+		response := &db.Match{}
 		s.assertEqual(http.StatusCreated, w.Code)
 		s.mustUnmarshal(w.Body.Bytes(), response)
 		s.assertTrue(response.ID > 0)
@@ -302,9 +309,9 @@ func (s *testSuite) createMatches() {
 
 func (s *testSuite) listMatches() {
 	gameID := strconv.Itoa(int(s.testData.gameID))
-	w := s.request("GET", "/api/project/games/"+gameID+"/matches")
+	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/matches")
 
-	var response []match.MatchData
+	var response []compelo.MatchData
 	s.assertEqual(http.StatusOK, w.Code)
 	s.mustUnmarshal(w.Body.Bytes(), &response)
 	s.assertTrue(len(response) == len(s.testData.matches))
@@ -330,9 +337,9 @@ func (s *testSuite) listMatches() {
 
 func (s *testSuite) loadPlayerStats() {
 	gameID := strconv.Itoa(int(s.testData.gameID))
-	w := s.request("GET", "/api/project/games/"+gameID+"/players")
+	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/player-stats")
 
-	var response []stats.Player
+	var response []compelo.PlayerStats
 	s.assertEqual(http.StatusOK, w.Code)
 	s.mustUnmarshal(w.Body.Bytes(), &response)
 	s.assertTrue(len(response) == len(s.testData.players))
@@ -350,7 +357,7 @@ func (s *testSuite) loadPlayerStats() {
 
 // ------ Helpers ------
 
-func (s *testSuite) requestWithBody(method, path string, body gin.H) *httptest.ResponseRecorder {
+func (s *testSuite) requestWithBody(method, path string, body JSON) *httptest.ResponseRecorder {
 	b, err := json.Marshal(body)
 	if err != nil {
 		s.testing.Error(err)
@@ -364,7 +371,7 @@ func (s *testSuite) requestWithBody(method, path string, body gin.H) *httptest.R
 		req.Header.Set("Authorization", "Bearer "+s.token)
 	}
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.handler.ServeHTTP(w, req)
 	return w
 }
 
@@ -378,7 +385,7 @@ func (s *testSuite) request(method, path string) *httptest.ResponseRecorder {
 		req.Header.Set("Authorization", "Bearer "+s.token)
 	}
 	w := httptest.NewRecorder()
-	s.router.ServeHTTP(w, req)
+	s.handler.ServeHTTP(w, req)
 	return w
 }
 

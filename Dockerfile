@@ -14,16 +14,9 @@ FROM golang:1.13-buster AS BACKEND
 RUN apt-get install -y -q --no-install-recommends make
 
 COPY Makefile go.mod go.sum /usr/src/
-COPY api /usr/src/api
-COPY auth /usr/src/auth
 COPY cmd /usr/src/cmd
-COPY db /usr/src/db
-COPY game /usr/src/game
-COPY match /usr/src/match
-COPY player /usr/src/player
-COPY project /usr/src/project
-COPY rating /usr/src/rating
-COPY stats /usr/src/stats
+COPY pkg /usr/src/pkg
+COPY internal /usr/src/internal
 
 RUN mkdir -p /usr/src/frontend/compelo/
 COPY frontend/*.go /usr/src/frontend/

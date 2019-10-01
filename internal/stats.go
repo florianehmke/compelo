@@ -6,7 +6,7 @@ import (
 	"compelo/pkg/rating"
 )
 
-type Player struct {
+type PlayerStats struct {
 	ID           uint   `json:"id"`
 	Name         string `json:"name"`
 	ProjectID    uint   `json:"projectId"`
@@ -19,17 +19,17 @@ type Player struct {
 	LossCount    int    `json:"lossCount"`
 }
 
-func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
+func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) {
 	ratings := svc.LoadRatingsByGameID(gameID)
 
-	var players []Player
+	var players []PlayerStats
 	for _, r := range ratings {
 		p, err := svc.LoadPlayerByID(r.PlayerID)
 		if err != nil {
 			return nil, err
 		}
 
-		pws := Player{
+		pws := PlayerStats{
 			ID:           p.ID,
 			Name:         p.Name,
 			ProjectID:    p.ProjectID,
@@ -52,7 +52,7 @@ func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]Player, error) {
 	return players, nil
 }
 
-func (s *Service) applyRatingStats(player *Player) (err error) {
+func (s *Service) applyRatingStats(player *PlayerStats) (err error) {
 	selectRatings := `
 		SELECT t.rating_delta
 		FROM matches m
@@ -92,7 +92,7 @@ func (s *Service) applyRatingStats(player *Player) (err error) {
 	return nil
 }
 
-func (s *Service) applyGameStats(player *Player) (err error) {
+func (s *Service) applyGameStats(player *PlayerStats) (err error) {
 	selectRatings := `
 		SELECT t.result
 		FROM players p

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"compelo/rating"
+	"compelo/pkg/rating"
 )
 
 func TestEloForTwoPlayers(t *testing.T) {

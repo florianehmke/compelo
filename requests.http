@@ -60,31 +60,29 @@ Authorization: Bearer {{auth_token}}
 # ------------- Matches
 
 ### Create Match
-POST localhost:8080/api/project/games/1/matches
+POST localhost:8080/api/projects/1/games/1/matches
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
   "teams": [
     {
-      "playerIds":[2],
-      "score": 3,
-      "winner": false
+      "playerIds":[1],
+      "score": 3
     },
     {
       "playerIds":[2],
-      "score": 5,
-      "winner": true
+      "score": 5
     }
   ]
 }
 
 ### Get Matches
-GET localhost:8080/api/project/games/1/matches
+GET localhost:8080/api/projects/1/games/1/matches
 Authorization: Bearer {{auth_token}}
 
-### Get Matches by ID
-GET localhost:8080/api/project/games/1/matches/1
+### Get Player Stats
+GET localhost:8080/api/projects/1/games/1/player-stats
 Authorization: Bearer {{auth_token}}
 
 ###

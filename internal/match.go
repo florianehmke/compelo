@@ -228,6 +228,7 @@ func (svc *Service) LoadMatchByID(id uint) (MatchData, error) {
 	return matchData, err
 }
 
+// FIXME move
 func (svc *Service) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]db.Player, error) {
 	appearances, err := svc.db.LoadAppearancesByMatchIDAndTeamID(matchID, teamID)
 	if err != nil {

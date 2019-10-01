@@ -2,6 +2,8 @@ package handler
 
 import (
 	"net/http"
+
+	"compelo/pkg/json"
 )
 
 func (h *Handler) GetAllPlayerStats(w http.ResponseWriter, r *http.Request) {
@@ -9,8 +11,8 @@ func (h *Handler) GetAllPlayerStats(w http.ResponseWriter, r *http.Request) {
 
 	players, err := h.svc.LoadPlayerStatsByGameID(game.ID)
 	if err == nil {
-		writeJSON(w, http.StatusCreated, players)
+		json.Write(w, http.StatusOK, players)
 	} else {
-		writeError(w, http.StatusBadRequest, err)
+		json.Error(w, http.StatusBadRequest, err)
 	}
 }

@@ -1,6 +1,6 @@
 // +build ignore
 
-package db
+package main
 
 import (
 	"log"

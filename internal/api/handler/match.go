@@ -5,14 +5,15 @@ import (
 	"time"
 
 	"compelo/internal"
+	"compelo/pkg/json"
 )
 
 func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
 	game := mustLoadGameFromContext(r)
 
 	var param compelo.CreateMatchParameter
-	if err := unmarshal(r.Body, &param); err != nil {
-		writeError(w, http.StatusBadRequest, err)
+	if err := json.Unmarshal(r.Body, &param); err != nil {
+		json.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -21,9 +22,9 @@ func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
 
 	m, err := h.svc.CreateMatch(param)
 	if err == nil {
-		writeJSON(w, http.StatusCreated, m)
+		json.Write(w, http.StatusCreated, m)
 	} else {
-		writeError(w, http.StatusBadRequest, err)
+		json.Error(w, http.StatusBadRequest, err)
 	}
 }
 
@@ -32,8 +33,8 @@ func (h *Handler) GetAllMatches(w http.ResponseWriter, r *http.Request) {
 
 	matches, err := h.svc.LoadMatchesByGameID(game.ID)
 	if err == nil {
-		writeJSON(w, http.StatusOK, matches)
+		json.Write(w, http.StatusOK, matches)
 	} else {
-		writeError(w, http.StatusBadRequest, err)
+		json.Error(w, http.StatusBadRequest, err)
 	}
 }

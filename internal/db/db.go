@@ -1,3 +1,4 @@
+//go:generate go run scripts_generate.go
 package db
 
 import (

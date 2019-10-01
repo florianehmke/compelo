@@ -10,7 +10,7 @@ func (svc *Service) LoadRatingsByGameID(gameID uint) []db.Rating {
 }
 
 func (svc *Service) LoadRatingByPlayerIDAndGameID(playerID, gameID uint) (db.Rating, error) {
-	r, err := svc.LoadRatingByPlayerIDAndGameID(playerID, gameID)
+	r, err := svc.db.LoadRatingByPlayerIDAndGameID(playerID, gameID)
 	if err == db.RecordNotFound {
 		r = db.Rating{
 			Rating:   rating.InitialRating,
