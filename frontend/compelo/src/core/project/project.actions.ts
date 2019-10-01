@@ -1,5 +1,12 @@
 import { createAction, props } from '@ngrx/store';
-import { ErrorPayload, Game, Match, Payload, Player } from '@shared/models';
+import {
+  ErrorPayload,
+  Game,
+  Match,
+  Payload,
+  Player,
+  PlayerStats
+} from '@shared/models';
 import {
   CreateMatchPayload,
   FilterMatchesPayload,
@@ -85,7 +92,7 @@ export const loadPlayersWithStats = createAction(
 );
 export const loadPlayersWithStatsSuccess = createAction(
   '[Players] Load With Stats Success',
-  props<Payload<Player[]>>()
+  props<Payload<PlayerStats[]>>()
 );
 export const loadPlayersWithStatsError = createAction(
   '[Players] Load With Stats Error',

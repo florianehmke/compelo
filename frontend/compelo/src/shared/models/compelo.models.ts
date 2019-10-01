@@ -13,7 +13,9 @@ export interface Player {
   id?: number;
   projectId?: number;
   name: string;
+}
 
+export interface PlayerStats extends Player {
   rating?: number;
   peakRating?: number;
   lowestRating?: number;

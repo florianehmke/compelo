@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 
 	"compelo/internal/api/handler"
 	"compelo/internal/api/security"
@@ -19,6 +20,7 @@ func New(h *handler.Handler, s *security.JWT) http.Handler {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(corsMiddleware().Handler)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/login", s.Login)
@@ -41,4 +43,15 @@ func New(h *handler.Handler, s *security.JWT) http.Handler {
 		})
 	})
 	return r
+}
+
+func corsMiddleware() *cors.Cors {
+	return cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:4200"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	})
 }

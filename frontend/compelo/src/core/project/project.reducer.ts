@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Game, Match, Player } from '@shared/models';
+import { Game, Match, Player, PlayerStats } from '@shared/models';
 import {
   loadGamesSuccess,
   loadMatchesSuccess,
@@ -13,7 +13,7 @@ export const FEATURE_KEY = 'project';
 export interface State {
   games: Game[];
   players: Player[];
-  playersWithStats: Player[];
+  playersWithStats: PlayerStats[];
   matches: Match[];
   matchFilter: string;
 }
