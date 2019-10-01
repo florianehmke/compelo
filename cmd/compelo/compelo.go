@@ -8,7 +8,7 @@ import (
 
 	"compelo/api/handler"
 	"compelo/api/router"
-	"compelo/internal/compelo"
+	"compelo/internal"
 )
 
 func main() {

@@ -6,4 +6,4 @@ import (
 	"net/http"
 )
 
-var Scripts = http.Dir("db/scripts")
+var Scripts = http.Dir("internal/db/scripts")

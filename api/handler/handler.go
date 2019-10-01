@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"compelo/internal/compelo"
+	"compelo/internal"
 )
 
 type Handler struct {
@@ -24,19 +24,22 @@ func unmarshal(r io.Reader, v interface{}) error {
 func marshal(r io.Reader, v interface{}) error {
 	return json.NewDecoder(r).Decode(&v)
 }
+
 func writeJSON(w http.ResponseWriter, code int, c interface{}) {
 	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
+
 	_, err = w.Write(b)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
 }
 
 func writeError(w http.ResponseWriter, code int, err error) {

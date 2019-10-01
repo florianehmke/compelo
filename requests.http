@@ -9,12 +9,12 @@ Content-Type: application/json
   "password": "123"
 }
 
-### Select Project
-POST localhost:8080/api/select-project
+### Login
+POST localhost:8080/api/login
 Content-Type: application/json
 
 {
-  "name": "Avengers",
+  "name": "My Project 1",
   "password": "123"
 }
 

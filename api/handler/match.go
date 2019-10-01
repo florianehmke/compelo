@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"compelo/internal/compelo"
+	"compelo/internal"
 )
 
 func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {

@@ -19,9 +19,12 @@ func New(h *handler.Handler) *chi.Mux {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Route("/api", func(r chi.Router) {
+		r.Post("/login", h.Login)
 		r.Post("/projects", h.CreateProject)
 		r.Get("/projects", h.GetAllProjects)
 		r.Route("/projects/{projectID}", func(r chi.Router) {
+			r.Use(handler.Verifier)
+			r.Use(handler.Authenticator)
 			r.Use(h.ProjectCtx)
 			r.Post("/players", h.CreatePlayer)
 			r.Get("/players", h.GetAllPlayers)
