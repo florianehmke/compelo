@@ -225,7 +225,7 @@ func (svc *Service) LoadMatchByID(id uint) (MatchData, error) {
 		}
 
 		// 3. Get data about players.
-		players, err := svc.LoadPlayersByMatchIDAndTeamID(id, t.ID)
+		players, err := svc.db.LoadPlayersByMatchIDAndTeamID(id, t.ID)
 		if err != nil {
 			return MatchData{}, err
 		}
@@ -249,23 +249,4 @@ func (svc *Service) LoadMatchByID(id uint) (MatchData, error) {
 	})
 
 	return matchData, err
-}
-
-// FIXME move
-func (svc *Service) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]db.Player, error) {
-	appearances, err := svc.db.LoadAppearancesByMatchIDAndTeamID(matchID, teamID)
-	if err != nil {
-		return nil, err
-	}
-
-	var players []db.Player
-	for _, appearance := range appearances {
-		p, err := svc.db.LoadPlayerByID(appearance.PlayerID)
-		if err != nil {
-			return nil, err
-		}
-		players = append(players, p)
-	}
-
-	return players, err
 }

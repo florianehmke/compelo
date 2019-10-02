@@ -73,3 +73,13 @@ func (db *DB) LoadAppearancesByMatchIDAndTeamID(matchID, teamID uint) ([]Appeara
 	err := db.Where(Appearance{MatchID: matchID, TeamID: teamID}).Find(&players).Error
 	return players, err
 }
+
+func (db *DB) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]Player, error) {
+	var players []Player
+	err := db.
+		Joins("left join appearances on appearances.player_id = players.id").
+		Where("appearances.match_id = ? and appearances.team_id = ? ", matchID, teamID).
+		Find(&players).Error
+
+	return players, err
+}
