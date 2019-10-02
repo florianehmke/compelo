@@ -29,8 +29,7 @@ func New(h *handler.Handler, s *security.JWT) http.Handler {
 		r.Post("/projects", h.CreateProject)
 		r.Get("/projects", h.GetAllProjects)
 		r.Route("/projects/{"+handler.ProjectID+"}", func(r chi.Router) {
-			r.Use(s.Verifier)
-			r.Use(s.Authenticator)
+			r.Use(s.VerifyToken)
 			r.Use(h.ProjectCtx)
 			r.Post("/players", h.CreatePlayer)
 			r.Get("/players", h.GetAllPlayers)

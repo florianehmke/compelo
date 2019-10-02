@@ -9,7 +9,7 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { loadToken, removeToken, storeToken } from '@shared/jwt';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@core/auth.service';
-import { TokenPayload } from '@shared/models';
+import { AuthResponse } from '@shared/models';
 import { Router } from '@angular/router';
 import { ToastService } from '@shared/toast';
 
@@ -48,7 +48,7 @@ export class AuthInterceptor implements HttpInterceptor {
       this.refreshTokenSubject.next(null);
 
       return this.authService.refresh().pipe(
-        switchMap(({ token }: TokenPayload) => {
+        switchMap(({ token }: AuthResponse) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token);
           storeToken(token);

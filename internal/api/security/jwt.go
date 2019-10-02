@@ -1,154 +1,138 @@
 package security
 
 import (
+	"context"
+	"errors"
 	"net/http"
+	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
-	"github.com/go-chi/jwtauth"
+	"github.com/brianvoe/sjwt"
 
 	"compelo/internal"
 	"compelo/pkg/json"
 )
 
+const ClaimsKey = "claims"
+
 type JWT struct {
 	svc *compelo.Service
-	cfg *jwtConfig
+
+	timeout    time.Duration
+	maxRefresh int64
+	secretKey  []byte
 }
 
 func NewJWT(svc *compelo.Service, timeoutSec int, secretKey string) *JWT {
-	cfg := &jwtConfig{
+	return &JWT{
+		svc:        svc,
 		timeout:    time.Second * time.Duration(timeoutSec),
-		maxRefresh: time.Hour * 7 * 24,
+		maxRefresh: 60 * 7 * 24,
 		secretKey:  []byte(secretKey),
 	}
-	cfg.initialize()
-	return &JWT{
-		svc: svc,
-		cfg: cfg,
-	}
-}
-
-type jwtConfig struct {
-	timeout    time.Duration
-	maxRefresh time.Duration
-	secretKey  []byte
-
-	jwtAuth  *jwtauth.JWTAuth
-	verifier func(http.Handler) http.Handler
-}
-
-func (c *jwtConfig) initialize() {
-	c.jwtAuth = jwtauth.New("HS256", c.secretKey, nil)
-	c.verifier = jwtauth.Verifier(c.jwtAuth)
 }
 
 type Claims struct {
 	ProjectID uint `json:"projectId"`
-	jwt.StandardClaims
 }
 
-type LoginRequest struct {
+type AuthRequest struct {
 	ProjectName string `json:"projectName"`
 	Password    string `json:"password"`
 }
 
-type LoginResponse struct {
-	Token  string `json:"token"`
-	Expire string `json:"expire"`
-}
-
-func (j *JWT) Authenticator(handler http.Handler) http.Handler {
-	return jwtauth.Authenticator(handler)
-}
-
-func (j *JWT) Verifier(handler http.Handler) http.Handler {
-	return j.cfg.verifier(handler)
+type AuthResponse struct {
+	Token string `json:"token"`
 }
 
 func (j *JWT) Login(w http.ResponseWriter, r *http.Request) {
-	var login LoginRequest
-	// Get the JSON body and decode into credentials
+	var login AuthRequest
 	err := json.Unmarshal(r.Body, &login)
 	if err != nil {
 		json.Error(w, http.StatusBadRequest, err)
 		return
 	}
-
-	project, err := j.svc.AuthorizeProject(login.ProjectName, login.Password)
+	project, err := j.svc.AuthenticateProject(login.ProjectName, login.Password)
 	if err != nil {
 		json.Error(w, http.StatusUnauthorized, err)
 		return
 	}
 
-	expirationTime := time.Now().Add(j.cfg.timeout)
-	claims := &Claims{
-		ProjectID: project.ID,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-			IssuedAt:  time.Now().Unix(),
-		},
-	}
+	claims := sjwt.New()
+	claims.Set("projectId", project.ID)
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(j.cfg.secretKey)
-	if err != nil {
-		json.Error(w, http.StatusInternalServerError, err)
-		return
-	}
+	now := time.Now()
+	claims.SetExpiresAt(now.Add(j.timeout))
+	claims.SetIssuedAt(now)
 
-	json.Write(w, http.StatusOK, LoginResponse{
-		Token:  tokenString,
-		Expire: expirationTime.Format(time.RFC3339),
+	json.Write(w, http.StatusOK, AuthResponse{
+		Token: claims.Generate(j.secretKey),
 	})
 }
 
 func (j *JWT) Refresh(w http.ResponseWriter, r *http.Request) {
-	tknStr := jwtauth.TokenFromHeader(r)
-	if tknStr == "" {
-		w.WriteHeader(http.StatusUnauthorized)
+	tokenStr := tokenFromHeader(r)
+	if valid := sjwt.Verify(tokenStr, j.secretKey); !valid {
+		json.Error(w, http.StatusUnauthorized, sjwt.ErrTokenInvalid)
 		return
 	}
-
-	claims := &Claims{}
-	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return j.cfg.secretKey, nil
-	})
-	if !tkn.Valid {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
+	rawClaims, err := sjwt.Parse(tokenStr)
 	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
-			w.WriteHeader(http.StatusUnauthorized)
+		json.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+	issuedAt, err := rawClaims.GetIssuedAt()
+	if err != nil {
+		json.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+	if (time.Now().Unix() - issuedAt) > j.maxRefresh {
+		json.Error(w, http.StatusUnauthorized, errors.New("max refresh time exceeded"))
+		return
+	}
+	rawClaims.SetExpiresAt(time.Now().Add(j.timeout))
+	json.Write(w, http.StatusOK, AuthResponse{
+		Token: rawClaims.Generate(j.secretKey),
+	})
+}
+
+// VerifyToken verifies, parses and validates the jwt.
+//
+// 1. Extract bearer token from request headers.
+// 2. Verify that the token signature matches.
+// 3. Parse the token's claims.
+// 4. Validate the token's claims (checks for expiration).
+// 5. Populate claims struct and put it into request context.
+func (j *JWT) VerifyToken(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenStr := tokenFromHeader(r)
+		if valid := sjwt.Verify(tokenStr, j.secretKey); !valid {
+			json.Error(w, http.StatusUnauthorized, sjwt.ErrTokenInvalid)
 			return
 		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	_, err = j.svc.LoadProjectByID(claims.ProjectID)
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	if time.Now().Sub(time.Unix(claims.IssuedAt, 0)) > j.cfg.maxRefresh {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	expirationTime := time.Now().Add(j.cfg.timeout)
-	claims.ExpiresAt = expirationTime.Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(j.cfg.secretKey)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	json.Write(w, http.StatusOK, LoginResponse{
-		Token:  tokenString,
-		Expire: expirationTime.Format(time.RFC3339),
+		rawClaims, err := sjwt.Parse(tokenStr)
+		if err != nil {
+			json.Error(w, http.StatusUnauthorized, err)
+			return
+		}
+		if err := rawClaims.Validate(); err != nil {
+			json.Error(w, http.StatusUnauthorized, err)
+			return
+		}
+		var claims Claims
+		if err := rawClaims.ToStruct(&claims); err != nil {
+			json.Error(w, http.StatusUnauthorized, err)
+			return
+		}
+		ctx := context.WithValue(r.Context(), ClaimsKey, claims)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func tokenFromHeader(r *http.Request) string {
+	bearer := r.Header.Get("Authorization")
+	if len(bearer) > 7 && strings.ToUpper(bearer[0:6]) == "BEARER" {
+		return bearer[7:]
+	}
+	return ""
 }

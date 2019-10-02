@@ -3,7 +3,6 @@ export interface AuthRequest {
   password: string;
 }
 
-export interface TokenPayload {
+export interface AuthResponse {
   token: string;
-  expire: string;
 }

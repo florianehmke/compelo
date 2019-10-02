@@ -28,7 +28,7 @@ func (svc *Service) LoadProjectByID(id uint) (db.Project, error) {
 	return svc.db.LoadProjectByID(id)
 }
 
-func (svc *Service) AuthorizeProject(name, pw string) (db.Project, error) {
+func (svc *Service) AuthenticateProject(name, pw string) (db.Project, error) {
 	p, err := svc.LoadProjectByName(name)
 	if err != nil {
 		return db.Project{}, errors.New("unknown project")
