@@ -10,9 +10,9 @@ import (
 )
 
 func main() {
-	scripts := http.Dir("scripts")
+	scripts := http.Dir(".")
 	err := vfsgen.Generate(scripts, vfsgen.Options{
-		PackageName:  "db",
+		PackageName:  "scripts",
 		VariableName: "Scripts",
 	})
 	if err != nil {

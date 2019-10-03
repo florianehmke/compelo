@@ -13,29 +13,39 @@ type CreateMatchParameter struct {
 	GameID uint      `json:"-"`
 	Date   time.Time `json:"-"`
 
-	Teams []struct {
-		Result      db.Result `json:"-"`
-		PlayerIDs   []int     `json:"playerIds" `
-		Score       int       `json:"score"`
-		RatingDelta int       `json:"-"`
-	} `json:"teams"`
+	Teams []CreateMatchParameterTeam `json:"teams"`
 }
+
+type CreateMatchParameterTeam struct {
+	PlayerIDs []int `json:"playerIds" `
+	Score     int   `json:"score"`
+
+	// Result + rating delta are determined by service.
+	result      db.Result
+	ratingDelta int
+}
+
+var (
+	ErrTwoTeamsRequired      = errors.New("at least two teams required")
+	ErrSameTeamSizeRequired  = errors.New("all teams need the same amount of players")
+	ErrPlayerInMultipleTeams = errors.New("player can only be in one team")
+)
 
 func (p *CreateMatchParameter) validate() error {
 	if len(p.Teams) < 2 {
-		return errors.New("at least two teams required")
+		return ErrTwoTeamsRequired
 	}
 	teamSize := len(p.Teams[0].PlayerIDs)
 	for _, t := range p.Teams {
 		if len(t.PlayerIDs) != teamSize {
-			return errors.New("all teams need the same amount of players")
+			return ErrSameTeamSizeRequired
 		}
 	}
 	playerMap := map[int]bool{}
 	for _, t := range p.Teams {
 		for _, pid := range t.PlayerIDs {
 			if _, ok := playerMap[pid]; ok {
-				return errors.New("player can only be in one team")
+				return ErrPlayerInMultipleTeams
 			}
 			playerMap[pid] = true
 		}
@@ -65,8 +75,8 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 			t, err := tx.CreateTeam(db.Team{
 				MatchID:     match.ID,
 				Score:       team.Score,
-				Result:      team.Result,
-				RatingDelta: team.RatingDelta,
+				Result:      team.result,
+				RatingDelta: team.ratingDelta,
 			})
 			if err != nil {
 				return err
@@ -78,7 +88,7 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 					MatchID:     match.ID,
 					TeamID:      t.ID,
 					PlayerID:    uint(playerID),
-					RatingDelta: team.RatingDelta,
+					RatingDelta: team.ratingDelta,
 				}); err != nil {
 					return err
 				}
@@ -100,7 +110,7 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 func (svc *Service) updatePlayerRatings(param CreateMatchParameter) error {
 	for _, t := range param.Teams {
 		for _, playerId := range t.PlayerIDs {
-			_, err := svc.UpdateRating(uint(playerId), param.GameID, t.RatingDelta)
+			_, err := svc.UpdateRating(uint(playerId), param.GameID, t.ratingDelta)
 			if err != nil {
 				return err
 			}
@@ -130,7 +140,7 @@ func (svc *Service) calculateTeamElo(param *CreateMatchParameter) {
 	rm.Calculate()
 
 	for i := range param.Teams {
-		param.Teams[i].RatingDelta = rm.GetRatingDelta(i)
+		param.Teams[i].ratingDelta = rm.GetRatingDelta(i)
 	}
 }
 
@@ -148,14 +158,14 @@ func (svc *Service) determineResult(param *CreateMatchParameter) {
 	if highScoreCount < len(param.Teams) {
 		for i := range param.Teams {
 			if param.Teams[i].Score == highScore {
-				param.Teams[i].Result = db.Win
+				param.Teams[i].result = db.Win
 			} else {
-				param.Teams[i].Result = db.Loss
+				param.Teams[i].result = db.Loss
 			}
 		}
 	} else {
 		for i := range param.Teams {
-			param.Teams[i].Result = db.Draw
+			param.Teams[i].result = db.Draw
 		}
 	}
 }

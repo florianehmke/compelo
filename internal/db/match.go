@@ -70,12 +70,6 @@ func (db *DB) LoadTeamsByMatchID(id uint) ([]Team, error) {
 	return teams, err
 }
 
-func (db *DB) LoadAppearancesByMatchIDAndTeamID(matchID, teamID uint) ([]Appearance, error) {
-	var players []Appearance
-	err := db.gorm.Where(Appearance{MatchID: matchID, TeamID: teamID}).Find(&players).Error
-	return players, err
-}
-
 func (db *DB) LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]Player, error) {
 	var players []Player
 	err := db.gorm.
