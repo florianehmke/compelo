@@ -51,7 +51,6 @@ func TestMatch(t *testing.T) {
 	bp.testTwoTeamsRequired(t)
 	bp.testPlayerInMultipleTeams(t)
 	bp.testSameTeamSizeRequired(t)
-
 }
 
 func (bp basicProject) testTwoTeamsRequired(t *testing.T) {

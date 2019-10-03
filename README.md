@@ -7,7 +7,7 @@ Program for elevating team spirit.
 ## Development
 
 Build with `-tags=dev`, otherwise generated `*_vfsdata.go` files for the `frontend` and `db` package are expected.
-Start the backend with `-dev` flag (enables a `CORS` middleware).
+See `Makefile` and `Dockerfile` for details.
 
 Start the frontend inside `frontend/compelo` via `npm install && npm run start`.
 
