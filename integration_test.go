@@ -177,7 +177,7 @@ func TestAPI(t *testing.T) {
 
 	svc := compelo.NewService("file::memory:")
 	hdl := handler.New(svc)
-	sec := security.NewJWT(svc, 60, "test")
+	sec := security.New(svc, 60, "test")
 	mux := router.New(hdl, sec)
 
 	ts := newTestSuite(t, mux, testData)

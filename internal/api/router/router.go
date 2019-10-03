@@ -13,7 +13,7 @@ import (
 	"compelo/internal/api/security"
 )
 
-func New(h *handler.Handler, s *security.JWT) http.Handler {
+func New(h *handler.Handler, s *security.Security) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -30,6 +30,7 @@ func New(h *handler.Handler, s *security.JWT) http.Handler {
 		r.Get("/projects", h.GetAllProjects)
 		r.Route("/projects/{"+handler.ProjectID+"}", func(r chi.Router) {
 			r.Use(s.VerifyToken)
+			r.Use(s.ProjectSecurity)
 			r.Use(h.ProjectCtx)
 			r.Post("/players", h.CreatePlayer)
 			r.Get("/players", h.GetAllPlayers)

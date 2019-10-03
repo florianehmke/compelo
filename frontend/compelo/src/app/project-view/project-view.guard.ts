@@ -12,7 +12,7 @@ export class ProjectViewGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const projectId = parseInt(route.paramMap.get('projectId'), 10);
+    const projectId = route.paramMap.get('projectId');
     if (tokenForProjectIdExists(projectId)) {
       return true;
     }

@@ -33,6 +33,6 @@ func main() {
 
 	svc := compelo.NewService(dbPath)
 	hdl := handler.New(svc)
-	sec := security.NewJWT(svc, 60*120, secret)
+	sec := security.New(svc, 60*120, secret)
 	log.Fatal(http.ListenAndServe(":"+port, router.New(hdl, sec)))
 }
