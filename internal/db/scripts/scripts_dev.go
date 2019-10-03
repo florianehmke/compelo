@@ -1,6 +1,6 @@
 // +build dev
 
-package db
+package scripts
 
 import (
 	"net/http"

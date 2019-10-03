@@ -51,4 +51,4 @@ clean:
 distclean: clean
 	rm -f -r frontend/compelo/dist
 	rm -f frontend/frontend_vfsdata.go
-	rm -f internal/db/scripts_vfsdata.go
+	rm -f internal/db/scripts/scripts_vfsdata.go

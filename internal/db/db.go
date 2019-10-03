@@ -1,4 +1,4 @@
-//go:generate go run scripts_generate.go
+//go:generate go run scripts/scripts_generate.go
 package db
 
 import (
@@ -8,6 +8,8 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+
+	"compelo/internal/db/scripts"
 )
 
 type DB struct {
@@ -37,7 +39,7 @@ func New(dbPath string) *DB {
 	db.Exec("PRAGMA foreign_keys = ON")
 	db.LogMode(false)
 
-	f, err := Scripts.Open("schema.sql")
+	f, err := scripts.Scripts.Open("schema.sql")
 	if err != nil {
 		panic(err)
 	}
