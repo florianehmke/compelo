@@ -14,10 +14,10 @@ type CreateMatchParameter struct {
 	Date   time.Time `json:"-"`
 
 	Teams []struct {
-		Result      string `json:"-"`
-		PlayerIDs   []int  `json:"playerIds" `
-		Score       int    `json:"score"`
-		RatingDelta int    `json:"-"`
+		Result      db.Result `json:"-"`
+		PlayerIDs   []int     `json:"playerIds" `
+		Score       int       `json:"score"`
+		RatingDelta int       `json:"-"`
 	} `json:"teams"`
 }
 
@@ -167,7 +167,7 @@ type TeamData struct {
 	ID          uint         `json:"id"`
 	MatchID     uint         `json:"matchId"`
 	Score       int          `json:"score"`
-	Result      string       `json:"result"`
+	Result      db.Result    `json:"result"`
 	RatingDelta int          `json:"ratingDelta"`
 	Players     []PlayerData `json:"players"`
 }

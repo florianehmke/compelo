@@ -3,6 +3,7 @@ package compelo
 import (
 	"sort"
 
+	"compelo/internal/db"
 	"compelo/pkg/rating"
 )
 
@@ -37,12 +38,14 @@ func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) 
 			PeakRating:   rating.InitialRating,
 			LowestRating: rating.InitialRating,
 		}
-		if err := svc.applyRatingStats(&pws); err != nil {
+		results, err := svc.db.LoadMatchResultsByPlayerIDAndGameID(p.ID, gameID)
+		if err != nil {
 			return nil, err
 		}
-		if err := svc.applyGameStats(&pws); err != nil {
-			return nil, err
-		}
+
+		pws.applyRatingStats(results)
+		pws.applyResultStats(results)
+
 		players = append(players, pws)
 	}
 
@@ -52,89 +55,29 @@ func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) 
 	return players, nil
 }
 
-func (svc *Service) applyRatingStats(player *PlayerStats) (err error) {
-	selectRatings := `
-		SELECT t.rating_delta
-		FROM matches m
-				 JOIN appearances a ON m.id = a.match_id
-				 JOIN teams t ON a.team_id = t.id
-		WHERE a.player_id = ?
-		ORDER BY m.date ASC`
-
-	rows, err := svc.db.Raw(selectRatings, player.ID).Rows()
-	if err != nil {
-		return err
-	}
-	defer func() {
-		err = rows.Close()
-	}()
-
-	var deltas []int
-	for rows.Next() {
-		var delta int
-		err := rows.Scan(&delta)
-		if err != nil {
-			return err
-		}
-		deltas = append(deltas, delta)
-	}
-
+func (p *PlayerStats) applyRatingStats(results []db.MatchResult) {
 	current := rating.InitialRating
-	for _, delta := range deltas {
-		current = current + delta
-		if current > player.PeakRating {
-			player.PeakRating = current
+	for _, result := range results {
+		current = current + result.RatingDelta
+		if current > p.PeakRating {
+			p.PeakRating = current
 		}
-		if current < player.LowestRating {
-			player.LowestRating = current
+		if current < p.LowestRating {
+			p.LowestRating = current
 		}
 	}
-	return nil
 }
 
-func (svc *Service) applyGameStats(player *PlayerStats) (err error) {
-	selectRatings := `
-		SELECT t.result
-		FROM players p
-				 JOIN appearances a ON p.id = a.player_id
-				 JOIN teams t ON a.team_id = t.id
-		WHERE p.id = ?`
-
-	rows, err := svc.db.Raw(selectRatings, player.ID).Rows()
-	if err != nil {
-		return err
-	}
-	defer func() {
-		err = rows.Close()
-	}()
-
-	var results []string
-	for rows.Next() {
-		var r string
-		err := rows.Scan(&r)
-		if err != nil {
-			return err
-		}
-		results = append(results, r)
-	}
-
-	wins := 0
-	draws := 0
-	losses := 0
+func (p *PlayerStats) applyResultStats(results []db.MatchResult) {
 	for _, r := range results {
-		switch r {
-		case "Win":
-			wins += 1
-		case "Draw":
-			draws += 1
-		case "Loss":
-			losses += 1
+		switch r.Result {
+		case db.Win:
+			p.WinCount += 1
+		case db.Draw:
+			p.DrawCount += 1
+		case db.Loss:
+			p.LossCount += 1
 		}
 	}
-
-	player.GameCount = len(results)
-	player.WinCount = wins
-	player.DrawCount = draws
-	player.LossCount = losses
-	return nil
+	p.GameCount = len(results)
 }

@@ -12,7 +12,7 @@ import (
 )
 
 type DB struct {
-	*gorm.DB
+	gorm *gorm.DB
 }
 
 type Model struct {
@@ -25,7 +25,7 @@ type Model struct {
 var RecordNotFound = errors.New("record not found")
 
 func (db *DB) Close() {
-	if err := db.DB.Close(); err != nil {
+	if err := db.gorm.Close(); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -54,7 +54,7 @@ func New(dbPath string) *DB {
 }
 
 func (db *DB) DoInTransaction(fn func(*DB) error) error {
-	tx := db.Begin()
+	tx := db.gorm.Begin()
 	if tx.Error != nil {
 		return tx.Error
 	}

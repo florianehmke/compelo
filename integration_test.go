@@ -62,7 +62,7 @@ type testMatch struct {
 type testTeam struct {
 	players []int
 	score   int
-	result  string
+	result  db.Result
 }
 
 type testStats struct {
@@ -92,12 +92,12 @@ func TestAPI(t *testing.T) {
 					{
 						players: []int{1, 2},
 						score:   1,
-						result:  "Draw",
+						result:  db.Draw,
 					},
 					{
 						players: []int{3, 4},
 						score:   1,
-						result:  "Draw",
+						result:  db.Draw,
 					},
 				},
 			},
@@ -106,12 +106,12 @@ func TestAPI(t *testing.T) {
 					{
 						players: []int{1, 2},
 						score:   2,
-						result:  "Win",
+						result:  db.Win,
 					},
 					{
 						players: []int{3, 4},
 						score:   1,
-						result:  "Loss",
+						result:  db.Loss,
 					},
 				},
 			},
@@ -120,17 +120,17 @@ func TestAPI(t *testing.T) {
 					{
 						players: []int{1},
 						score:   2,
-						result:  "Win",
+						result:  db.Win,
 					},
 					{
 						players: []int{2},
 						score:   2,
-						result:  "Win",
+						result:  db.Win,
 					},
 					{
 						players: []int{3},
 						score:   1,
-						result:  "Loss",
+						result:  db.Loss,
 					},
 				},
 			},
