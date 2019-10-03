@@ -110,7 +110,7 @@ func (svc *Service) calculateTeamElo(param *CreateMatchParameter) {
 	for i, t := range param.Teams {
 		sum := 0
 		for _, playerID := range t.PlayerIDs {
-			r, err := svc.LoadRatingByPlayerIDAndGameID(uint(playerID), param.GameID)
+			r, err := svc.LoadOrCreateRatingByPlayerIDAndGameID(uint(playerID), param.GameID)
 			if err != nil {
 				return
 			}

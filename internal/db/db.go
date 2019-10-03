@@ -2,7 +2,6 @@
 package db
 
 import (
-	"errors"
 	"io/ioutil"
 	"log"
 	"time"
@@ -21,8 +20,6 @@ type Model struct {
 	UpdatedAt time.Time  `json:"-"`
 	DeletedAt *time.Time `json:"-"`
 }
-
-var RecordNotFound = errors.New("record not found")
 
 func (db *DB) Close() {
 	if err := db.gorm.Close(); err != nil {
