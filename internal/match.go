@@ -44,6 +44,10 @@ func (p *CreateMatchParameter) validate() error {
 }
 
 func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
+	if err := param.validate(); err != nil {
+		return db.Match{}, err
+	}
+
 	svc.determineResult(&param)
 	svc.calculateTeamElo(&param)
 
