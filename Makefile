@@ -25,7 +25,7 @@ backend-quality:
 backend:
 	mkdir -p $(FRONTEND_PATH)/dist
 	$(GOCMD) generate ./frontend
-	$(GOCMD) generate ./internal/db
+	$(GOCMD) generate ./internal/db/scripts
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
 
 # Builds application with dev tag, meaning that sql files and
