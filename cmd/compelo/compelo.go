@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -13,10 +12,6 @@ import (
 )
 
 func main() {
-	dev := false
-	flag.BoolVar(&dev, "dev", false, "dev mode")
-	flag.Parse()
-
 	secret, ok := os.LookupEnv("COMPELO_SECRET")
 	if !ok {
 		secret = "insecure_dev_secret"

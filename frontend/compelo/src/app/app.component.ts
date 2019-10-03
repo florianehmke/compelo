@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { getSelectedGame, State as ProjectState } from '@core/project';
 
 import { Store } from '@ngrx/store';
@@ -15,7 +15,8 @@ import { getSelectedProject } from '@core/project-list';
     <div class="container">
       <router-outlet></router-outlet>
     </div>
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   game$ = this.projectStore.select(getSelectedGame);

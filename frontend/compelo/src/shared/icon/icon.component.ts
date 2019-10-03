@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
@@ -6,7 +6,6 @@ import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
   template: `
     <fa-icon [icon]="[prefix, icon]" [class.icon-btn]="button"></fa-icon>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       .icon-btn {
