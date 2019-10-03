@@ -17,16 +17,17 @@ frontend-quality: frontend-prepare
 frontend: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run build-prod
 
-backend-quality:
+generate:
+	mkdir -p $(FRONTEND_PATH)/dist
+	$(GOCMD) generate ./frontend
 	$(GOCMD) generate ./internal/db/scripts
+
+backend-quality: generate
 	$(GOCMD) fmt ./...
 	$(GOCMD) vet ./...
 	$(GOCMD) test ./...
 
-backend:
-	mkdir -p $(FRONTEND_PATH)/dist
-	$(GOCMD) generate ./frontend
-	$(GOCMD) generate ./internal/db/scripts
+backend: generate
 	$(GOCMD) build -o $(EXECUTEABLE) ./cmd/compelo
 
 # Builds application with dev tag, meaning that sql files and
