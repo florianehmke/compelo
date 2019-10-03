@@ -58,7 +58,7 @@ func (h *Handler) ProjectCtx(next http.Handler) http.Handler {
 	})
 }
 
-func mustLoadProjectFromContext(r *http.Request) db.Project {
+func MustLoadProjectFromContext(r *http.Request) db.Project {
 	project, ok := r.Context().Value(ProjectKey).(db.Project)
 	if !ok {
 		panic("project must be set in context")

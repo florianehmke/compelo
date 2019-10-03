@@ -7,7 +7,7 @@ import (
 )
 
 func (h *Handler) GetAllPlayerStats(w http.ResponseWriter, r *http.Request) {
-	game := mustLoadGameFromContext(r)
+	game := MustLoadGameFromContext(r)
 
 	players, err := h.svc.LoadPlayerStatsByGameID(game.ID)
 	if err == nil {

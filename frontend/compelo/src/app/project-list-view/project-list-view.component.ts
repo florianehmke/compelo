@@ -33,7 +33,7 @@ export class ProjectListViewComponent {
   constructor(private store: Store<State>, private modalService: NgbModal) {}
 
   onSelect(project: Project) {
-    if (tokenForProjectIdExists(project.id.toString())) {
+    if (tokenForProjectIdExists(project.id)) {
       this.store.dispatch(selectProjectSuccess({ payload: project }));
     } else {
       this.modalService

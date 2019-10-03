@@ -1,14 +1,14 @@
-export function tokenForProjectIdExists(id: string): boolean {
+export function tokenForProjectIdExists(id: number): boolean {
   return projectIdFromToken() === id;
 }
 
-export function projectIdFromToken(): string {
+export function projectIdFromToken(): number {
   const token = loadToken();
   if (token) {
     const decoded = JSON.parse(atob(token.split('.')[1]));
     return decoded.projectId;
   }
-  return "";
+  return -1;
 }
 
 export function loadToken(): string {

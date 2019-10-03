@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
-	game := mustLoadGameFromContext(r)
+	game := MustLoadGameFromContext(r)
 
 	var param compelo.CreateMatchParameter
 	if err := json.Unmarshal(r.Body, &param); err != nil {
@@ -29,7 +29,7 @@ func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetAllMatches(w http.ResponseWriter, r *http.Request) {
-	game := mustLoadGameFromContext(r)
+	game := MustLoadGameFromContext(r)
 
 	matches, err := h.svc.LoadMatchesByGameID(game.ID)
 	if err == nil {

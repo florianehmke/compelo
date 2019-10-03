@@ -7,7 +7,7 @@ import (
 )
 
 func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
-	project := mustLoadProjectFromContext(r)
+	project := MustLoadProjectFromContext(r)
 	var body struct {
 		Name string `json:"name"`
 	}
@@ -25,7 +25,7 @@ func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetAllPlayers(w http.ResponseWriter, r *http.Request) {
-	project := mustLoadProjectFromContext(r)
+	project := MustLoadProjectFromContext(r)
 	players := h.svc.LoadPlayersByProjectID(project.ID)
 	json.Write(w, http.StatusOK, players)
 }

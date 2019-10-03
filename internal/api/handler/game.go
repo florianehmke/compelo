@@ -18,7 +18,7 @@ const (
 )
 
 func (h *Handler) CreateGame(w http.ResponseWriter, r *http.Request) {
-	project := mustLoadProjectFromContext(r)
+	project := MustLoadProjectFromContext(r)
 	var body struct {
 		Name string `json:"name"`
 	}
@@ -36,7 +36,7 @@ func (h *Handler) CreateGame(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetAllGames(w http.ResponseWriter, r *http.Request) {
-	project := mustLoadProjectFromContext(r)
+	project := MustLoadProjectFromContext(r)
 	games := h.svc.LoadGamesByProjectID(project.ID)
 	json.Write(w, http.StatusOK, games)
 }
@@ -59,7 +59,7 @@ func (h *Handler) GameCtx(next http.Handler) http.Handler {
 	})
 }
 
-func mustLoadGameFromContext(r *http.Request) db.Game {
+func MustLoadGameFromContext(r *http.Request) db.Game {
 	game, ok := r.Context().Value(GameKey).(db.Game)
 	if !ok {
 		panic("game must be set in context")

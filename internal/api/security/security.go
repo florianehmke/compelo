@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -34,7 +33,7 @@ func New(svc *compelo.Service, timeoutSec int, secretKey string) *Security {
 }
 
 type Claims struct {
-	ProjectID string `json:"projectId"`
+	ProjectID uint `json:"projectId"`
 }
 
 type AuthRequest struct {
@@ -60,7 +59,7 @@ func (sec *Security) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := sjwt.New()
-	claims.Set("projectId", strconv.Itoa(int(project.ID)))
+	claims.Set("projectId", project.ID)
 
 	now := time.Now()
 	claims.SetExpiresAt(now.Add(sec.timeout))
@@ -136,4 +135,12 @@ func tokenFromHeader(r *http.Request) string {
 		return bearer[7:]
 	}
 	return ""
+}
+
+func mustLoadClaimsFromContext(r *http.Request) Claims {
+	claims, ok := r.Context().Value(ClaimsKey).(Claims)
+	if !ok {
+		panic("claims must be set in context")
+	}
+	return claims
 }
