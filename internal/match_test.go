@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
 	"compelo/internal"
@@ -61,7 +62,7 @@ func (bp basicProject) testTwoTeamsRequired(t *testing.T) {
 	}
 
 	_, err := bp.svc.CreateMatch(p)
-	assert.Equal(t, compelo.ErrTwoTeamsRequired, err)
+	assert.Equal(t, compelo.ErrTwoTeamsRequired, errors.Cause(err))
 }
 
 func (bp basicProject) testPlayerInMultipleTeams(t *testing.T) {
@@ -85,7 +86,7 @@ func (bp basicProject) testPlayerInMultipleTeams(t *testing.T) {
 	}
 
 	_, err := bp.svc.CreateMatch(p)
-	assert.Equal(t, compelo.ErrPlayerInMultipleTeams, err)
+	assert.Equal(t, compelo.ErrPlayerInMultipleTeams, errors.Cause(err))
 }
 
 func (bp basicProject) testSameTeamSizeRequired(t *testing.T) {
@@ -110,5 +111,5 @@ func (bp basicProject) testSameTeamSizeRequired(t *testing.T) {
 	}
 
 	_, err := bp.svc.CreateMatch(p)
-	assert.Equal(t, compelo.ErrSameTeamSizeRequired, err)
+	assert.Equal(t, compelo.ErrSameTeamSizeRequired, errors.Cause(err))
 }

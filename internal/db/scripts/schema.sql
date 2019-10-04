@@ -116,3 +116,10 @@ CREATE INDEX idx_teams_deleted_at
     ON teams (deleted_at);
 
 
+
+CREATE VIEW match_results AS
+SELECT a.player_id, m.game_id, m.date, t.rating_delta, t.result
+FROM matches m
+         JOIN appearances a ON m.id = a.match_id
+         JOIN teams t ON a.team_id = t.id
+ORDER BY m.date;

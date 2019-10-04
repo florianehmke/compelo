@@ -3,21 +3,21 @@ package compelo
 import (
 	"sort"
 
+	"github.com/pkg/errors"
+
 	"compelo/internal/db"
 	"compelo/pkg/rating"
 )
 
 type PlayerStats struct {
-	ID           uint   `json:"id"`
-	Name         string `json:"name"`
-	ProjectID    uint   `json:"projectId"`
-	Rating       int    `json:"rating"`
-	PeakRating   int    `json:"peakRating"`
-	LowestRating int    `json:"lowestRating"`
-	GameCount    int    `json:"gameCount"`
-	WinCount     int    `json:"winCount"`
-	DrawCount    int    `json:"drawCount"`
-	LossCount    int    `json:"lossCount"`
+	db.Player        // embedded player
+	Rating       int `json:"rating"`
+	PeakRating   int `json:"peakRating"`
+	LowestRating int `json:"lowestRating"`
+	GameCount    int `json:"gameCount"`
+	WinCount     int `json:"winCount"`
+	DrawCount    int `json:"drawCount"`
+	LossCount    int `json:"lossCount"`
 }
 
 func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) {
@@ -27,20 +27,18 @@ func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) 
 	for _, r := range ratings {
 		p, err := svc.LoadPlayerByID(r.PlayerID)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "could not load player by rating")
 		}
 
 		pws := PlayerStats{
-			ID:           p.ID,
-			Name:         p.Name,
-			ProjectID:    p.ProjectID,
+			Player:       p,
 			Rating:       r.Rating,
 			PeakRating:   rating.InitialRating,
 			LowestRating: rating.InitialRating,
 		}
 		results, err := svc.db.LoadMatchResultsByPlayerIDAndGameID(p.ID, gameID)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "could not match results")
 		}
 
 		pws.applyRatingStats(results)

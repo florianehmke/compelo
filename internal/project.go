@@ -28,14 +28,19 @@ func (svc *Service) LoadProjectByID(id uint) (db.Project, error) {
 	return svc.db.LoadProjectByID(id)
 }
 
+var (
+	ErrProjectDoesNotExist  = errors.New("project does not exist")
+	ErrWrongProjectPassword = errors.New("wrong password for project")
+)
+
 func (svc *Service) AuthenticateProject(name, pw string) (db.Project, error) {
 	p, err := svc.LoadProjectByName(name)
 	if err != nil {
-		return db.Project{}, errors.New("unknown project")
+		return db.Project{}, ErrProjectDoesNotExist
 	}
 	err = bcrypt.CompareHashAndPassword(p.PasswordHash, []byte(pw))
 	if err != nil {
-		return db.Project{}, errors.New("wrong password for project")
+		return db.Project{}, ErrWrongProjectPassword
 	}
 	return p, nil
 }

@@ -21,12 +21,10 @@ func (db *DB) LoadRatingsByGameID(gameID uint) []Rating {
 func (db *DB) LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint) (Rating, error) {
 	var r Rating
 
-	err := db.gorm.Where(Rating{
-		GameID:   gameID,
-		PlayerID: playerID,
-	}).Attrs(Rating{
-		Rating: rating.InitialRating,
-	}).FirstOrCreate(&r).Error
+	where := Rating{GameID: gameID, PlayerID: playerID}
+	attrs := Rating{Rating: rating.InitialRating}
+
+	err := db.gorm.Where(where).Attrs(attrs).FirstOrCreate(&r).Error
 
 	return r, err
 }

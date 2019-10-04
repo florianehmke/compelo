@@ -1,9 +1,10 @@
 package compelo
 
 import (
-	"errors"
 	"sort"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"compelo/internal/db"
 	"compelo/pkg/rating"
@@ -55,11 +56,13 @@ func (p *CreateMatchParameter) validate() error {
 
 func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 	if err := param.validate(); err != nil {
-		return db.Match{}, err
+		return db.Match{}, errors.Wrap(err, "create match parameter validation failed")
 	}
 
 	svc.determineResult(&param)
-	svc.calculateTeamElo(&param)
+	if err := svc.calculateTeamElo(&param); err != nil {
+		return db.Match{}, errors.Wrap(err, "could not calculate team elo")
+	}
 
 	var match db.Match
 	if err := svc.db.DoInTransaction(func(tx *db.DB) error {
@@ -67,7 +70,7 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 
 		// 1. Create match.
 		if match, err = tx.CreateMatch(db.Match{GameID: param.GameID, Date: param.Date}); err != nil {
-			return err
+			return errors.Wrap(err, "create match failed")
 		}
 
 		// 2. Create teams.
@@ -79,7 +82,7 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 				RatingDelta: team.ratingDelta,
 			})
 			if err != nil {
-				return err
+				return errors.Wrap(err, "create team failed")
 			}
 
 			// 3. Create appearances for players.
@@ -90,18 +93,18 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 					PlayerID:    uint(playerID),
 					RatingDelta: team.ratingDelta,
 				}); err != nil {
-					return err
+					return errors.Wrap(err, "create appearance failed")
 				}
 			}
 		}
 		return nil
 	}); err != nil {
-		return db.Match{}, err
+		return db.Match{}, errors.Wrap(err, "create match in txn failed")
 	}
 
 	// Update the ratings of the players who participated.
 	if err := svc.updatePlayerRatings(param); err != nil {
-		return db.Match{}, err
+		return db.Match{}, errors.Wrap(err, "update player ratings failed")
 	}
 
 	return match, nil
@@ -109,24 +112,24 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 
 func (svc *Service) updatePlayerRatings(param CreateMatchParameter) error {
 	for _, t := range param.Teams {
-		for _, playerId := range t.PlayerIDs {
-			_, err := svc.UpdateRating(uint(playerId), param.GameID, t.ratingDelta)
+		for _, playerID := range t.PlayerIDs {
+			_, err := svc.UpdateRating(uint(playerID), param.GameID, t.ratingDelta)
 			if err != nil {
-				return err
+				return errors.Wrapf(err, "update rating for player with id %d failed", playerID)
 			}
 		}
 	}
 	return nil
 }
 
-func (svc *Service) calculateTeamElo(param *CreateMatchParameter) {
+func (svc *Service) calculateTeamElo(param *CreateMatchParameter) error {
 	rm := rating.NewRatedMatch()
 	for i, t := range param.Teams {
 		sum := 0
 		for _, playerID := range t.PlayerIDs {
 			r, err := svc.LoadOrCreateRatingByPlayerIDAndGameID(uint(playerID), param.GameID)
 			if err != nil {
-				return
+				return errors.Wrapf(err, "load rating for player with id %d failed", playerID)
 			}
 			sum += r.Rating
 		}
@@ -142,6 +145,7 @@ func (svc *Service) calculateTeamElo(param *CreateMatchParameter) {
 	for i := range param.Teams {
 		param.Teams[i].ratingDelta = rm.GetRatingDelta(i)
 	}
+	return nil
 }
 
 func (svc *Service) determineResult(param *CreateMatchParameter) {
@@ -199,7 +203,7 @@ func (svc *Service) LoadMatchesByGameID(gameID uint) ([]MatchData, error) {
 	for _, match := range matches {
 		matchData, err := svc.LoadMatchByID(match.ID)
 		if err != nil {
-			return matchDataList, err
+			return matchDataList, errors.Wrapf(err, "could not load match by id %d", match.ID)
 		}
 		matchDataList = append(matchDataList, matchData)
 	}
@@ -227,7 +231,7 @@ func (svc *Service) LoadMatchByID(id uint) (MatchData, error) {
 	// 2. Get data about teams.
 	teams, err := svc.db.LoadTeamsByMatchID(id)
 	if err != nil {
-		return MatchData{}, err
+		return MatchData{}, errors.Wrapf(err, "could not load teams by match id %d", id)
 	}
 	for _, t := range teams {
 		teamData := TeamData{
@@ -241,7 +245,7 @@ func (svc *Service) LoadMatchByID(id uint) (MatchData, error) {
 		// 3. Get data about players.
 		players, err := svc.db.LoadPlayersByMatchIDAndTeamID(id, t.ID)
 		if err != nil {
-			return MatchData{}, err
+			return MatchData{}, errors.Wrapf(err, "could not load players by match id %d", id)
 		}
 		for _, p := range players {
 			playerData := PlayerData{

@@ -1,6 +1,8 @@
 package compelo
 
 import (
+	"github.com/pkg/errors"
+
 	"compelo/internal/db"
 )
 
@@ -15,7 +17,7 @@ func (svc *Service) LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint)
 func (svc *Service) UpdateRating(playerID, gameID uint, delta int) (db.Rating, error) {
 	r, err := svc.db.LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID)
 	if err != nil {
-		return db.Rating{}, nil
+		return db.Rating{}, errors.Wrap(err, "load/create player rating failed")
 	}
 
 	r.Rating = r.Rating + delta
