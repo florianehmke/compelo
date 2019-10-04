@@ -19,13 +19,13 @@ import { PlayerStats } from '@shared/models';
         <tr *ngFor="let player of players">
           <td>{{ player?.name }}</td>
           <td class="text-center">
-            <small class="text-muted">{{ player?.lowestRating }}</small>
-            <span> {{ player?.rating }} </span>
-            <small class="text-muted">{{ player?.peakRating }}</small>
+            <small class="text-muted">{{ player?.current?.lowestRating }}</small>
+            <span> {{ player?.current?.rating }} </span>
+            <small class="text-muted">{{ player?.current?.peakRating }}</small>
           </td>
-          <td class="text-center">{{ player?.winCount }}</td>
-          <td class="text-center">{{ player?.drawCount }}</td>
-          <td class="text-center">{{ player?.lossCount }}</td>
+          <td class="text-center">{{ player?.current?.winCount }}</td>
+          <td class="text-center">{{ player?.current?.drawCount }}</td>
+          <td class="text-center">{{ player?.current?.lossCount }}</td>
         </tr>
       </tbody>
     </table>

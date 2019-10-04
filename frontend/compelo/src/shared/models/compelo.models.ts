@@ -16,6 +16,11 @@ export interface Player {
 }
 
 export interface PlayerStats extends Player {
+  current: Stats;
+  history: { [key: string]: Stats };
+}
+
+export interface Stats {
   rating?: number;
   peakRating?: number;
   lowestRating?: number;

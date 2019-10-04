@@ -2,6 +2,7 @@ package compelo
 
 import (
 	"sort"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -10,7 +11,12 @@ import (
 )
 
 type PlayerStats struct {
-	db.Player        // embedded player
+	db.Player                  // embedded player
+	Current   Stats            `json:"current"`
+	History   map[string]Stats `json:"history"` // mapped by RFC3339 formatted date (eg. 2019-10-01T00:00:00Z)
+}
+
+type Stats struct {
 	Rating       int `json:"rating"`
 	PeakRating   int `json:"peakRating"`
 	LowestRating int `json:"lowestRating"`
@@ -31,51 +37,58 @@ func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) 
 		}
 
 		pws := PlayerStats{
-			Player:       p,
-			Rating:       r.Rating,
-			PeakRating:   rating.InitialRating,
-			LowestRating: rating.InitialRating,
+			Player: p,
+			Current: Stats{
+				Rating:       r.Rating,
+				PeakRating:   rating.InitialRating,
+				LowestRating: rating.InitialRating,
+			},
+			History: make(map[string]Stats),
 		}
 		results, err := svc.db.LoadMatchResultsByPlayerIDAndGameID(p.ID, gameID)
 		if err != nil {
-			return nil, errors.Wrap(err, "could not match results")
+			return nil, errors.Wrap(err, "could not load match results")
 		}
 
-		pws.applyRatingStats(results)
-		pws.applyResultStats(results)
-
+		pws.applyStats(results)
 		players = append(players, pws)
 	}
 
 	sort.Slice(players, func(i, j int) bool {
-		return players[i].Rating > (players[j].Rating)
+		return players[i].Current.Rating > (players[j].Current.Rating)
 	})
 	return players, nil
 }
 
-func (p *PlayerStats) applyRatingStats(results []db.MatchResult) {
-	current := rating.InitialRating
-	for _, result := range results {
-		current = current + result.RatingDelta
-		if current > p.PeakRating {
-			p.PeakRating = current
+func (p *PlayerStats) applyStats(results []db.MatchResult) {
+	p.Current.Rating = rating.InitialRating
+
+	for i, result := range results {
+		// rating (peak, low, current)
+		p.Current.Rating = p.Current.Rating + result.RatingDelta
+		if p.Current.Rating > p.Current.PeakRating {
+			p.Current.PeakRating = p.Current.Rating
 		}
-		if current < p.LowestRating {
-			p.LowestRating = current
+		if p.Current.Rating < p.Current.LowestRating {
+			p.Current.LowestRating = p.Current.Rating
 		}
+
+		// game results
+		switch result.Result {
+		case db.Win:
+			p.Current.WinCount += 1
+		case db.Draw:
+			p.Current.DrawCount += 1
+		case db.Loss:
+			p.Current.LossCount += 1
+		}
+		p.Current.GameCount = i + 1
+
+		// store copy in history map
+		p.History[beginningOfDay(result.Date).Format(time.RFC3339)] = p.Current
 	}
 }
 
-func (p *PlayerStats) applyResultStats(results []db.MatchResult) {
-	for _, r := range results {
-		switch r.Result {
-		case db.Win:
-			p.WinCount += 1
-		case db.Draw:
-			p.DrawCount += 1
-		case db.Loss:
-			p.LossCount += 1
-		}
-	}
-	p.GameCount = len(results)
+func beginningOfDay(date time.Time) time.Time {
+	return time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, time.UTC)
 }

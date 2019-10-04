@@ -345,13 +345,13 @@ func (s *testSuite) loadPlayerStats() {
 	s.assertTrue(len(response) == len(s.testData.players))
 
 	for _, v := range response {
-		s.assertEqual(s.testData.stats[v.Name].rating, v.Rating)
-		s.assertEqual(s.testData.stats[v.Name].peakRating, v.PeakRating)
-		s.assertEqual(s.testData.stats[v.Name].lowestRating, v.LowestRating)
-		s.assertEqual(s.testData.stats[v.Name].gameCount, v.GameCount)
-		s.assertEqual(s.testData.stats[v.Name].winCount, v.WinCount)
-		s.assertEqual(s.testData.stats[v.Name].drawCount, v.DrawCount)
-		s.assertEqual(s.testData.stats[v.Name].lossCount, v.LossCount)
+		s.assertEqual(s.testData.stats[v.Name].rating, v.Current.Rating)
+		s.assertEqual(s.testData.stats[v.Name].peakRating, v.Current.PeakRating)
+		s.assertEqual(s.testData.stats[v.Name].lowestRating, v.Current.LowestRating)
+		s.assertEqual(s.testData.stats[v.Name].gameCount, v.Current.GameCount)
+		s.assertEqual(s.testData.stats[v.Name].winCount, v.Current.WinCount)
+		s.assertEqual(s.testData.stats[v.Name].drawCount, v.Current.DrawCount)
+		s.assertEqual(s.testData.stats[v.Name].lossCount, v.Current.LossCount)
 	}
 }
 
