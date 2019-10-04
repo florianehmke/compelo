@@ -29,6 +29,9 @@ type Stats struct {
 func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) {
 	ratings := svc.LoadRatingsByGameID(gameID)
 
+	firstMatch := time.Now()
+	lastMatch := time.Time{}
+
 	var players []PlayerStats
 	for _, r := range ratings {
 		p, err := svc.LoadPlayerByID(r.PlayerID)
@@ -45,19 +48,42 @@ func (svc *Service) LoadPlayerStatsByGameID(gameID uint) ([]PlayerStats, error) 
 			},
 			History: make(map[string]Stats),
 		}
+
 		results, err := svc.db.LoadMatchResultsByPlayerIDAndGameID(p.ID, gameID)
 		if err != nil {
 			return nil, errors.Wrap(err, "could not load match results")
+		}
+
+		// Need first
+		for _, v := range results {
+			if v.Date.Before(firstMatch) {
+				firstMatch = v.Date
+			}
+			if v.Date.After(lastMatch) {
+				lastMatch = v.Date
+			}
 		}
 
 		pws.applyStats(results)
 		players = append(players, pws)
 	}
 
+	players = fillMissingDataPoints(players, firstMatch, lastMatch)
+
 	sort.Slice(players, func(i, j int) bool {
 		return players[i].Current.Rating > (players[j].Current.Rating)
 	})
 	return players, nil
+}
+
+func fillMissingDataPoints(playerStats []PlayerStats, firstMatch, lastMatch time.Time) []PlayerStats {
+	matchDay := beginningOfDay(firstMatch)
+	for !matchDay.After(lastMatch) {
+		//key := matchDay.Format(time.RFC3339)
+
+		matchDay = matchDay.AddDate(0, 0, 1)
+	}
+	return nil
 }
 
 func (p *PlayerStats) applyStats(results []db.MatchResult) {
