@@ -19,7 +19,9 @@ import { PlayerStats } from '@shared/models';
         <tr *ngFor="let player of players">
           <td>{{ player?.name }}</td>
           <td class="text-center">
-            <small class="text-muted">{{ player?.current?.lowestRating }}</small>
+            <small class="text-muted">{{
+              player?.current?.lowestRating
+            }}</small>
             <span> {{ player?.current?.rating }} </span>
             <small class="text-muted">{{ player?.current?.peakRating }}</small>
           </td>
