@@ -18,7 +18,16 @@ export type ButtonStyle = 'primary' | 'success' | 'danger';
         <app-icon *ngIf="icon" [icon]="icon" class="ml-1"></app-icon>
       </span>
     </button>
-  `
+  `,
+  styles: [
+    `
+      button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+    `
+  ]
 })
 export class ButtonComponent {
   @Input()

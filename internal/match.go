@@ -65,7 +65,7 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 	}
 
 	var match db.Match
-	if err := svc.db.DoInTransaction(func(tx *db.DB) error {
+	if err := svc.db.DoInTransaction(func(tx db.Database) error {
 		var err error
 
 		// 1. Create match.

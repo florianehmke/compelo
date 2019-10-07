@@ -12,13 +12,13 @@ type Rating struct {
 	PlayerID uint `json:"playerId"`
 }
 
-func (db *DB) LoadRatingsByGameID(gameID uint) []Rating {
+func (db *gormDB) LoadRatingsByGameID(gameID uint) []Rating {
 	var ratings []Rating
 	db.gorm.Where(&Rating{GameID: gameID}).Find(&ratings)
 	return ratings
 }
 
-func (db *DB) LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint) (Rating, error) {
+func (db *gormDB) LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint) (Rating, error) {
 	var r Rating
 
 	where := Rating{GameID: gameID, PlayerID: playerID}
@@ -29,7 +29,7 @@ func (db *DB) LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint) (Rati
 	return r, err
 }
 
-func (db *DB) SaveRating(rating Rating) (Rating, error) {
+func (db *gormDB) SaveRating(rating Rating) (Rating, error) {
 	err := db.gorm.Save(&rating).Error
 	return rating, err
 }

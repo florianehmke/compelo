@@ -11,9 +11,44 @@ import (
 	"compelo/internal/db/scripts"
 )
 
-type DB struct {
+type gormDB struct {
 	gorm *gorm.DB
 }
+
+type Database interface {
+	DoInTransaction(fn func(Database) error) error
+	Close()
+
+	CreateGame(Game) (Game, error)
+	LoadGamesByProjectID(projectID uint) []Game
+	LoadGameByID(id uint) (Game, error)
+
+	CreateMatch(match Match) (Match, error)
+	LoadMatchByID(id uint) (Match, error)
+	LoadMatchesByGameID(gameID uint) []Match
+
+	CreateAppearance(appearance Appearance) (Appearance, error)
+	CreateTeam(team Team) (Team, error)
+	LoadTeamsByMatchID(matchID uint) ([]Team, error)
+
+	CreatePlayer(player Player) (Player, error)
+	LoadPlayerByID(id uint) (Player, error)
+	LoadPlayersByProjectID(projectID uint) []Player
+	LoadPlayersByMatchIDAndTeamID(matchID, teamID uint) ([]Player, error)
+
+	CreateProject(project Project) (Project, error)
+	LoadProjectByID(id uint) (Project, error)
+	LoadProjectByName(name string) (Project, error)
+	LoadAllProjects() []Project
+
+	LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint) (Rating, error)
+	LoadRatingsByGameID(gameID uint) []Rating
+	SaveRating(Rating) (Rating, error)
+
+	LoadMatchResultsByPlayerIDAndGameID(playerID, gameID uint) ([]MatchResult, error)
+}
+
+var _ Database = &gormDB{}
 
 type Model struct {
 	ID        uint       `json:"id"`
@@ -22,13 +57,13 @@ type Model struct {
 	DeletedAt *time.Time `json:"-"`
 }
 
-func (db *DB) Close() {
+func (db *gormDB) Close() {
 	if err := db.gorm.Close(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func New(dbPath string) *DB {
+func New(dbPath string) *gormDB {
 	db, err := gorm.Open("sqlite3", dbPath)
 	if err != nil {
 		panic("failed to connect database")
@@ -48,15 +83,15 @@ func New(dbPath string) *DB {
 	}
 	db.Exec(string(schema))
 
-	return &DB{db}
+	return &gormDB{db}
 }
 
-func (db *DB) DoInTransaction(fn func(*DB) error) error {
+func (db *gormDB) DoInTransaction(fn func(Database) error) error {
 	tx := db.gorm.Begin()
 	if tx.Error != nil {
 		return tx.Error
 	}
-	err := fn(&DB{tx})
+	err := fn(&gormDB{tx})
 	if err != nil {
 		xerr := tx.Rollback().Error
 		if xerr != nil {
