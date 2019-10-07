@@ -15,6 +15,6 @@ export class AuthService {
   }
 
   refresh(): Observable<AuthResponse> {
-    return this.http.get<AuthResponse>(`${this.baseUrl}/refresh`);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/refresh`, {});
   }
 }
