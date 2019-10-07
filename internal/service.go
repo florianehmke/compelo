@@ -5,7 +5,7 @@ import (
 )
 
 type Service struct {
-	db *db.DB
+	db db.Database
 }
 
 func NewService(dbPath string) *Service {
