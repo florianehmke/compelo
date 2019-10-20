@@ -42,10 +42,9 @@ type Database interface {
 	LoadAllProjects() []Project
 
 	LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint) (Rating, error)
-	LoadRatingsByGameID(gameID uint) []Rating
 	SaveRating(Rating) (Rating, error)
 
-	LoadMatchResultsByPlayerIDAndGameID(playerID, gameID uint) ([]MatchResult, error)
+	LoadMatchResultsByGameID(gameID uint) ([]MatchResult, error)
 }
 
 var _ Database = &gormDB{}

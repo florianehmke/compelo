@@ -13,8 +13,8 @@ type MatchResult struct {
 	Result      Result
 }
 
-func (db *gormDB) LoadMatchResultsByPlayerIDAndGameID(playerID, gameID uint) ([]MatchResult, error) {
+func (db *gormDB) LoadMatchResultsByGameID(gameID uint) ([]MatchResult, error) {
 	var results []MatchResult
-	err := db.gorm.Where(&MatchResult{GameID: gameID, PlayerID: playerID}).Find(&results).Error
+	err := db.gorm.Where(&MatchResult{GameID: gameID}).Find(&results).Error
 	return results, err
 }

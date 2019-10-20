@@ -6,10 +6,6 @@ import (
 	"compelo/internal/db"
 )
 
-func (svc *Service) LoadRatingsByGameID(gameID uint) []db.Rating {
-	return svc.db.LoadRatingsByGameID(gameID)
-}
-
 func (svc *Service) LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID uint) (db.Rating, error) {
 	return svc.db.LoadOrCreateRatingByPlayerIDAndGameID(playerID, gameID)
 }
