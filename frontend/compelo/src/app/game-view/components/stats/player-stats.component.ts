@@ -29,18 +29,18 @@ export class PlayerStatsComponent {
   show: 'table' | 'chart' = 'table';
 
   toggle() {
-    this.show = this.show == 'table' ? 'chart' : 'table';
+    this.show = this.show === 'table' ? 'chart' : 'table';
   }
 
   get icon(): IconName {
-    return this.show == 'table' ? 'chart-line' : 'table';
+    return this.show === 'table' ? 'chart-line' : 'table';
   }
 
   get showChart(): boolean {
-    return this.show == 'chart';
+    return this.show === 'chart';
   }
 
   get showTable(): boolean {
-    return this.show == 'table';
+    return this.show === 'table';
   }
 }
