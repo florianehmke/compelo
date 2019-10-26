@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IconModule } from '@shared/icon/icon.module';
 
-import { ButtonComponent } from './button.component';
-import { IconModule } from '../icon/icon.module';
+import { ButtonLabelComponent } from './button-label.component';
+import { ButtonPrimaryDirective } from './button-primary.directive';
 
 @NgModule({
   imports: [CommonModule, IconModule],
-  exports: [ButtonComponent],
-  declarations: [ButtonComponent],
+  exports: [ButtonLabelComponent, ButtonPrimaryDirective],
+  declarations: [ButtonLabelComponent, ButtonPrimaryDirective],
   providers: []
 })
 export class ButtonModule {}

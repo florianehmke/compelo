@@ -9,7 +9,7 @@ import { Game } from '@shared/models';
     </p>
     <form (ngSubmit)="onSubmit(); form.reset()" #form="ngForm">
       <div class="row">
-        <div class="col-8">
+        <div class="col-9">
           <input
             type="text"
             placeholder="Game Name"
@@ -19,15 +19,12 @@ import { Game } from '@shared/models';
             [(ngModel)]="name"
           />
         </div>
-        <div class="col-4">
-          <app-button
-            class="w-100"
-            type="submit"
-            icon="plus"
-            [disabled]="!form.form.valid"
-            label="Create"
-          >
-          </app-button>
+        <div class="col-3 d-flex justify-content-end">
+          <button type="submit" appPrimary [disabled]="!form.form.valid">
+            <app-button-label icon="plus">
+              Create
+            </app-button-label>
+          </button>
         </div>
       </div>
     </form>

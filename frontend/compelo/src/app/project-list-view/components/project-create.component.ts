@@ -27,15 +27,12 @@ import { CreateProjectPayload } from '@core/project-list';
             [(ngModel)]="password"
           />
         </div>
-        <div class="col-md-2">
-          <app-button
-            class="w-100"
-            type="submit"
-            icon="plus"
-            [disabled]="!form.form.valid"
-            label="Create"
-          >
-          </app-button>
+        <div class="col-md-2 d-flex justify-content-end">
+          <button type="submit" appPrimary [disabled]="!form.form.valid">
+            <app-button-label icon="plus">
+              Create
+            </app-button-label>
+          </button>
         </div>
       </div>
     </form>

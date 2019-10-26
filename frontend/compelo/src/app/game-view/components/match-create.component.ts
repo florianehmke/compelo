@@ -43,13 +43,11 @@ import { CreateMatchPayload } from '@core/project';
         </div>
       </div>
       <div class="d-flex flex-row-reverse">
-        <app-button
-          type="submit"
-          icon="plus"
-          [disabled]="!formGroup.valid"
-          label="Submit"
-        >
-        </app-button>
+        <button type="submit" appPrimary [disabled]="!formGroup.valid">
+          <app-button-label icon="plus">
+            Submit
+          </app-button-label>
+        </button>
       </div>
     </form>
   `,

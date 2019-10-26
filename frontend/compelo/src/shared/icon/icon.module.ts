@@ -7,6 +7,7 @@ import {
   faChartLine,
   faPlus,
   faSave,
+  faSignInAlt,
   faTable,
   faTimes,
   faWrench
@@ -30,7 +31,8 @@ export class IconModule {
       faPlus,
       faGithub,
       faChartLine,
-      faTable
+      faTable,
+      faSignInAlt
     );
   }
 }

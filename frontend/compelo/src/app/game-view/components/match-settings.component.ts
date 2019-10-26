@@ -31,13 +31,11 @@ import { MatchFormSettings } from '../services/match-form.service';
         [(ngModel)]="teamSize"
       />
       <div class="d-flex flex-row-reverse">
-        <app-button
-          label="Change"
-          type="submit"
-          icon="save"
-          [disabled]="!form.form.valid"
-        >
-        </app-button>
+        <button type="submit" appPrimary [disabled]="!form.form.valid">
+          <app-button-label icon="save">
+            Change
+          </app-button-label>
+        </button>
       </div>
     </form>
   `,

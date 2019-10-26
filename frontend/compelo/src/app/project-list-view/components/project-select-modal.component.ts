@@ -29,8 +29,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" aria-label="Confirm">
-          Confirm
+        <button type="submit" appPrimary>
+          <app-button-label icon="sign-in-alt">
+            Login
+          </app-button-label>
         </button>
       </div>
     </form>
