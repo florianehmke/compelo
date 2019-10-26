@@ -5,7 +5,7 @@ import {
   filterMatches,
   getMatches,
   getPlayers,
-  getPlayersWithStats,
+  getPlayerStats,
   State
 } from '@core/project';
 import { Store } from '@ngrx/store';
@@ -35,21 +35,21 @@ import {
     </div>
     <hr />
     <div class="row">
-      <div class="col-md-7" *ngIf="matches$ | async as matches">
+      <div class="col-md-6" *ngIf="matches$ | async as matches">
         <app-match-list
           [matches]="matches"
           (filterChange)="onFilterChange($event)"
         ></app-match-list>
       </div>
-      <div class="col-md-5" *ngIf="playersWithStats$ | async as players">
-        <app-leaderboard [players]="players"></app-leaderboard>
+      <div class="col-md-6" *ngIf="playerStats$ | async as players">
+        <app-player-stats [players]="players"></app-player-stats>
       </div>
     </div>
   `
 })
 export class GameViewComponent {
   players$ = this.store.select(getPlayers);
-  playersWithStats$ = this.store.select(getPlayersWithStats);
+  playerStats$ = this.store.select(getPlayerStats);
   matches$ = this.store.select(getMatches);
 
   formGroup = this.formService.buildForm({ teamSize: 1, teamCount: 2 });

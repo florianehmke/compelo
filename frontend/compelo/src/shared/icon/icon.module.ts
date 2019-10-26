@@ -4,8 +4,10 @@ import {
   FontAwesomeModule
 } from '@fortawesome/angular-fontawesome';
 import {
+  faChartLine,
   faPlus,
   faSave,
+  faTable,
   faTimes,
   faWrench
 } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +23,14 @@ import { IconComponent } from './icon.component';
 })
 export class IconModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faWrench, faSave, faTimes, faPlus, faGithub);
+    library.addIcons(
+      faWrench,
+      faSave,
+      faTimes,
+      faPlus,
+      faGithub,
+      faChartLine,
+      faTable
+    );
   }
 }

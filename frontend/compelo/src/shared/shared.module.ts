@@ -10,6 +10,7 @@ import { ListGroupModule } from './list-group/list-group.module';
 import { IconModule } from './icon/icon.module';
 import { ButtonModule } from './button/button.module';
 import { ToastModule } from './toast/toast.module';
+import { ChartsModule } from 'ng2-charts';
 
 const modules: any = [
   // angular
@@ -20,6 +21,9 @@ const modules: any = [
   // ng-bootstrap
   NgbModalModule,
   NgbPaginationModule,
+
+  // chart.js (ng2-charts)
+  ChartsModule,
 
   // custom
   ButtonModule,

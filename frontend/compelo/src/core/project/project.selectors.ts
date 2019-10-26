@@ -23,9 +23,9 @@ export const getPlayers = createSelector(
   (state: State) => state.players
 );
 
-export const getPlayersWithStats = createSelector(
+export const getPlayerStats = createSelector(
   getProjectState,
-  (state: State) => state.playersWithStats
+  (state: State) => state.playerStats
 );
 
 export const getMatches = createSelector(

@@ -13,7 +13,7 @@ export const FEATURE_KEY = 'project';
 export interface State {
   games: Game[];
   players: Player[];
-  playersWithStats: PlayerStats[];
+  playerStats: PlayerStats[];
   matches: Match[];
   matchFilter: string;
 }
@@ -21,7 +21,7 @@ export interface State {
 export const initialState: State = {
   games: [],
   players: [],
-  playersWithStats: [],
+  playerStats: [],
   matches: [],
   matchFilter: ''
 };
@@ -38,7 +38,7 @@ const projectReducer = createReducer(
   })),
   on(loadPlayersWithStatsSuccess, (state, action) => ({
     ...state,
-    playersWithStats: action.payload || []
+    playerStats: action.payload || []
   })),
   on(loadMatchesSuccess, (state, action) => ({
     ...state,

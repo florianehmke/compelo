@@ -2,9 +2,8 @@ import { Component, Input } from '@angular/core';
 import { PlayerStats } from '@shared/models';
 
 @Component({
-  selector: 'app-leaderboard',
+  selector: 'app-player-stats-table',
   template: `
-    <p class="lead">Leaderboard</p>
     <table class="table table-bordered bg-white">
       <thead>
         <tr>
@@ -33,7 +32,7 @@ import { PlayerStats } from '@shared/models';
     </table>
   `
 })
-export class LeaderboardComponent {
+export class PlayerStatsTableComponent {
   @Input()
   players: PlayerStats[];
 }
