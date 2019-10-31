@@ -9,7 +9,11 @@ export interface LoadMatchesPayload {
   gameId: number;
 }
 
-export interface LoadPlayersWithStatusPayload {
+export interface LoadPlayerStatsPayload {
+  gameId: number;
+}
+
+export interface LoadGameStatsPayload {
   gameId: number;
 }
 

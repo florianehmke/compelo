@@ -9,6 +9,11 @@ export interface Game {
   name: string;
 }
 
+export interface GameStats {
+  maxScoreSum: Match;
+  maxScoreDiff: Match;
+}
+
 export interface Player {
   id?: number;
   projectId?: number;

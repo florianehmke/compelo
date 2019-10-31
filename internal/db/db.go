@@ -45,6 +45,8 @@ type Database interface {
 	SaveRating(Rating) (Rating, error)
 
 	LoadMatchResultsByGameID(gameID uint) ([]MatchResult, error)
+	LoadMaxScoreDiffByGameID(gameID uint) (MatchScoreStats, error)
+	LoadMaxScoreSumByGameID(gameID uint) (MatchScoreStats, error)
 }
 
 var _ Database = &gormDB{}

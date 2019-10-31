@@ -122,9 +122,38 @@ CREATE VIEW match_results AS
 SELECT a.player_id,
        m.game_id,
        m.date,
+       m.id as match_id,
+       t.score,
        t.rating_delta,
        t.result
 FROM matches m
          JOIN appearances a ON m.id = a.match_id
          JOIN teams t ON a.team_id = t.id
 ORDER BY m.date;
+
+
+
+DROP VIEW IF EXISTS match_score_stats;
+CREATE VIEW match_score_stats AS
+SELECT m.id as match_id,
+       m.game_id,
+       (
+           SELECT sum(score) score_sum
+           FROM teams t
+           WHERE t.match_id = m.id
+       ) AS score_sum,
+       (
+           SELECT score_max - score_min
+           FROM (
+                    SELECT min(score) score_min
+                    FROM teams t
+                    WHERE t.match_id = m.id
+                ) AS score_min,
+                (
+                    SELECT max(score) score_max
+                    FROM teams t
+                    WHERE t.match_id = m.id
+                ) AS score_max
+       ) AS score_diff
+FROM matches m
+         JOIN teams t ON m.id = t.match_id

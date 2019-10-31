@@ -5,9 +5,10 @@ import { gameIdParam } from '@shared/route-params';
 
 import {
   loadGames,
+  loadGameStats,
   loadMatches,
   loadPlayers,
-  loadPlayersWithStats
+  loadPlayerStats
 } from './project.actions';
 import { State } from './project.reducer';
 
@@ -28,11 +29,20 @@ export function triggerLoadMatches(
   return of(loadMatches(payload));
 }
 
-export function triggerLoadPlayersWithStats(
+export function triggerLoadPlayerStats(
   store: Store<State>,
   route: ActivatedRouteSnapshot
 ): Observable<Action> {
   const gameId = route.params[gameIdParam];
   const payload = { payload: { gameId: parseInt(gameId, 10) } };
-  return of(loadPlayersWithStats(payload));
+  return of(loadPlayerStats(payload));
+}
+
+export function triggerLoadGameStats(
+  store: Store<State>,
+  route: ActivatedRouteSnapshot
+): Observable<Action> {
+  const gameId = route.params[gameIdParam];
+  const payload = { payload: { gameId: parseInt(gameId, 10) } };
+  return of(loadGameStats(payload));
 }

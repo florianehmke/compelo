@@ -1,17 +1,19 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Game, Match, Player, PlayerStats } from '@shared/models';
+import { Game, GameStats, Match, Player, PlayerStats } from '@shared/models';
 import {
+  filterMatches,
   loadGamesSuccess,
+  loadGameStatsSuccess,
   loadMatchesSuccess,
-  loadPlayersWithStatsSuccess,
   loadPlayersSuccess,
-  filterMatches
+  loadPlayerStatsSuccess
 } from './project.actions';
 
 export const FEATURE_KEY = 'project';
 
 export interface State {
   games: Game[];
+  gameStats: GameStats;
   players: Player[];
   playerStats: PlayerStats[];
   matches: Match[];
@@ -20,6 +22,7 @@ export interface State {
 
 export const initialState: State = {
   games: [],
+  gameStats: null,
   players: [],
   playerStats: [],
   matches: [],
@@ -32,11 +35,15 @@ const projectReducer = createReducer(
     ...state,
     games: action.payload || []
   })),
+  on(loadGameStatsSuccess, (state, action) => ({
+    ...state,
+    gameStats: action.payload || null
+  })),
   on(loadPlayersSuccess, (state, action) => ({
     ...state,
     players: action.payload || []
   })),
-  on(loadPlayersWithStatsSuccess, (state, action) => ({
+  on(loadPlayerStatsSuccess, (state, action) => ({
     ...state,
     playerStats: action.payload || []
   })),

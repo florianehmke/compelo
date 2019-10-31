@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { ActionResolver } from '@core/router';
 import {
   triggerLoadGames,
+  triggerLoadGameStats,
   triggerLoadMatches,
   triggerLoadPlayers,
-  triggerLoadPlayersWithStats
+  triggerLoadPlayerStats
 } from '@core/project';
 import { triggerLoadProjects } from '@core/project-list';
 
@@ -20,9 +21,10 @@ const routes: Routes = [
       actionFactory: [
         triggerLoadProjects,
         triggerLoadGames,
+        triggerLoadGameStats,
         triggerLoadPlayers,
-        triggerLoadMatches,
-        triggerLoadPlayersWithStats
+        triggerLoadPlayerStats,
+        triggerLoadMatches
       ]
     }
   }

@@ -9,6 +9,8 @@ type MatchResult struct {
 	PlayerID    uint
 	GameID      uint
 	Date        time.Time
+	MatchID     uint
+	Score       int
 	RatingDelta int
 	Result      Result
 }

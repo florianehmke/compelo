@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import {
   ErrorPayload,
   Game,
+  GameStats,
   Match,
   Payload,
   Player,
@@ -10,8 +11,9 @@ import {
 import {
   CreateMatchPayload,
   FilterMatchesPayload,
+  LoadGameStatsPayload,
   LoadMatchesPayload,
-  LoadPlayersWithStatusPayload
+  LoadPlayerStatsPayload
 } from './project.models';
 
 export const loadGames = createAction('[Games] Load');
@@ -34,6 +36,19 @@ export const createGameSuccess = createAction(
 );
 export const createGameError = createAction(
   '[Games] Create Error',
+  props<ErrorPayload>()
+);
+
+export const loadGameStats = createAction(
+  '[Games] Load Game Stats',
+  props<Payload<LoadGameStatsPayload>>()
+);
+export const loadGameStatsSuccess = createAction(
+  '[Games] Load Game Stats Success',
+  props<Payload<GameStats>>()
+);
+export const loadGameStatsError = createAction(
+  '[Games] Load Game Stats Error',
   props<ErrorPayload>()
 );
 
@@ -86,16 +101,16 @@ export const loadMatchesError = createAction(
   props<ErrorPayload>()
 );
 
-export const loadPlayersWithStats = createAction(
-  '[Players] Load With Stats',
-  props<Payload<LoadPlayersWithStatusPayload>>()
+export const loadPlayerStats = createAction(
+  '[Players] Load Player Stats',
+  props<Payload<LoadPlayerStatsPayload>>()
 );
-export const loadPlayersWithStatsSuccess = createAction(
-  '[Players] Load With Stats Success',
+export const loadPlayerStatsSuccess = createAction(
+  '[Players] Load Player Stats Success',
   props<Payload<PlayerStats[]>>()
 );
-export const loadPlayersWithStatsError = createAction(
-  '[Players] Load With Stats Error',
+export const loadPlayerStatsError = createAction(
+  '[Players] Load Player Stats Error',
   props<ErrorPayload>()
 );
 

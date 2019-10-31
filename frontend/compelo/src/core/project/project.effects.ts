@@ -25,15 +25,18 @@ import {
   loadGames,
   loadGamesError,
   loadGamesSuccess,
+  loadGameStats,
+  loadGameStatsError,
+  loadGameStatsSuccess,
   loadMatches,
   loadMatchesError,
   loadMatchesSuccess,
   loadPlayers,
   loadPlayersError,
   loadPlayersSuccess,
-  loadPlayersWithStats,
-  loadPlayersWithStatsError,
-  loadPlayersWithStatsSuccess
+  loadPlayerStats,
+  loadPlayerStatsError,
+  loadPlayerStatsSuccess
 } from './project.actions';
 import { State } from './project.reducer';
 import { getSelectedGame } from './project.selectors';
@@ -67,6 +70,18 @@ export class ProjectEffects {
     )
   );
 
+  loadGameStats$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadGameStats),
+      switchMap(action =>
+        this.service.getGameStats(action.payload.gameId).pipe(
+          map(gameStats => loadGameStatsSuccess({ payload: gameStats })),
+          catchError(err => of(loadGameStatsError(err)))
+        )
+      )
+    )
+  );
+
   loadPlayers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadPlayers),
@@ -79,13 +94,13 @@ export class ProjectEffects {
     )
   );
 
-  loadPlayersWithStats$ = createEffect(() =>
+  loadPlayerStats$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadPlayersWithStats),
+      ofType(loadPlayerStats),
       switchMap(action =>
-        this.service.getPlayersWithStats(action.payload.gameId).pipe(
-          map(players => loadPlayersWithStatsSuccess({ payload: players })),
-          catchError(err => of(loadPlayersWithStatsError(err)))
+        this.service.getPlayerStats(action.payload.gameId).pipe(
+          map(players => loadPlayerStatsSuccess({ payload: players })),
+          catchError(err => of(loadPlayerStatsError(err)))
         )
       )
     )
@@ -115,7 +130,8 @@ export class ProjectEffects {
           switchMap(response => [
             createMatchSuccess({ payload: response }),
             loadMatches({ payload: { gameId: game.id } }),
-            loadPlayersWithStats({ payload: { gameId: game.id } })
+            loadPlayerStats({ payload: { gameId: game.id } }),
+            loadGameStats({ payload: { gameId: game.id } })
           ]),
           catchError(err => of(createMatchError(err)))
         )
