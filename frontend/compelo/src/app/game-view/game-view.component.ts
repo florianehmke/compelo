@@ -3,12 +3,14 @@ import {
   createMatch,
   CreateMatchPayload,
   filterMatches,
+  getGameStats,
   getMatches,
   getPlayers,
   getPlayerStats,
   State
 } from '@core/project';
 import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
 
 import {
   MatchFormService,
@@ -41,16 +43,20 @@ import {
           (filterChange)="onFilterChange($event)"
         ></app-match-list>
       </div>
-      <div class="col-md-6" *ngIf="playerStats$ | async as players">
-        <app-player-stats [players]="players"></app-player-stats>
+      <div class="col-md-6" *ngIf="stats$ | async as stats">
+        <app-stats [players]="stats[0]" [gameStats]="stats[1]"></app-stats>
       </div>
     </div>
   `
 })
 export class GameViewComponent {
   players$ = this.store.select(getPlayers);
-  playerStats$ = this.store.select(getPlayerStats);
   matches$ = this.store.select(getMatches);
+
+  stats$ = combineLatest([
+    this.store.select(getPlayerStats),
+    this.store.select(getGameStats)
+  ]);
 
   formGroup = this.formService.buildForm({ teamSize: 1, teamCount: 2 });
   showSettings = false;

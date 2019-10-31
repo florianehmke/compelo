@@ -10,6 +10,7 @@ import {
   faSignInAlt,
   faTable,
   faTimes,
+  faTrophy,
   faWrench
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -32,7 +33,8 @@ export class IconModule {
       faGithub,
       faChartLine,
       faTable,
-      faSignInAlt
+      faSignInAlt,
+      faTrophy
     );
   }
 }
