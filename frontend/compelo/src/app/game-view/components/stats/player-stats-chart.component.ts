@@ -60,7 +60,10 @@ export class PlayerStatsChartComponent implements OnChanges {
           label: player.name,
           data: Object.keys(player.history).map(key => {
             labels.add(key);
-            return player.history[key].rating;
+            return {
+              x: key,
+              y: player.history[key].rating
+            };
           })
         };
       });
