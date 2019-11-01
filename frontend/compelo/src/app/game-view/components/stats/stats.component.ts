@@ -61,5 +61,5 @@ export class StatsComponent {
     title: 'Remarkable Games'
   };
 
-  currentMode: Mode = this.game;
+  currentMode: Mode = this.table;
 }
