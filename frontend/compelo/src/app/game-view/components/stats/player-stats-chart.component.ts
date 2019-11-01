@@ -46,7 +46,7 @@ export class PlayerStatsChartComponent implements OnChanges {
       position: 'top'
     },
     layout: {
-      padding: { bottom: 25, top: 8, left: 8 }
+      padding: { bottom: 24, top: 8, left: 8, right: 16 }
     },
     aspectRatio: 1.2,
     scales: {
