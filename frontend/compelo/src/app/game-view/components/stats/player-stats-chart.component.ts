@@ -42,7 +42,16 @@ export class PlayerStatsChartComponent implements OnChanges {
   lineChartType: ChartType = 'line';
   lineChartOptions: ChartOptions = {
     responsive: true,
-    aspectRatio: 1,
+    legend: {
+      position: 'top'
+    },
+    layout: {
+      padding: { bottom: 25, top: 8, left: 8 }
+    },
+    aspectRatio: 1.2,
+    scales: {
+      xAxes: [{ display: false }]
+    },
     elements: {
       line: {
         backgroundColor: 'rgba(0, 0, 0, 0)',
