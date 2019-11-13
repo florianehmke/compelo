@@ -10,8 +10,8 @@ export interface Game {
 }
 
 export interface GameStats {
-  maxScoreSum: Match;
-  maxScoreDiff: Match;
+  maxScoreSum: Match[];
+  maxScoreDiff: Match[];
 }
 
 export interface Player {

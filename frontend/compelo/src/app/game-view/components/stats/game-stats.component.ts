@@ -4,11 +4,14 @@ import { GameStats } from '@shared/models';
 @Component({
   selector: 'app-game-stats',
   template: `
-    <ng-container *ngIf="gameStats.maxScoreSum as sum">
-      <div class="row align-items-center mb-3">
+    <h6>Many Goals</h6>
+    <ng-container *ngFor="let sum of gameStats.maxScoreSum">
+      <div class="row align-items-center">
         <div class="col">
-          <h6>Most Goals</h6>
-          <span>{{ sum.date | date }}: {{ sum.teams | teams }}</span>
+          <span>{{ sum.date | date }}</span>
+        </div>
+        <div class="col">
+          <span>{{ sum.teams | teams }}</span>
         </div>
         <div class="col">
           <h5 class="font-weight-ligh text-center align-middle">
@@ -17,11 +20,14 @@ import { GameStats } from '@shared/models';
         </div>
       </div>
     </ng-container>
-    <ng-container *ngIf="gameStats.maxScoreDiff as lead">
+    <h6 class="mt-3">Large Lead</h6>
+    <ng-container *ngFor="let lead of gameStats.maxScoreDiff">
       <div class="row align-items-center">
         <div class="col">
-          <h6>Biggest Lead</h6>
-          <span>{{ lead.date | date }}: {{ lead.teams | teams }}</span>
+          <span>{{ lead.date | date }}</span>
+        </div>
+        <div class="col">
+          <span>{{ lead.teams | teams }}</span>
         </div>
         <div class="col">
           <h5 class="font-weight-ligh text-center align-middle">

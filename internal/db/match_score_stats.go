@@ -8,20 +8,22 @@ type MatchScoreStats struct {
 	ScoreSum  int
 }
 
-func (db *gormDB) LoadMaxScoreDiffByGameID(gameID uint) (MatchScoreStats, error) {
-	var result MatchScoreStats
+func (db *gormDB) LoadMaxScoreDiffByGameID(gameID, limit uint) ([]MatchScoreStats, error) {
+	var result []MatchScoreStats
 	err := db.gorm.
 		Where(&MatchScoreStats{GameID: gameID}).
 		Order("score_diff desc").
-		First(&result).Error
+		Limit(limit).
+		Find(&result).Error
 	return result, err
 }
 
-func (db *gormDB) LoadMaxScoreSumByGameID(gameID uint) (MatchScoreStats, error) {
-	var result MatchScoreStats
+func (db *gormDB) LoadMaxScoreSumByGameID(gameID, limit uint) ([]MatchScoreStats, error) {
+	var result []MatchScoreStats
 	err := db.gorm.
 		Where(&MatchScoreStats{GameID: gameID}).
 		Order("score_sum desc").
-		First(&result).Error
+		Limit(limit).
+		Find(&result).Error
 	return result, err
 }
