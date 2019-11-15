@@ -5,12 +5,13 @@ import {
   NgbModalModule,
   NgbPaginationModule
 } from '@ng-bootstrap/ng-bootstrap';
+import { ChartsModule } from 'ng2-charts';
 
 import { ListGroupModule } from './list-group/list-group.module';
 import { IconModule } from './icon/icon.module';
 import { ButtonModule } from './button/button.module';
 import { ToastModule } from './toast/toast.module';
-import { ChartsModule } from 'ng2-charts';
+import { StatsBarModule } from './stats-bar/stats-bar.module';
 
 const modules: any = [
   // angular
@@ -29,7 +30,8 @@ const modules: any = [
   ButtonModule,
   IconModule,
   ListGroupModule,
-  ToastModule
+  ToastModule,
+  StatsBarModule
 ];
 
 @NgModule({
