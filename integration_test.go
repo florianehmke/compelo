@@ -105,7 +105,7 @@ func TestAPI(t *testing.T) {
 				teams: []testTeam{
 					{
 						players: []int{1, 2},
-						score:   2,
+						score:   4,
 						result:  db.Win,
 					},
 					{
@@ -119,17 +119,17 @@ func TestAPI(t *testing.T) {
 				teams: []testTeam{
 					{
 						players: []int{1},
-						score:   2,
+						score:   4,
 						result:  db.Win,
 					},
 					{
 						players: []int{2},
-						score:   2,
+						score:   4,
 						result:  db.Win,
 					},
 					{
 						players: []int{3},
-						score:   1,
+						score:   2,
 						result:  db.Loss,
 					},
 				},
@@ -196,6 +196,7 @@ func TestAPI(t *testing.T) {
 	ts.listMatches()
 
 	ts.loadPlayerStats()
+	ts.loadGameStats()
 }
 
 func (s *testSuite) createProject() {
@@ -353,6 +354,25 @@ func (s *testSuite) loadPlayerStats() {
 		s.assertEqual(s.testData.stats[v.Name].drawCount, v.Current.DrawCount)
 		s.assertEqual(s.testData.stats[v.Name].lossCount, v.Current.LossCount)
 	}
+}
+
+func (s *testSuite) loadGameStats() {
+	gameID := strconv.Itoa(int(s.testData.gameID))
+	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/game-stats")
+
+	var response compelo.GameStats
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), &response)
+
+	// Only three test games so far, all should appear in stats.
+	s.assertTrue(len(response.MaxScoreDiff) == len(s.testData.matches))
+	s.assertTrue(len(response.MaxScoreSum) == len(s.testData.matches))
+
+	// The third test-game, 1v1v1 (4:4:2)
+	s.assertTrue(response.MaxScoreSum[0].ID == 3)
+
+	// The second test-game, 1v1 (4:1)
+	s.assertTrue(response.MaxScoreDiff[0].ID == 2)
 }
 
 // ------ Helpers ------
