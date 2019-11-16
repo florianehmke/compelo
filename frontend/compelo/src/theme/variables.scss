@@ -1,17 +1,28 @@
 // Theme Variables
-$compelo_primary: #083D77;
-$compelo_secondary: #4B719C;
+$compelo_primary: #55E8C5;
+$compelo_secondary: #E2FFF8;
 $compelo_red: #FF6978;
-$compelo_light: #F4F4F4;
-$compelo_gray: #6B8AAE;
-$compelo_border: #D3D3D3;
+
+$compelo_body: #2F3A3D;
+$compelo_background: #425256;
+$compelo_border: #6A8289;
+
+$compelo_text: #E2FFF8;
+$compelo_text_muted: #C5DDD8;
 
 // Override Bootstrap variables
 $primary: $compelo_primary;
 $secondary: $compelo_secondary;
-$body-bg: $compelo_light;
-$body-color: $compelo_primary;
-$text-muted: $compelo_gray;
+
+$body-bg: $compelo_body;
+$body-color: $compelo_text;
+
+$text-muted: $compelo_text_muted;
+
+$input-bg: $compelo_background;
+$input-color: $compelo_text;
+$input-placeholder-color: $compelo_text_muted;
+$input-border-color: $compelo_border;
 
 // Bootstrap Settings
 $enable-rounded: false;

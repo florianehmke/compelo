@@ -11,7 +11,7 @@ import { GameStats } from '@shared/models';
           <div class="col">
             <span>{{ sum.date | date }}</span>
           </div>
-          <div class="col">
+          <div class="col text-center">
             <span>{{ sum.teams | teams }}</span>
           </div>
           <div class="col">
@@ -27,7 +27,7 @@ import { GameStats } from '@shared/models';
           <div class="col">
             <span>{{ lead.date | date }}</span>
           </div>
-          <div class="col">
+          <div class="col text-center">
             <span>{{ lead.teams | teams }}</span>
           </div>
           <div class="col">

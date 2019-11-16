@@ -1,13 +1,36 @@
 .header {
-  background-color: $compelo_primary;
+  background-color: $compelo_background;
+  border-bottom: 1px solid $compelo_border;
 }
 
-.icon-btn:hover {
-  color: $compelo_gray;
+.icon-btn {
+  color: $compelo_text;
+
+  &:hover {
+    color: $compelo_primary;
+  }
+}
+
+button {
+  &:disabled {
+    color: $compelo_text !important;
+    border-color: $compelo_border !important;
+    background-color: $compelo_background !important;
+  }
 }
 
 .compelo-container {
-  background-color: white;
+  background-color: $compelo_background;
   border: 1px solid $compelo_border;
   padding: 12px;
+}
+
+.table {
+  background-color: $compelo_background;
+}
+
+table,
+th,
+td {
+  border-color: $compelo_border !important;
 }

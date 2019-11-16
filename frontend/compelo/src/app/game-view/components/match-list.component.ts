@@ -8,12 +8,12 @@ import { Match } from '@shared/models';
       <p class="lead">Recent Matches</p>
       <input
         type="text"
-        class="form-control-sm"
+        class="w-25 form-control form-control-sm"
         placeholder="Filter by Player"
         (input)="filterChange.emit($event.target.value)"
       />
     </div>
-    <table class="table table-bordered bg-white">
+    <table class="table table-bordered">
       <tbody>
         <tr *ngFor="let match of matches | slice: from():to()">
           <td>

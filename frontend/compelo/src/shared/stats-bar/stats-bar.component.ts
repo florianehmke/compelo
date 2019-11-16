@@ -34,7 +34,7 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
       }
 
       .wins {
-        background-color: lightgreen;
+        background-color: #55E8C5;
       }
 
       .draws {
@@ -42,7 +42,7 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
       }
 
       .lost {
-        background-color: lightcoral;
+        background-color: #FF6978;
       }
     `
   ]
