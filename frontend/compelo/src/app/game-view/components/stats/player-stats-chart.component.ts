@@ -10,6 +10,7 @@ import { BaseChartDirective, Label } from 'ng2-charts';
       <div class="flex-item">
         <div style="display: block;">
           <canvas
+            class="compelo-container"
             baseChart
             [datasets]="lineChartData"
             [labels]="lineChartLabels"
@@ -20,15 +21,7 @@ import { BaseChartDirective, Label } from 'ng2-charts';
         </div>
       </div>
     </div>
-  `,
-  styles: [
-    `
-      canvas {
-        background-color: white;
-        border: 1px solid lightgray;
-      }
-    `
-  ]
+  `
 })
 export class PlayerStatsChartComponent implements OnChanges {
   @Input()
@@ -44,9 +37,6 @@ export class PlayerStatsChartComponent implements OnChanges {
     responsive: true,
     legend: {
       position: 'top'
-    },
-    layout: {
-      padding: { bottom: 24, top: 8, left: 8, right: 16 }
     },
     aspectRatio: 1.2,
     scales: {

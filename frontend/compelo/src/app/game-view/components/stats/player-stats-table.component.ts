@@ -5,7 +5,7 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
 @Component({
   selector: 'app-player-stats-table',
   template: `
-    <div class="table-container">
+    <div class="compelo-container pt-0">
       <ng-container *ngFor="let player of players">
         <div class="row mt-2" *ngIf="player.current as stats">
           <div class="col">
@@ -34,16 +34,7 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
         <app-stats-bar [data]="statsBarData(player?.current)"></app-stats-bar>
       </ng-container>
     </div>
-  `,
-  styles: [
-    `
-      .table-container {
-        padding: 0 12px 12px 12px;
-        border: 1px solid lightgray;
-        background-color: white;
-      }
-    `
-  ]
+  `
 })
 export class PlayerStatsTableComponent {
   @Input()
