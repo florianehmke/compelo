@@ -4,7 +4,7 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
 @Component({
   selector: 'app-stats-bar',
   template: `
-    <div class="bar-container">
+    <div class="bar-container" *ngIf="data">
       <div class="segment wins" [style.flex]="data.wins">
         <span *ngIf="data.wins > 0">{{ data.wins }}</span>
       </div>

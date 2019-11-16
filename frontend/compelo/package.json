@@ -8,7 +8,11 @@
     "build-prod": "ng build --configuration=production",
     "lint": "ng lint",
     "format:write": "prettier \"**/*.{ts,html}\" --write",
-    "format:check": "prettier \"**/*.{ts,html}\" --check"
+    "format:check": "prettier \"**/*.{ts,html}\" --check",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --runInBand",
+    "test:coverage": "jest --coverage"
   },
   "private": true,
   "dependencies": {
@@ -42,11 +46,21 @@
     "@angular/cli": "~8.3.6",
     "@angular/compiler-cli": "~8.2.8",
     "@angular/language-service": "~8.2.8",
-    "@types/node": "~8.9.4",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^11.0.0",
     "codelyzer": "^5.0.0",
+    "jest": "^24.1.0",
+    "jest-preset-angular": "^8.0.0",
     "prettier": "^1.18.2",
-    "ts-node": "~7.0.0",
+    "ts-jest": "^24.0.0",
+    "ts-node": "^8.0.3",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3"
+  },
+  "jest": {
+    "preset": "jest-preset-angular",
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/testing/setupJest.ts"
+    ]
   }
 }

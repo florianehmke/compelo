@@ -13,6 +13,7 @@ frontend-prepare:
 frontend-quality: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run format:check
 	cd $(FRONTEND_PATH) && npm run lint
+	cd $(FRONTEND_PATH) && npm run test:ci
 
 frontend: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run build-prod
