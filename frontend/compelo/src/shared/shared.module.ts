@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NgbModalModule,
-  NgbPaginationModule
+  NgbPaginationModule,
+  NgbTooltipModule
 } from '@ng-bootstrap/ng-bootstrap';
 import { ChartsModule } from 'ng2-charts';
 
@@ -22,6 +23,7 @@ const modules: any = [
   // ng-bootstrap
   NgbModalModule,
   NgbPaginationModule,
+  NgbTooltipModule,
 
   // chart.js (ng2-charts)
   ChartsModule,

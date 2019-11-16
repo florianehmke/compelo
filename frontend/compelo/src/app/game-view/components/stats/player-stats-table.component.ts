@@ -7,22 +7,28 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
   template: `
     <div class="table-container">
       <ng-container *ngFor="let player of players">
-        <div class="row mt-1" *ngIf="player.current as stats">
-          <div class="col-4">
-            {{ player?.name }}
+        <div class="row mt-2" *ngIf="player.current as stats">
+          <div class="col">
+            <span>{{ player?.name }}</span>
           </div>
-          <div class="col-6">
-            <small class="text-muted">{{ stats.lowestRating }}</small>
-            <span> {{ stats.rating }} </span>
-            <small class="text-muted">{{ stats.peakRating }}</small>
+          <div class="col text-center">
+            <small [ngbTooltip]="tooltips.lowestRating" class="text-muted">
+              {{ stats.lowestRating }}
+            </small>
+            <span [ngbTooltip]="tooltips.rating">
+              {{ stats.rating }}
+            </span>
+            <small [ngbTooltip]="tooltips.peakRating" class="text-muted">
+              {{ stats.peakRating }}
+            </small>
           </div>
-          <div class="col-2">
-            <div class="d-flex justify-content-between">
-              <div>
-                {{ stats.gameCount }}
-              </div>
-              <div class="text-right">{{ winPercentage(stats) }}%</div>
-            </div>
+          <div class="col d-flex justify-content-between">
+            <small [ngbTooltip]="tooltips.totalGames">
+              {{ stats.gameCount }}
+            </small>
+            <small [ngbTooltip]="tooltips.winPercentage">
+              {{ winPercentage(stats) }}%
+            </small>
           </div>
         </div>
         <app-stats-bar [data]="statsBarData(player?.current)"></app-stats-bar>
@@ -32,7 +38,7 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
   styles: [
     `
       .table-container {
-        padding: 0 8px 8px 8px;
+        padding: 0 12px 12px 12px;
         border: 1px solid lightgray;
         background-color: white;
       }
@@ -42,6 +48,14 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
 export class PlayerStatsTableComponent {
   @Input()
   players: PlayerStats[];
+
+  tooltips = {
+    winPercentage: 'Win Percentage',
+    totalGames: 'Total Games',
+    peakRating: 'Highest Elo',
+    rating: 'Current Elo',
+    lowestRating: 'Lowest Elo'
+  };
 
   statsBarData(stats: Stats): StatsBarData {
     return {
