@@ -1,5 +1,5 @@
 ### Frontend Build
-FROM node:10 AS FRONTEND
+FROM node:11 AS FRONTEND
 
 COPY frontend /usr/src/frontend
 COPY Makefile  /usr/src/
