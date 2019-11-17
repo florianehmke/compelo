@@ -4,7 +4,7 @@ import { GameStats } from '@shared/models';
 @Component({
   selector: 'app-game-stats',
   template: `
-    <div class="compelo-container">
+    <app-container>
       <h6>Many Goals</h6>
       <ng-container *ngFor="let sum of gameStats.maxScoreSum">
         <div class="row align-items-center">
@@ -37,7 +37,7 @@ import { GameStats } from '@shared/models';
           </div>
         </div>
       </ng-container>
-    </div>
+    </app-container>
   `
 })
 export class GameStatsComponent {

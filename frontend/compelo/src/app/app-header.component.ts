@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Game, Project } from '@shared/models';
 
 @Component({
@@ -39,10 +39,8 @@ import { Game, Project } from '@shared/models';
         height: 48px;
         padding: 8px;
         margin-bottom: 32px;
-      }
-      a,
-      span {
-        color: white;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
       }
     `
   ]

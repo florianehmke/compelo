@@ -1,0 +1,58 @@
+// Settings
+$enable-rounded: false;
+
+// --- General
+$primary: $compelo_primary;
+$secondary: $compelo_secondary;
+
+$body-bg: $compelo_body;
+$body-color: $compelo_text;
+
+$text-muted: $compelo_text_muted;
+
+// --- Inputs
+$input-bg: $compelo_background;
+$input-color: $compelo_text;
+$input-placeholder-color: $compelo_text_muted;
+$input-border-color: $compelo_border;
+
+// --- Pagination
+$pagination-color: $compelo_text;
+$pagination-hover-color: $compelo_text_primary;
+$pagination-active-color: $compelo_text_primary;
+$pagination-disabled-color: $compelo_text_muted;
+
+$pagination-bg: $compelo_background;
+$pagination-hover-bg: $compelo_primary;
+$pagination-active-bg: $compelo_primary;
+$pagination-disabled-bg: $compelo_background;
+
+$pagination-border-color: $compelo_border;
+$pagination-hover-border-color: $compelo_border;
+$pagination-active-border-color: $compelo_border;
+$pagination-disabled-border-color: $compelo_border;
+
+// --- List Groups
+$list-group-color: $compelo_text;
+$list-group-hover-color: $compelo_text_primary;
+$list-group-active-color: $compelo_text_primary;
+$list-group-disabled-color: $compelo_text_muted;
+
+$list-group-bg: $compelo_background;
+$list-group-hover-bg: $compelo_primary;
+$list-group-active-bg: $compelo_primary;
+$list-group-disabled-bg: $compelo_background;
+
+$list-group-border-color: $compelo_border;
+$list-group-hover-border-color: $compelo_border;
+$list-group-active-border-color: $compelo_border;
+$list-group-disabled-border-color: $compelo_border;
+
+// --- Tables
+$table-bg: $compelo_background;
+$table-border-color: $compelo_border;
+
+// --- Tooltips
+
+$tooltip-color: $compelo_text_primary;
+$tooltip-bg: $compelo_primary;

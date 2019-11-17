@@ -13,6 +13,7 @@ import { IconModule } from './icon/icon.module';
 import { ButtonModule } from './button/button.module';
 import { ToastModule } from './toast/toast.module';
 import { StatsBarModule } from './stats-bar/stats-bar.module';
+import { ContainerModule } from './container/container.module';
 
 const modules: any = [
   // angular
@@ -33,13 +34,12 @@ const modules: any = [
   IconModule,
   ListGroupModule,
   ToastModule,
-  StatsBarModule
+  StatsBarModule,
+  ContainerModule
 ];
 
 @NgModule({
   imports: [...modules],
-  exports: [...modules],
-  declarations: [],
-  providers: []
+  exports: [...modules]
 })
 export class SharedModule {}

@@ -1,0 +1,10 @@
+.btn-primary {
+  @include button-variant(
+    $compelo_background,
+    $compelo_border,
+    $compelo_primary,
+    $compelo_border,
+    $compelo_primary,
+    $compelo_border
+  );
+}

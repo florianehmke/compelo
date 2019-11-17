@@ -8,9 +8,8 @@ import { BaseChartDirective, Label } from 'ng2-charts';
   template: `
     <div class="flex">
       <div class="flex-item">
-        <div style="display: block;">
+        <app-container>
           <canvas
-            class="compelo-container"
             baseChart
             [datasets]="lineChartData"
             [labels]="lineChartLabels"
@@ -18,7 +17,7 @@ import { BaseChartDirective, Label } from 'ng2-charts';
             [legend]="lineChartLegend"
             [chartType]="lineChartType"
           ></canvas>
-        </div>
+        </app-container>
       </div>
     </div>
   `

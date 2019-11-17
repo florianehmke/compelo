@@ -1,4 +1,4 @@
-import { Spectator, createComponentFactory } from '@ngneat/spectator/jest';
+import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
 
 import { StatsBarComponent } from './stats-bar.component';
 
@@ -7,6 +7,10 @@ describe('StatsBarComponent', () => {
   const createComponent = createComponentFactory(StatsBarComponent);
 
   beforeEach(() => (spectator = createComponent()));
+
+  it('should create', () => {
+    expect(spectator.component).toBeTruthy();
+  });
 
   it('should not render segments if data input is null', () => {
     expect(spectator.query('.segment')).toBeNull();
