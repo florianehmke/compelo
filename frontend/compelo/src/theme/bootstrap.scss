@@ -2,57 +2,63 @@
 $enable-rounded: false;
 
 // --- General
-$primary: $compelo_primary;
-$secondary: $compelo_secondary;
+$primary: $cpl_color;
 
-$body-bg: $compelo_body;
-$body-color: $compelo_text;
+$body-bg: $cpl_color_body;
+$body-color: $cpl_color;
 
-$text-muted: $compelo_text_muted;
+$text-muted: $cpl_color_disabled;
 
 // --- Inputs
-$input-bg: $compelo_background;
-$input-color: $compelo_text;
-$input-placeholder-color: $compelo_text_muted;
-$input-border-color: $compelo_border;
+$input-bg: $cpl_color_bg;
+$input-color: $cpl_color;
+$input-placeholder-color: $cpl_color_disabled;
+$input-border-color: $cpl_color_border;
 
 // --- Pagination
-$pagination-color: $compelo_text;
-$pagination-hover-color: $compelo_text_primary;
-$pagination-active-color: $compelo_text_primary;
-$pagination-disabled-color: $compelo_text_muted;
+$pagination-color: $cpl_color;
+$pagination-hover-color: $cpl_color_highlight;
+$pagination-active-color: $cpl_color_highlight;
+$pagination-disabled-color: $cpl_color_disabled;
 
-$pagination-bg: $compelo_background;
-$pagination-hover-bg: $compelo_primary;
-$pagination-active-bg: $compelo_primary;
-$pagination-disabled-bg: $compelo_background;
+$pagination-bg: $cpl_color_bg;
+$pagination-hover-bg: $cpl_color_highlight_bg;
+$pagination-active-bg: $cpl_color_highlight_bg;
+$pagination-disabled-bg: $cpl_color_disabled_bg;
 
-$pagination-border-color: $compelo_border;
-$pagination-hover-border-color: $compelo_border;
-$pagination-active-border-color: $compelo_border;
-$pagination-disabled-border-color: $compelo_border;
+$pagination-border-color: $cpl_color_border;
+$pagination-hover-border-color: $cpl_color_highlight_border;
+$pagination-active-border-color: $cpl_color_highlight_border;
+$pagination-disabled-border-color: $cpl_color_disabled_border;
 
 // --- List Groups
-$list-group-color: $compelo_text;
-$list-group-hover-color: $compelo_text_primary;
-$list-group-active-color: $compelo_text_primary;
-$list-group-disabled-color: $compelo_text_muted;
+$list-group-color: $cpl_color;
+$list-group-hover-color: $cpl_color_highlight;
+$list-group-active-color: $cpl_color_highlight;
+$list-group-disabled-color: $cpl_color_disabled;
 
-$list-group-bg: $compelo_background;
-$list-group-hover-bg: $compelo_primary;
-$list-group-active-bg: $compelo_primary;
-$list-group-disabled-bg: $compelo_background;
+$list-group-bg: $cpl_color_bg;
+$list-group-hover-bg: $cpl_color_highlight_bg;
+$list-group-active-bg: $cpl_color_highlight_bg;
+$list-group-disabled-bg: $cpl_color_disabled_bg;
 
-$list-group-border-color: $compelo_border;
-$list-group-hover-border-color: $compelo_border;
-$list-group-active-border-color: $compelo_border;
-$list-group-disabled-border-color: $compelo_border;
+$list-group-border-color: $cpl_color_border;
+$list-group-hover-border-color: $cpl_color_highlight_border;
+$list-group-active-border-color: $cpl_color_highlight_border;
+$list-group-disabled-border-color: $cpl_color_disabled_border;
+
+$list-group-action-hover-color: $cpl_color_highlight;
+$list-group-action-color: $cpl_color_highlight;
+$list-group-action-active-color: $cpl_color_highlight;
+//$pagination-focus-box-shadow
+$input-btn-focus-box-shadow:  0 0 0 0 $cpl_color;
+
 
 // --- Tables
-$table-bg: $compelo_background;
-$table-border-color: $compelo_border;
+$table-bg: $cpl_color_bg;
+$table-border-color: $cpl_color_border;
 
 // --- Tooltips
 
-$tooltip-color: $compelo_text_primary;
-$tooltip-bg: $compelo_primary;
+$tooltip-color: $cpl_color_highlight;
+$tooltip-bg: $cpl_color_highlight_bg;
