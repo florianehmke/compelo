@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Match } from '@api';
+import { MatchData } from '@api';
 
 @Component({
   selector: 'app-match-list',
@@ -68,7 +68,7 @@ import { Match } from '@api';
 })
 export class MatchListComponent {
   @Input()
-  matches: Match[];
+  matches: MatchData[];
 
   @Output()
   filterChange = new EventEmitter<string>();
