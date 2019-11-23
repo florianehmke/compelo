@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GameStats, PlayerStats } from '@shared/models';
+import { GameStats, PlayerStats } from '@api';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 export interface Mode {

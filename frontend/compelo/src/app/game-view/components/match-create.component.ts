@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Player } from '@shared/models';
+import { Player } from '@api';
 import { CreateMatchPayload } from '@core/project';
 
 @Component({

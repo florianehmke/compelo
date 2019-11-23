@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Game } from '@shared/models';
+import { Game } from '@api';
 
 @Component({
   selector: 'app-game-list',

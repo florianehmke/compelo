@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Project } from '@shared/models';
+import { Project } from '@api';
 import { tokenForProjectIdExists } from '@shared/jwt';
 import { noop } from '@shared/util';
 

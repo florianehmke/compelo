@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Game } from '@shared/models';
+import { Game } from '@api';
 
 @Component({
   selector: 'app-game-create',
@@ -32,7 +32,7 @@ import { Game } from '@shared/models';
 })
 export class GameCreateComponent {
   @Output()
-  gameCreated = new EventEmitter<Game>();
+  gameCreated = new EventEmitter<Partial<Game>>();
 
   name: string;
 

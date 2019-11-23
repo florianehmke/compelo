@@ -1,10 +1,11 @@
 import { createAction, props } from '@ngrx/store';
-import { ErrorPayload, Project, Payload } from '@shared/models';
 
 import {
   CreateProjectPayload,
   SelectProjectPayload
 } from './project-list.models';
+import { ErrorPayload, Payload } from '@shared/models';
+import { Project } from '@api';
 
 export const loadProjects = createAction('[Projects] Load');
 export const loadProjectsSuccess = createAction(

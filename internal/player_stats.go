@@ -13,7 +13,7 @@ import (
 type PlayerStats struct {
 	db.Player                  // embedded player
 	Current   Stats            `json:"current"`
-	History   map[string]Stats `json:"history"` // mapped by RFC3339 formatted date (eg. 2019-10-01T00:00:00Z)
+	History   map[string]Stats `json:"history" ts_type:"{[key: string]: Stats}"`
 }
 
 type Stats struct {

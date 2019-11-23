@@ -2,10 +2,10 @@ package db
 
 // match_score_stats view
 type MatchScoreStats struct {
-	MatchID   uint
-	GameID    uint
-	ScoreDiff int
-	ScoreSum  int
+	MatchID   uint `json:"matchId"`
+	GameID    uint `json:"gameId"`
+	ScoreDiff int  `json:"scoreDiff"`
+	ScoreSum  int  `json:"scoreSum"`
 }
 
 func (db *gormDB) LoadMaxScoreDiffByGameID(gameID, limit uint) ([]MatchScoreStats, error) {

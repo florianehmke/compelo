@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Project } from '@shared/models';
+import { Project } from '@api';
 import { loadProjectsSuccess } from './project-list.actions';
 
 export const FEATURE_KEY = 'project-list';

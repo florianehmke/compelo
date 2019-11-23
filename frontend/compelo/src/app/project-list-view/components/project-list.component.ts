@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Project } from '@shared/models';
+import { Project } from '@api';
 
 @Component({
   selector: 'app-project-list',

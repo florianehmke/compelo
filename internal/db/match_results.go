@@ -6,13 +6,13 @@ import (
 
 // match_results view
 type MatchResult struct {
-	PlayerID    uint
-	GameID      uint
-	Date        time.Time
-	MatchID     uint
-	Score       int
-	RatingDelta int
-	Result      Result
+	PlayerID    uint      `json:"playerId"`
+	GameID      uint      `json:"gameId"`
+	Date        time.Time `json:"date" ts_type:"string"`
+	MatchID     uint      `json:"matchId"`
+	Score       int       `json:"score"`
+	RatingDelta int       `json:"ratingDelta"`
+	Result      Result    `json:"result"`
 }
 
 func (db *gormDB) LoadMatchResultsByGameID(gameID uint) ([]MatchResult, error) {

@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Game, GameStats, Match, Player, PlayerStats } from '@shared/models';
+import { Game, GameStats, Match, MatchData, Player, PlayerStats } from '@api';
 import {
   filterMatches,
   loadGamesSuccess,
@@ -16,7 +16,7 @@ export interface State {
   gameStats: GameStats;
   players: Player[];
   playerStats: PlayerStats[];
-  matches: Match[];
+  matches: MatchData[];
   matchFilter: string;
 }
 

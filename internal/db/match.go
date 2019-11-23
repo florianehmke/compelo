@@ -15,7 +15,7 @@ const (
 type Match struct {
 	Model
 
-	Date   time.Time `json:"date"`
+	Date   time.Time `json:"date" ts_type:"string"`
 	GameID uint      `json:"gameId"`
 }
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Player } from '@shared/models';
+import { Player } from '@api';
 
 @Component({
   selector: 'app-player-list',

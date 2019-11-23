@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
-import { Game, GameStats, Match, Player, PlayerStats } from '@shared/models';
+import { Game, GameStats, Match, MatchData, Player, PlayerStats } from '@api';
 import { Store } from '@ngrx/store';
 import { flatMap, map, take } from 'rxjs/operators';
 
@@ -56,9 +56,11 @@ export class ProjectService {
     );
   }
 
-  getMatches(gameID: number): Observable<Match[]> {
+  getMatches(gameID: number): Observable<MatchData[]> {
     return this.projectUrl().pipe(
-      flatMap(url => this.http.get<Match[]>(`${url}/games/${gameID}/matches`))
+      flatMap(url =>
+        this.http.get<MatchData[]>(`${url}/games/${gameID}/matches`)
+      )
     );
   }
 

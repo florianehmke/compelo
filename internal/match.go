@@ -176,7 +176,7 @@ func (svc *Service) determineResult(param *CreateMatchParameter) {
 
 type MatchData struct {
 	ID     uint       `json:"id"`
-	Date   time.Time  `json:"date"`
+	Date   time.Time  `json:"date" ts_type:"string"`
 	GameID uint       `json:"gameId"`
 	Teams  []TeamData `json:"teams"`
 }

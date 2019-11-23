@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Game, Project } from '@shared/models';
+import { Component, Input } from '@angular/core';
+import { Game, Project } from '@api';
 
 @Component({
   selector: 'app-header',

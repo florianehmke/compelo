@@ -20,8 +20,9 @@ frontend: frontend-prepare
 
 generate:
 	mkdir -p $(FRONTEND_PATH)/dist
-	$(GOCMD) generate ./frontend
 	$(GOCMD) generate ./internal/db/scripts
+	$(GOCMD) generate ./frontend
+	$(GOCMD) generate ./generate_models.go
 
 backend-quality: generate
 	$(GOCMD) fmt ./...

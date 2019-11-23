@@ -9,9 +9,9 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { loadToken, removeToken, storeToken } from '@shared/jwt';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@core/auth.service';
-import { AuthResponse } from '@shared/models';
 import { Router } from '@angular/router';
 import { ToastService } from '@shared/toast';
+import { AuthResponse } from '@shared/models';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

@@ -1,11 +1,11 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { Team } from '@shared/models';
+import { Pipe, PipeTransform } from "@angular/core";
+import { TeamData } from '@api';
 
 @Pipe({
   name: 'team'
 })
 export class TeamPipe implements PipeTransform {
-  transform(team: Team, ...args: any[]): string {
+  transform(team: TeamData, ...args: any[]): string {
     if (team) {
       return team.players.map(p => p.name).join(', ');
     }

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Team } from '@shared/models';
+import { Team } from '@api';
 
 @Pipe({
   name: 'scores'

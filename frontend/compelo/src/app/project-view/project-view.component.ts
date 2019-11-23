@@ -7,7 +7,7 @@ import {
   getPlayers,
   State
 } from '@core/project';
-import { Game, Player } from '@shared/models';
+import { Game, Player } from '@api';
 
 @Component({
   template: `
