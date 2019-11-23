@@ -33,8 +33,8 @@ var (
 	ErrWrongProjectPassword = errors.New("wrong password for project")
 )
 
-func (svc *Service) AuthenticateProject(name, pw string) (db.Project, error) {
-	p, err := svc.LoadProjectByName(name)
+func (svc *Service) AuthenticateProject(id uint, pw string) (db.Project, error) {
+	p, err := svc.LoadProjectByID(id)
 	if err != nil {
 		return db.Project{}, ErrProjectDoesNotExist
 	}

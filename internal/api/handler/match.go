@@ -8,17 +8,34 @@ import (
 	"compelo/pkg/json"
 )
 
+type CreateMatchRequest struct {
+	Teams []CreateMatchRequestTeam `json:"teams"`
+}
+
+type CreateMatchRequestTeam struct {
+	PlayerIDs []int `json:"playerIds" `
+	Score     int   `json:"score"`
+}
+
 func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
 	game := MustLoadGameFromContext(r)
 
-	var param compelo.CreateMatchParameter
-	if err := json.Unmarshal(r.Body, &param); err != nil {
+	var body CreateMatchRequest
+	if err := json.Unmarshal(r.Body, &body); err != nil {
 		json.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
-	param.GameID = game.ID
-	param.Date = time.Now()
+	param := compelo.CreateMatchParameter{
+		GameID: game.ID,
+		Date:   time.Now(),
+	}
+	for _, t := range body.Teams {
+		param.Teams = append(param.Teams, compelo.CreateMatchParameterTeam{
+			PlayerIDs: t.PlayerIDs,
+			Score:     t.Score,
+		})
+	}
 
 	m, err := h.svc.CreateMatch(param)
 	if err == nil {

@@ -37,8 +37,8 @@ type Claims struct {
 }
 
 type AuthRequest struct {
-	ProjectName string `json:"projectName"`
-	Password    string `json:"password"`
+	ProjectId uint   `json:"projectId"`
+	Password  string `json:"password"`
 }
 
 type AuthResponse struct {
@@ -52,7 +52,7 @@ func (sec *Security) Login(w http.ResponseWriter, r *http.Request) {
 		json.Error(w, http.StatusBadRequest, err)
 		return
 	}
-	project, err := sec.svc.AuthenticateProject(login.ProjectName, login.Password)
+	project, err := sec.svc.AuthenticateProject(login.ProjectId, login.Password)
 	if err != nil {
 		json.Error(w, http.StatusUnauthorized, err)
 		return

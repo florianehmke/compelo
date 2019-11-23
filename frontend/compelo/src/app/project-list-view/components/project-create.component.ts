@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CreateProjectPayload } from '@core/project-list';
+import { CreateProjectRequest } from '@api';
 
 @Component({
   selector: 'app-project-create',
@@ -40,7 +40,7 @@ import { CreateProjectPayload } from '@core/project-list';
 })
 export class ProjectCreateComponent {
   @Output()
-  projectCreated = new EventEmitter<CreateProjectPayload>();
+  projectCreated = new EventEmitter<CreateProjectRequest>();
 
   name: string;
   password: string;

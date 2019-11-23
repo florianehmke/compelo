@@ -36,15 +36,11 @@ export class ProjectListEffects {
     this.actions$.pipe(
       ofType(selectProject),
       switchMap(action =>
-        this.authService.login(action.payload).pipe(
+        this.authService.login(action.payload.request).pipe(
           tap(response => storeToken(response.token)),
-          tap(() => delete action.payload.password),
           map(() =>
             selectProjectSuccess({
-              payload: {
-                id: action.payload.projectId,
-                name: action.payload.projectName
-              }
+              payload: { ...action.payload.project }
             })
           ),
           catchError(err => of(loadProjectsError(err)))
@@ -62,9 +58,11 @@ export class ProjectListEffects {
             createProjectSuccess({ payload: createdProject }),
             selectProject({
               payload: {
-                password: action.payload.password,
-                projectName: action.payload.name,
-                projectId: createdProject.id
+                project: createdProject,
+                request: {
+                  password: action.payload.password,
+                  projectId: createdProject.id
+                }
               }
             })
           ]),

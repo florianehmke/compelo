@@ -11,7 +11,7 @@ import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@core/auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from '@shared/toast';
-import { AuthResponse } from '@shared/models';
+import { AuthResponse } from '@api';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

@@ -17,11 +17,13 @@ const (
 	GameKey = "game"
 )
 
+type CreateGameRequest struct {
+	Name string `json:"name"`
+}
+
 func (h *Handler) CreateGame(w http.ResponseWriter, r *http.Request) {
 	project := MustLoadProjectFromContext(r)
-	var body struct {
-		Name string `json:"name"`
-	}
+	var body CreateGameRequest
 	if err := json.Unmarshal(r.Body, &body); err != nil {
 		json.Error(w, http.StatusBadRequest, err)
 		return

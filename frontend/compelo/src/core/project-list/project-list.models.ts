@@ -1,10 +1,6 @@
-export interface CreateProjectPayload {
-  name: string;
-  password: string;
-}
+import { AuthRequest, Project } from '@api';
 
 export interface SelectProjectPayload {
-  projectId: number;
-  projectName: string;
-  password: string;
+  request: AuthRequest;
+  project: Project;
 }

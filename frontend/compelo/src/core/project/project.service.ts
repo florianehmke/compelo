@@ -2,11 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
-import { Game, GameStats, Match, MatchData, Player, PlayerStats } from '@api';
+import {
+  CreateMatchRequest,
+  Game,
+  GameStats,
+  Match,
+  MatchData,
+  Player,
+  PlayerStats
+} from '@api';
 import { Store } from '@ngrx/store';
 import { flatMap, map, take } from 'rxjs/operators';
 
-import { CreateMatchPayload } from './project.models';
 import { State } from '../router/router-state.reducer';
 import { getSelectedProjectId } from '../router';
 
@@ -48,7 +55,7 @@ export class ProjectService {
     );
   }
 
-  createMatch(payload: CreateMatchPayload, gameID: number): Observable<Match> {
+  createMatch(payload: CreateMatchRequest, gameID: number): Observable<Match> {
     return this.projectUrl().pipe(
       flatMap(url =>
         this.http.post<Match>(`${url}/games/${gameID}/matches`, payload)

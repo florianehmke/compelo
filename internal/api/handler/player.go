@@ -6,11 +6,13 @@ import (
 	"compelo/pkg/json"
 )
 
+type CreatePlayerRequest struct {
+	Name string `json:"name"`
+}
+
 func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	project := MustLoadProjectFromContext(r)
-	var body struct {
-		Name string `json:"name"`
-	}
+	var body CreatePlayerRequest
 	if err := json.Unmarshal(r.Body, &body); err != nil {
 		json.Error(w, http.StatusBadRequest, err)
 		return

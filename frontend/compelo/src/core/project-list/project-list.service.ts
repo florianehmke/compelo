@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
-import { Project } from '@api';
-import { CreateProjectPayload } from '@core/project-list';
+import { CreateProjectRequest, Project } from '@api';
 
 @Injectable()
 export class ProjectListService {
@@ -15,7 +14,7 @@ export class ProjectListService {
     return this.http.get<Project[]>(`${this.baseUrl}`);
   }
 
-  createProject(project: CreateProjectPayload): Observable<Project> {
+  createProject(project: CreateProjectRequest): Observable<Project> {
     return this.http.post<Project>(`${this.baseUrl}`, project);
   }
 }

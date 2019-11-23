@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Project } from '@api';
+import { CreateProjectRequest, Project } from '@api';
 import { tokenForProjectIdExists } from '@shared/jwt';
 import { noop } from '@shared/util';
 
 import { ProjectSelectModalComponent } from './components';
 import {
   createProject,
-  CreateProjectPayload,
   getProjects,
   selectProject,
+  SelectProjectPayload,
   selectProjectSuccess,
   State
 } from '@core/project-list';
+import { Payload } from '@shared/models';
 
 @Component({
   template: `
@@ -39,11 +40,13 @@ export class ProjectListViewComponent {
       this.modalService
         .open(ProjectSelectModalComponent)
         .result.then((pw: string) => {
-          const payload = {
+          const payload: Payload<SelectProjectPayload> = {
             payload: {
-              projectId: project.id,
-              projectName: project.name,
-              password: pw
+              request: {
+                projectId: project.id,
+                password: pw
+              },
+              project
             }
           };
           this.store.dispatch(selectProject(payload));
@@ -51,7 +54,7 @@ export class ProjectListViewComponent {
     }
   }
 
-  onProjectCreate(payload: CreateProjectPayload) {
+  onProjectCreate(payload: CreateProjectRequest) {
     this.store.dispatch(createProject({ payload }));
   }
 }

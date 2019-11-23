@@ -1,19 +1,46 @@
 // +build ignore
 
-package integration
+package main
 
 import (
 	"github.com/tkrajina/typescriptify-golang-structs/typescriptify"
 
 	compelo "compelo/internal"
+	"compelo/internal/api/handler"
+	"compelo/internal/api/security"
 	"compelo/internal/db"
 )
 
-const modelPath = "frontend/compelo/src/generated/"
+const modelPath = "compelo/src/generated/"
 
 func main() {
+	generateAuthModels()
+	generateApiModels()
 	generateAppModels()
 	generateDatabaseModels()
+}
+
+func generateAuthModels() {
+	converter := newConverter()
+	converter.Add(security.AuthRequest{})
+	converter.Add(security.AuthResponse{})
+	err := converter.ConvertToFile(modelPath + "auth.models.ts")
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func generateApiModels() {
+	converter := newConverter()
+	converter.Add(handler.CreateProjectRequest{})
+	converter.Add(handler.CreateGameRequest{})
+	converter.Add(handler.CreatePlayerRequest{})
+	converter.Add(handler.CreateMatchRequest{})
+	converter.Add(handler.CreateMatchRequestTeam{})
+	err := converter.ConvertToFile(modelPath + "api.models.ts")
+	if err != nil {
+		panic(err.Error())
+	}
 }
 
 func generateAppModels() {

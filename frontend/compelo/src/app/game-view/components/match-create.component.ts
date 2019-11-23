@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Player } from '@api';
-import { CreateMatchPayload } from '@core/project';
+import { CreateMatchRequest, Player } from '@api';
 
 @Component({
   selector: 'app-match-create',
@@ -68,14 +67,14 @@ export class MatchCreateComponent {
   formGroup: FormGroup;
 
   @Output()
-  matchCreated = new EventEmitter<CreateMatchPayload>();
+  matchCreated = new EventEmitter<CreateMatchRequest>();
 
   @Output()
   settingsClick = new EventEmitter();
 
   onSubmit() {
     if (this.formGroup.valid) {
-      const value: CreateMatchPayload = this.formGroup.value;
+      const value: CreateMatchRequest = this.formGroup.value;
       this.matchCreated.emit(value);
       this.formGroup.reset();
     }

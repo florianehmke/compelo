@@ -227,8 +227,8 @@ func (s *testSuite) listProjects() {
 
 func (s *testSuite) selectProject() {
 	b := JSON{
-		"projectName": s.testData.projectName,
-		"password":    s.testData.projectPW,
+		"projectId": s.testData.projectID,
+		"password":  s.testData.projectPW,
 	}
 	w := s.requestWithBody("POST", "/api/login", b)
 

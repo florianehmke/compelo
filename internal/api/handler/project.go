@@ -17,11 +17,13 @@ const (
 	ProjectKey = "project"
 )
 
+type CreateProjectRequest struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
 func (h *Handler) CreateProject(w http.ResponseWriter, r *http.Request) {
-	var body struct {
-		Name     string `json:"name"`
-		Password string `json:"password"`
-	}
+	var body CreateProjectRequest
 	if err := json.Unmarshal(r.Body, &body); err != nil {
 		json.Error(w, http.StatusBadRequest, err)
 		return

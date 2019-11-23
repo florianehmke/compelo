@@ -1,10 +1,3 @@
-export interface CreateMatchPayload {
-  teams: {
-    playerIds: number[];
-    score: number;
-  }[];
-}
-
 export interface LoadMatchesPayload {
   gameId: number;
 }

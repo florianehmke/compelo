@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {
   createMatch,
-  CreateMatchPayload,
   filterMatches,
   getGameStats,
   getMatches,
@@ -16,6 +15,7 @@ import {
   MatchFormService,
   MatchFormSettings
 } from './services/match-form.service';
+import { CreateMatchRequest } from '@api';
 
 @Component({
   template: `
@@ -70,7 +70,7 @@ export class GameViewComponent {
     this.formGroup = this.formService.buildForm(settings);
   }
 
-  onMatchCreated(payload: CreateMatchPayload) {
+  onMatchCreated(payload: CreateMatchRequest) {
     this.store.dispatch(createMatch({ payload }));
   }
 

@@ -1,7 +1,14 @@
 import { createAction, props } from '@ngrx/store';
-import { Game, GameStats, Match, MatchData, Player, PlayerStats } from '@api';
 import {
-  CreateMatchPayload,
+  CreateMatchRequest,
+  Game,
+  GameStats,
+  Match,
+  MatchData,
+  Player,
+  PlayerStats
+} from '@api';
+import {
   FilterMatchesPayload,
   LoadGameStatsPayload,
   LoadMatchesPayload,
@@ -70,7 +77,7 @@ export const createPlayerError = createAction(
 
 export const createMatch = createAction(
   '[Matches] Create Match',
-  props<Payload<CreateMatchPayload>>()
+  props<Payload<CreateMatchRequest>>()
 );
 export const createMatchSuccess = createAction(
   '[Matches] Create Match Success',
