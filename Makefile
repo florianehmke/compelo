@@ -19,7 +19,7 @@ generate:
 # Frontend
 # =================
 
-frontend-prepare: generate
+frontend-prepare:
 	cd $(FRONTEND_PATH) && npm install
 
 frontend-verify: frontend-prepare
