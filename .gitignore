@@ -1,5 +1,6 @@
 .idea
 *.iml
 
-*_vfsdata.go
+scripts_vfsdata.go
+frontend_vfsdata.go
 db.sql

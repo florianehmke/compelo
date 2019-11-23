@@ -9,7 +9,6 @@ jobs:
       - checkout:
           path: ~/repo
 
-      - run: make backend-verify
       - run: make backend
       - run: ./go.test.sh
       - run: bash <(curl -s https://codecov.io/bash)
@@ -28,7 +27,6 @@ jobs:
             - v1-dependencies-{{ checksum "frontend/compelo/package.json" }}
             - v1-dependencies-
 
-      - run: make frontend-verify
       - run: make frontend
 
       - save_cache:
