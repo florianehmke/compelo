@@ -1,4 +1,4 @@
-.PHONY: frontend compelo
+.PHONY: frontend backend all
 
 TAG?=$(shell git describe --tags)
 export TAG
@@ -6,6 +6,8 @@ export TAG
 GOCMD := go
 EXECUTEABLE := compelo
 FRONTEND_PATH := frontend/compelo
+
+all: generate frontend backend
 
 # Codegen
 # =================

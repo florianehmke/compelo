@@ -14,24 +14,15 @@ import (
 const modelPath = "compelo/src/generated/"
 
 func main() {
-	generateAuthModels()
 	generateApiModels()
 	generateAppModels()
 	generateDatabaseModels()
 }
 
-func generateAuthModels() {
+func generateApiModels() {
 	converter := newConverter()
 	converter.Add(security.AuthRequest{})
 	converter.Add(security.AuthResponse{})
-	err := converter.ConvertToFile(modelPath + "auth.models.ts")
-	if err != nil {
-		panic(err.Error())
-	}
-}
-
-func generateApiModels() {
-	converter := newConverter()
 	converter.Add(handler.CreateProjectRequest{})
 	converter.Add(handler.CreateGameRequest{})
 	converter.Add(handler.CreatePlayerRequest{})

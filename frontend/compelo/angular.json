@@ -91,7 +91,8 @@
             ],
             "exclude": [
               "**/node_modules/**",
-              "src/generated/**"
+              "src/generated/**",
+              "dist/**"
             ]
           }
         }

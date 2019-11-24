@@ -5,7 +5,11 @@
     "types": []
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/testing",
+    "src/environments/environment.*.ts"
+  ],
   "angularCompilerOptions": {
     "enableIvy": true
   }

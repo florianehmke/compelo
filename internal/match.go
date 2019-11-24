@@ -11,15 +11,15 @@ import (
 )
 
 type CreateMatchParameter struct {
-	GameID uint      `json:"-"`
-	Date   time.Time `json:"-"`
+	GameID uint
+	Date   time.Time
 
-	Teams []CreateMatchParameterTeam `json:"teams"`
+	Teams []CreateMatchParameterTeam
 }
 
 type CreateMatchParameterTeam struct {
-	PlayerIDs []int `json:"playerIds" `
-	Score     int   `json:"score"`
+	PlayerIDs []int
+	Score     int
 
 	// Result + rating delta are determined by service.
 	result      db.Result
