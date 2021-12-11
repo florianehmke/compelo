@@ -6,6 +6,6 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   exports: [StatsBarComponent],
   declarations: [StatsBarComponent],
-  providers: []
+  providers: [],
 })
 export class StatsBarModule {}

@@ -8,6 +8,6 @@ import { ToastComponent } from './toast.component';
   imports: [CommonModule, NgbToastModule],
   exports: [ToastComponent],
   declarations: [ToastComponent],
-  providers: []
+  providers: [],
 })
 export class ToastModule {}

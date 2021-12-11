@@ -6,14 +6,14 @@ import {
   getMatches,
   getPlayers,
   getPlayerStats,
-  State
+  State,
 } from '@core/project';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 
 import {
   MatchFormService,
-  MatchFormSettings
+  MatchFormSettings,
 } from './services/match-form.service';
 import { CreateMatchRequest } from '@api';
 
@@ -47,7 +47,7 @@ import { CreateMatchRequest } from '@api';
         <app-stats [players]="stats[0]" [gameStats]="stats[1]"></app-stats>
       </div>
     </div>
-  `
+  `,
 })
 export class GameViewComponent {
   players$ = this.store.select(getPlayers);
@@ -55,7 +55,7 @@ export class GameViewComponent {
 
   stats$ = combineLatest([
     this.store.select(getPlayerStats),
-    this.store.select(getGameStats)
+    this.store.select(getGameStats),
   ]);
 
   formGroup = this.formService.buildForm({ teamSize: 1, teamCount: 2 });

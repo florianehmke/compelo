@@ -14,8 +14,8 @@ import { ProjectService } from './project.service';
     CommonModule,
     HttpClientModule,
     StoreModule.forFeature(FEATURE_KEY, reducer),
-    EffectsModule.forFeature([ProjectEffects])
+    EffectsModule.forFeature([ProjectEffects]),
   ],
-  providers: [ProjectService]
+  providers: [ProjectService],
 })
 export class ProjectModule {}

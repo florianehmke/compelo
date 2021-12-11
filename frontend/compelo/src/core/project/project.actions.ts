@@ -6,13 +6,13 @@ import {
   Match,
   MatchData,
   Player,
-  PlayerStats
+  PlayerStats,
 } from '@api';
 import {
   FilterMatchesPayload,
   LoadGameStatsPayload,
   LoadMatchesPayload,
-  LoadPlayerStatsPayload
+  LoadPlayerStatsPayload,
 } from './project.models';
 import { ErrorPayload, Payload } from '@shared/models';
 

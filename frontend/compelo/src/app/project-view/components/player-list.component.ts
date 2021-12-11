@@ -9,7 +9,7 @@ import { Player } from '@api';
         {{ player?.name }}
       </app-list-group-item>
     </app-list-group>
-  `
+  `,
 })
 export class PlayerListComponent {
   @Input()

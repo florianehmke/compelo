@@ -4,9 +4,7 @@ import { Game } from '@api';
 @Component({
   selector: 'app-game-create',
   template: `
-    <p class="lead">
-      Create / Select Game
-    </p>
+    <p class="lead">Create / Select Game</p>
     <form (ngSubmit)="onSubmit(); form.reset()" #form="ngForm">
       <div class="row">
         <div class="col-9">
@@ -21,14 +19,12 @@ import { Game } from '@api';
         </div>
         <div class="col-3 d-flex justify-content-end">
           <button type="submit" appPrimary [disabled]="!form.form.valid">
-            <app-button-label icon="plus">
-              Create
-            </app-button-label>
+            <app-button-label icon="plus"> Create </app-button-label>
           </button>
         </div>
       </div>
     </form>
-  `
+  `,
 })
 export class GameCreateComponent {
   @Output()

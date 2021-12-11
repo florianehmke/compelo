@@ -13,7 +13,7 @@ import { ToastService } from '@shared/toast/toast.service';
     >
       {{ toast.message }}
     </ngb-toast>
-  `
+  `,
 })
 export class ToastComponent {
   @HostBinding('class.ngb-toasts')

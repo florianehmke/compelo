@@ -10,6 +10,6 @@ import { components } from './components';
   declarations: [ProjectViewComponent, ...components],
   exports: [],
   providers: [ProjectViewGuard],
-  imports: [SharedModule, ProjectViewRoutingModule]
+  imports: [SharedModule, ProjectViewRoutingModule],
 })
 export class ProjectViewModule {}

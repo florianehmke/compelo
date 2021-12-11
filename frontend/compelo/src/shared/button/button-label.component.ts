@@ -8,7 +8,7 @@ import { IconName } from '@fortawesome/fontawesome-common-types';
       <ng-content></ng-content>
       <app-icon *ngIf="icon" [icon]="icon" class="ml-1"></app-icon>
     </span>
-  `
+  `,
 })
 export class ButtonLabelComponent {
   @Input()

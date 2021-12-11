@@ -6,7 +6,7 @@ import {
   triggerLoadGameStats,
   triggerLoadMatches,
   triggerLoadPlayers,
-  triggerLoadPlayerStats
+  triggerLoadPlayerStats,
 } from '@core/project';
 import { triggerLoadProjects } from '@core/project-list';
 
@@ -24,14 +24,14 @@ const routes: Routes = [
         triggerLoadGameStats,
         triggerLoadPlayers,
         triggerLoadPlayerStats,
-        triggerLoadMatches
-      ]
-    }
-  }
+        triggerLoadMatches,
+      ],
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class GameViewRoutingModule {}

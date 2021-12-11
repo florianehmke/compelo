@@ -9,13 +9,13 @@ import { ListGroupItemComponent } from './list-group-item.component';
   declarations: [
     ListGroupComponent,
     ListGroupButtonComponent,
-    ListGroupItemComponent
+    ListGroupItemComponent,
   ],
   exports: [
     ListGroupComponent,
     ListGroupButtonComponent,
-    ListGroupItemComponent
+    ListGroupItemComponent,
   ],
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class ListGroupModule {}

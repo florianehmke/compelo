@@ -63,8 +63,8 @@ import { MatchData } from '@api';
       td {
         padding: 0.5rem;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class MatchListComponent {
   @Input()

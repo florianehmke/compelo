@@ -22,5 +22,5 @@ export const components: any[] = [
   StatsComponent,
   GameStatsComponent,
   PlayerStatsChartComponent,
-  PlayerStatsTableComponent
+  PlayerStatsTableComponent,
 ];

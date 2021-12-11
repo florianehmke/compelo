@@ -9,7 +9,7 @@ export const getSelectedGame = createSelector(
   getSelectedGameId,
   getProjectState,
   (id, state) => {
-    return state.games.find(value => value.id === parseInt(id, 10));
+    return state.games.find((value) => value.id === parseInt(id, 10));
   }
 );
 
@@ -34,10 +34,10 @@ export const getGameStats = createSelector(
 );
 
 export const getMatches = createSelector(getProjectState, (state: State) =>
-  state.matches.filter(match => {
+  state.matches.filter((match) => {
     const searchTerm = state.matchFilter.toLowerCase();
-    return match.teams.some(team => {
-      return team.players.some(player => {
+    return match.teams.some((team) => {
+      return team.players.some((player) => {
         return player.name.toLowerCase().includes(searchTerm);
       });
     });

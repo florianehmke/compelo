@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
   FaIconLibrary,
-  FontAwesomeModule
+  FontAwesomeModule,
 } from '@fortawesome/angular-fontawesome';
 import {
   faChartLine,
@@ -11,7 +11,7 @@ import {
   faTable,
   faTimes,
   faTrophy,
-  faWrench
+  faWrench,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
@@ -21,7 +21,7 @@ import { IconComponent } from './icon.component';
   imports: [FontAwesomeModule],
   exports: [IconComponent],
   declarations: [IconComponent],
-  providers: []
+  providers: [],
 })
 export class IconModule {
   constructor(library: FaIconLibrary) {

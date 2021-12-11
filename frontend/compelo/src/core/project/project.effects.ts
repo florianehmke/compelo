@@ -6,7 +6,7 @@ import {
   map,
   switchMap,
   tap,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ToastService } from '@shared/toast';
@@ -36,7 +36,7 @@ import {
   loadPlayersSuccess,
   loadPlayerStats,
   loadPlayerStatsError,
-  loadPlayerStatsSuccess
+  loadPlayerStatsSuccess,
 } from './project.actions';
 import { State } from './project.reducer';
 import { getSelectedGame } from './project.selectors';
@@ -46,10 +46,10 @@ export class ProjectEffects {
   loadGames$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadGames),
-      switchMap(action =>
+      switchMap((action) =>
         this.service.getGames().pipe(
-          map(games => loadGamesSuccess({ payload: games })),
-          catchError(err => of(loadGamesError(err)))
+          map((games) => loadGamesSuccess({ payload: games })),
+          catchError((err) => of(loadGamesError(err)))
         )
       )
     )
@@ -58,13 +58,13 @@ export class ProjectEffects {
   createGame$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createGame),
-      switchMap(action =>
+      switchMap((action) =>
         this.service.createGame(action.payload).pipe(
-          switchMap(response => [
+          switchMap((response) => [
             createGameSuccess({ payload: response }),
-            loadGames()
+            loadGames(),
           ]),
-          catchError(err => of(createGameError(err)))
+          catchError((err) => of(createGameError(err)))
         )
       )
     )
@@ -73,10 +73,10 @@ export class ProjectEffects {
   loadGameStats$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadGameStats),
-      switchMap(action =>
+      switchMap((action) =>
         this.service.getGameStats(action.payload.gameId).pipe(
-          map(gameStats => loadGameStatsSuccess({ payload: gameStats })),
-          catchError(err => of(loadGameStatsError(err)))
+          map((gameStats) => loadGameStatsSuccess({ payload: gameStats })),
+          catchError((err) => of(loadGameStatsError(err)))
         )
       )
     )
@@ -87,8 +87,8 @@ export class ProjectEffects {
       ofType(loadPlayers),
       switchMap(() =>
         this.service.getPlayers().pipe(
-          map(players => loadPlayersSuccess({ payload: players })),
-          catchError(err => of(loadPlayersError(err)))
+          map((players) => loadPlayersSuccess({ payload: players })),
+          catchError((err) => of(loadPlayersError(err)))
         )
       )
     )
@@ -97,10 +97,10 @@ export class ProjectEffects {
   loadPlayerStats$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadPlayerStats),
-      switchMap(action =>
+      switchMap((action) =>
         this.service.getPlayerStats(action.payload.gameId).pipe(
-          map(players => loadPlayerStatsSuccess({ payload: players })),
-          catchError(err => of(loadPlayerStatsError(err)))
+          map((players) => loadPlayerStatsSuccess({ payload: players })),
+          catchError((err) => of(loadPlayerStatsError(err)))
         )
       )
     )
@@ -109,13 +109,13 @@ export class ProjectEffects {
   createPlayer$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createPlayer),
-      switchMap(action =>
+      switchMap((action) =>
         this.service.createPlayer(action.payload).pipe(
-          switchMap(response => [
+          switchMap((response) => [
             createPlayerSuccess({ payload: response }),
-            loadPlayers()
+            loadPlayers(),
           ]),
-          catchError(err => of(createPlayerError(err)))
+          catchError((err) => of(createPlayerError(err)))
         )
       )
     )
@@ -127,13 +127,13 @@ export class ProjectEffects {
       withLatestFrom(this.store.select(getSelectedGame)),
       switchMap(([action, game]) =>
         this.service.createMatch(action.payload, game.id).pipe(
-          switchMap(response => [
+          switchMap((response) => [
             createMatchSuccess({ payload: response }),
             loadMatches({ payload: { gameId: game.id } }),
             loadPlayerStats({ payload: { gameId: game.id } }),
-            loadGameStats({ payload: { gameId: game.id } })
+            loadGameStats({ payload: { gameId: game.id } }),
           ]),
-          catchError(err => of(createMatchError(err)))
+          catchError((err) => of(createMatchError(err)))
         )
       )
     )
@@ -142,10 +142,10 @@ export class ProjectEffects {
   loadMatches$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadMatches),
-      switchMap(action =>
+      switchMap((action) =>
         this.service.getMatches(action.payload.gameId).pipe(
-          map(matches => loadMatchesSuccess({ payload: matches })),
-          catchError(err => of(loadMatchesError(err)))
+          map((matches) => loadMatchesSuccess({ payload: matches })),
+          catchError((err) => of(loadMatchesError(err)))
         )
       )
     )
@@ -155,7 +155,7 @@ export class ProjectEffects {
     () =>
       this.actions$.pipe(
         ofType(createMatchSuccess, createPlayerSuccess, createGameSuccess),
-        tap(action => this.toastService.success('Created!'))
+        tap((action) => this.toastService.success('Created!'))
       ),
     { dispatch: false }
   );

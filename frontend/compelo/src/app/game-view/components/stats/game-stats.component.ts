@@ -38,7 +38,7 @@ import { GameStats } from '@api';
         </div>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class GameStatsComponent {
   @Input()

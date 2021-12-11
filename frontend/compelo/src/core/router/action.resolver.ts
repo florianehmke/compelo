@@ -25,7 +25,7 @@ export class ActionResolver<T> implements Resolve<boolean> {
     actionFactory.forEach((factory: RouteActionFactory<T>) =>
       factory(this.store, route)
         .pipe(
-          map(actions =>
+          map((actions) =>
             actions.toString() === '[object Array]' ? actions : [actions]
           )
         )

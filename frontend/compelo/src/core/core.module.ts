@@ -25,15 +25,15 @@ export const metaReducers = environment.production ? [] : [logger];
     StoreRouterConnectingModule.forRoot(),
     EffectsModule.forRoot([]),
     ProjectListModule,
-    ProjectModule
+    ProjectModule,
   ],
   providers: [
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class CoreModule {}

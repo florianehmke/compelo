@@ -14,8 +14,8 @@ import { ProjectListEffects } from './project-list.effects';
     CommonModule,
     HttpClientModule,
     StoreModule.forFeature(FEATURE_KEY, reducer),
-    EffectsModule.forFeature([ProjectListEffects])
+    EffectsModule.forFeature([ProjectListEffects]),
   ],
-  providers: [ProjectListService]
+  providers: [ProjectListService],
 })
 export class ProjectListModule {}

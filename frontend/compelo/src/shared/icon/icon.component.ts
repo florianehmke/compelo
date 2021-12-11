@@ -11,8 +11,8 @@ import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
       .icon-btn {
         cursor: pointer;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class IconComponent {
   @Input()

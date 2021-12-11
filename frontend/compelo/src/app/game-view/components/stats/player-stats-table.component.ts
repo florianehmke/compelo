@@ -34,7 +34,7 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
         <app-stats-bar [data]="statsBarData(player?.current)"></app-stats-bar>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class PlayerStatsTableComponent {
   @Input()
@@ -45,14 +45,14 @@ export class PlayerStatsTableComponent {
     totalGames: 'Total Games',
     peakRating: 'Highest Elo',
     rating: 'Current Elo',
-    lowestRating: 'Lowest Elo'
+    lowestRating: 'Lowest Elo',
   };
 
   statsBarData(stats: Stats): StatsBarData {
     return {
       wins: stats.winCount,
       draws: stats.drawCount,
-      lost: stats.lossCount
+      lost: stats.lossCount,
     };
   }
 

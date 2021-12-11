@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NgbModalModule,
   NgbPaginationModule,
-  NgbTooltipModule
+  NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ChartsModule } from 'ng2-charts';
 
@@ -33,13 +33,13 @@ const modules: any = [
   IconModule,
   ListGroupModule,
   ToastModule,
-  StatsBarModule
+  StatsBarModule,
 ];
 
 @NgModule({
   imports: [...modules],
   exports: [...modules],
   declarations: [],
-  providers: []
+  providers: [],
 })
 export class SharedModule {}

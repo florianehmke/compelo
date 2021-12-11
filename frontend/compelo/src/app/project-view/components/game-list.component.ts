@@ -12,7 +12,7 @@ import { Game } from '@api';
         {{ game?.name }}
       </app-list-group-button>
     </app-list-group>
-  `
+  `,
 })
 export class GameListComponent {
   @Input()

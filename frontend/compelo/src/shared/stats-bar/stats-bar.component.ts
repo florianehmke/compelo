@@ -44,8 +44,8 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
       .lost {
         background-color: lightcoral;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class StatsBarComponent {
   @Input() data: StatsBarData;

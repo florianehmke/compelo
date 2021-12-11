@@ -9,6 +9,6 @@ import { ButtonPrimaryDirective } from './button-primary.directive';
   imports: [CommonModule, IconModule],
   exports: [ButtonLabelComponent, ButtonPrimaryDirective],
   declarations: [ButtonLabelComponent, ButtonPrimaryDirective],
-  providers: []
+  providers: [],
 })
 export class ButtonModule {}

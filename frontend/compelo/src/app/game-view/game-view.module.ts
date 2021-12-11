@@ -11,6 +11,6 @@ import { pipes } from './pipes';
   declarations: [GameViewComponent, ...components, ...pipes],
   exports: [],
   imports: [SharedModule, GameViewRoutingModule],
-  providers: [MatchFormService]
+  providers: [MatchFormService],
 })
 export class GameViewModule {}

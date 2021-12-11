@@ -18,9 +18,9 @@ import { AppHeaderComponent } from './app-header.component';
     CoreModule,
     SharedModule,
     ProjectViewModule,
-    ProjectListViewModule
+    ProjectListViewModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

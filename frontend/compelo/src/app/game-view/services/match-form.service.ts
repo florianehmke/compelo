@@ -3,7 +3,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators
+  Validators,
 } from '@angular/forms';
 
 export interface MatchFormSettings {
@@ -22,7 +22,7 @@ export class MatchFormService {
     }
 
     return this.fb.group({
-      teams: teamArray
+      teams: teamArray,
     });
   }
 
@@ -34,7 +34,7 @@ export class MatchFormService {
 
     return this.fb.group({
       playerIds: playerArray,
-      score: [null, Validators.required]
+      score: [null, Validators.required],
     });
   }
 }

@@ -9,6 +9,6 @@ import { components, entryComponents } from './components';
   declarations: [ProjectListViewComponent, ...components],
   exports: [],
   entryComponents: [...entryComponents],
-  imports: [SharedModule, ProjectListViewRoutingModule]
+  imports: [SharedModule, ProjectListViewRoutingModule],
 })
 export class ProjectListViewModule {}

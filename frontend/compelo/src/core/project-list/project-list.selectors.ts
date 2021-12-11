@@ -14,6 +14,6 @@ export const getSelectedProject = createSelector(
   getSelectedProjectId,
   getProjectListState,
   (id, state) => {
-    return state.projects.find(value => value.id === parseInt(id, 10));
+    return state.projects.find((value) => value.id === parseInt(id, 10));
   }
 );

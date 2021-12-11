@@ -43,9 +43,7 @@ import { CreateMatchRequest, Player } from '@api';
       </div>
       <div class="d-flex flex-row-reverse">
         <button type="submit" appPrimary [disabled]="!formGroup.valid">
-          <app-button-label icon="plus">
-            Submit
-          </app-button-label>
+          <app-button-label icon="plus"> Submit </app-button-label>
         </button>
       </div>
     </form>
@@ -56,8 +54,8 @@ import { CreateMatchRequest, Player } from '@api';
       .custom-select {
         margin-bottom: 8px;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class MatchCreateComponent {
   @Input()

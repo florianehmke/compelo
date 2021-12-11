@@ -12,7 +12,7 @@ import {
   selectProject,
   SelectProjectPayload,
   selectProjectSuccess,
-  State
+  State,
 } from '@core/project-list';
 import { Payload } from '@shared/models';
 
@@ -26,7 +26,7 @@ import { Payload } from '@shared/models';
       [projects]="projects$ | async"
       (projectSelected)="onSelect($event)"
     ></app-project-list>
-  `
+  `,
 })
 export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);
@@ -44,10 +44,10 @@ export class ProjectListViewComponent {
             payload: {
               request: {
                 projectId: project.id,
-                password: pw
+                password: pw,
               },
-              project
-            }
+              project,
+            },
           };
           this.store.dispatch(selectProject(payload));
         }, noop);

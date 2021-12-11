@@ -16,7 +16,7 @@ import { getSelectedProject } from '@core/project-list';
       <router-outlet></router-outlet>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   game$ = this.projectStore.select(getSelectedGame);

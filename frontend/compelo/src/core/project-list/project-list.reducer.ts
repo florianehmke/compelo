@@ -9,14 +9,14 @@ export interface State {
 }
 
 export const initialState: State = {
-  projects: []
+  projects: [],
 };
 
 const projectListReducer = createReducer(
   initialState,
   on(loadProjectsSuccess, (state, action) => ({
     ...state,
-    projects: action.payload
+    projects: action.payload,
   }))
 );
 

@@ -8,7 +8,7 @@ import {
   loadGameStats,
   loadMatches,
   loadPlayers,
-  loadPlayerStats
+  loadPlayerStats,
 } from './project.actions';
 import { State } from './project.reducer';
 

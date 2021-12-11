@@ -15,19 +15,23 @@ const routes: Routes = [
     canActivate: [ProjectViewGuard],
     resolve: [ActionResolver],
     data: {
-      actionFactory: [triggerLoadProjects, triggerLoadGames, triggerLoadPlayers]
-    }
+      actionFactory: [
+        triggerLoadProjects,
+        triggerLoadGames,
+        triggerLoadPlayers,
+      ],
+    },
   },
   {
     path: `:${projectIdParam}/game/:${gameIdParam}`,
     loadChildren: () =>
-      import('../game-view/game-view.module').then(mod => mod.GameViewModule)
-  }
+      import('../game-view/game-view.module').then((mod) => mod.GameViewModule),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   providers: [ActionResolver],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class ProjectViewRoutingModule {}

@@ -12,7 +12,7 @@ import { Project } from '@api';
         {{ project?.name }}
       </app-list-group-button>
     </app-list-group>
-  `
+  `,
 })
 export class ProjectListComponent {
   @Input()

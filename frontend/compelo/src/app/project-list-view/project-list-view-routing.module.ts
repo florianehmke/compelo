@@ -11,13 +11,13 @@ const routes: Routes = [
     component: ProjectListViewComponent,
     resolve: [ActionResolver],
     data: {
-      actionFactory: [triggerLoadProjects]
-    }
-  }
+      actionFactory: [triggerLoadProjects],
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class ProjectListViewRoutingModule {}

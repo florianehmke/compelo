@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
     <div class="list-group">
       <ng-content></ng-content>
     </div>
-  `
+  `,
 })
 export class ListGroupComponent {}
