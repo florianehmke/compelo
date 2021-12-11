@@ -1,6 +1,6 @@
 .PHONY: frontend backend all
 
-TAG?=$(shell git describe --tags)
+TAG?=$(shell git rev-parse --abbrev-ref HEAD)
 export TAG
 
 GOCMD := go

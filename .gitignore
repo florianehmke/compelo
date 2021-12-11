@@ -1,8 +1,9 @@
-.idea
 .vscode
-
+.idea
 *.iml
-*_generate*.go
+
+scripts_vfsdata.go
+frontend_vfsdata.go
 
 /db.sql
 /compelo
