@@ -2,7 +2,7 @@ version: 2
 jobs:
   backend:
     docker:
-      - image: circleci/golang:1.13
+      - image: circleci/golang:1.17
 
     working_directory: ~/repo
     steps:
