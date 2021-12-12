@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 
-import { APP_VERSION } from './version';
+import { APP_BUILD_DATE, APP_VERSION } from './version';
 
 @Component({
   selector: 'app-footer',
-  template: `<div class="my-3 text-muted">Build: {{ appVersion }}</div>`,
+  template: `<div class="my-3 d-flex flex-column align-items-center">
+    <small class="text-muted">Build: {{ appVersion }}</small>
+    <small class="text-muted">Date: {{ appBuildDate }}</small>
+  </div>`,
   styles: [
     `
       :host {
@@ -15,4 +18,5 @@ import { APP_VERSION } from './version';
 })
 export class AppFooterComponent {
   appVersion = APP_VERSION;
+  appBuildDate = APP_BUILD_DATE;
 }

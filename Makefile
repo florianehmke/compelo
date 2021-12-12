@@ -1,7 +1,11 @@
 .PHONY: frontend backend all
 
+VERSION?=$(shell git describe --always)
 TAG?=$(shell git rev-parse --abbrev-ref HEAD)
+DATE?=$(shell date '+%Y-%m-%d %H:%M')
 export TAG
+export VERSION
+export DATE
 
 GOCMD := go
 EXECUTEABLE := compelo
@@ -30,6 +34,8 @@ frontend-verify: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run test:ci
 
 frontend: frontend-verify
+	cd $(FRONTEND_PATH) && echo "export const APP_VERSION = '$(VERSION)';" > src/app/version.ts
+	cd $(FRONTEND_PATH) && echo "export const APP_BUILD_DATE = '$(DATE)';" > src/app/version.ts
 	cd $(FRONTEND_PATH) && npm run build-prod
 
 # Backend
