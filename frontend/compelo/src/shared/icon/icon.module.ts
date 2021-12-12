@@ -3,6 +3,7 @@ import {
   FaIconLibrary,
   FontAwesomeModule,
 } from '@fortawesome/angular-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
   faChartLine,
   faPlus,
@@ -13,7 +14,6 @@ import {
   faTrophy,
   faWrench,
 } from '@fortawesome/free-solid-svg-icons';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import { IconComponent } from './icon.component';
 

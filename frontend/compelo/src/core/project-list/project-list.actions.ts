@@ -1,6 +1,7 @@
-import { createAction, props } from '@ngrx/store';
-import { ErrorPayload, Payload } from '@shared/models';
 import { CreateProjectRequest, Project } from '@api';
+import { createAction, props } from '@ngrx/store';
+
+import { ErrorPayload, Payload } from '@shared/models';
 
 import { SelectProjectPayload } from './project-list.models';
 

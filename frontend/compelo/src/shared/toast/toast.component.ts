@@ -1,4 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
+
 import { ToastService } from '@shared/toast/toast.service';
 
 @Component({

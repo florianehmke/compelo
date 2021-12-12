@@ -3,6 +3,7 @@
   "ignorePatterns": [
     "projects/**/*"
   ],
+  "plugins": ["import"],
   "overrides": [
     {
       "files": [
@@ -33,6 +34,27 @@
             "type": "element",
             "prefix": "app",
             "style": "kebab-case"
+          }
+        ],
+        "import/order": [
+          "error",
+          {
+            "groups": [
+              "builtin",
+              "external",
+              "internal",
+              ["index", "sibling", "parent", "object"]
+            ],
+            "pathGroupsExcludedImportTypes": ["builtin"],
+            "pathGroups": [
+              {
+                "pattern": "+(@api|@env|@shared|@core)/**",
+                "group": "external",
+                "position": "after"
+              }
+            ],
+            "newlines-between": "always",
+            "alphabetize": { "order": "asc", "caseInsensitive": true }
           }
         ]
       }

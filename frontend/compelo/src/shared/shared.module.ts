@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NgbModalModule,
@@ -8,11 +8,11 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ChartsModule } from 'ng2-charts';
 
-import { ListGroupModule } from './list-group/list-group.module';
-import { IconModule } from './icon/icon.module';
 import { ButtonModule } from './button/button.module';
-import { ToastModule } from './toast/toast.module';
+import { IconModule } from './icon/icon.module';
+import { ListGroupModule } from './list-group/list-group.module';
 import { StatsBarModule } from './stats-bar/stats-bar.module';
+import { ToastModule } from './toast/toast.module';
 
 const modules: any = [
   // angular

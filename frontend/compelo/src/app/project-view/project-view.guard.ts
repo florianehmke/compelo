@@ -5,6 +5,7 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
+
 import { tokenForProjectIdExists } from '@shared/jwt';
 
 @Injectable()

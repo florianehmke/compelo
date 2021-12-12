@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '@env/environment';
+import { Injectable } from '@angular/core';
 import {
   CreateMatchRequest,
   Game,
@@ -12,10 +10,13 @@ import {
   PlayerStats,
 } from '@api';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { flatMap, map, take } from 'rxjs/operators';
 
-import { State } from '../router/router-state.reducer';
+import { environment } from '@env/environment';
+
 import { getSelectedProjectId } from '../router';
+import { State } from '../router/router-state.reducer';
 
 @Injectable()
 export class ProjectService {

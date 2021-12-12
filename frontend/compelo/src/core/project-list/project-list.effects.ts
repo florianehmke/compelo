@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ProjectListService } from './project-list.service';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+
+import { storeToken } from '@shared/jwt';
+
+import { AuthService } from '../auth.service';
 import {
   createProject,
   createProjectError,
@@ -13,10 +17,7 @@ import {
   selectProject,
   selectProjectSuccess,
 } from './project-list.actions';
-import { Router } from '@angular/router';
-import { storeToken } from '@shared/jwt';
-
-import { AuthService } from '../auth.service';
+import { ProjectListService } from './project-list.service';
 
 @Injectable()
 export class ProjectListEffects {

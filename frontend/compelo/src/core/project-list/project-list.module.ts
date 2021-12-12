@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
-import { ProjectListService } from './project-list.service';
-import { FEATURE_KEY, reducer } from './project-list.reducer';
 import { ProjectListEffects } from './project-list.effects';
+import { FEATURE_KEY, reducer } from './project-list.reducer';
+import { ProjectListService } from './project-list.service';
 
 @NgModule({
   declarations: [],

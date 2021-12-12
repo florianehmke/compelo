@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 import {
   catchError,
   map,
@@ -8,10 +9,9 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { of } from 'rxjs';
+
 import { ToastService } from '@shared/toast';
 
-import { ProjectService } from './project.service';
 import {
   createGame,
   createGameError,
@@ -40,6 +40,7 @@ import {
 } from './project.actions';
 import { State } from './project.reducer';
 import { getSelectedGame } from './project.selectors';
+import { ProjectService } from './project.service';
 
 @Injectable()
 export class ProjectEffects {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { getSelectedGame, State as ProjectState } from '@core/project';
-
 import { Store } from '@ngrx/store';
+
+import { getSelectedGame, State as ProjectState } from '@core/project';
 import { getSelectedProject } from '@core/project-list';
 
 @Component({

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ActionResolver } from '@core/router';
+
 import { triggerLoadProjects } from '@core/project-list';
+import { ActionResolver } from '@core/router';
 
 import { ProjectListViewComponent } from './project-list-view.component';
 

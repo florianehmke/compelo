@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '@env/environment';
+import { Injectable } from '@angular/core';
 import { CreateProjectRequest, Project } from '@api';
+import { Observable } from 'rxjs';
+
+import { environment } from '@env/environment';
+
 
 @Injectable()
 export class ProjectListService {

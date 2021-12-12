@@ -1,4 +1,3 @@
-import { createAction, props } from '@ngrx/store';
 import {
   CreateMatchRequest,
   Game,
@@ -8,13 +7,17 @@ import {
   Player,
   PlayerStats,
 } from '@api';
+import { createAction, props } from '@ngrx/store';
+
+import { ErrorPayload, Payload } from '@shared/models';
+
 import {
   FilterMatchesPayload,
   LoadGameStatsPayload,
   LoadMatchesPayload,
   LoadPlayerStatsPayload,
 } from './project.models';
-import { ErrorPayload, Payload } from '@shared/models';
+
 
 export const loadGames = createAction('[Games] Load');
 export const loadGamesSuccess = createAction(

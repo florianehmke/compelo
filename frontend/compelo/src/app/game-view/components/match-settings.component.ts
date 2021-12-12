@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+
 import { MatchFormSettings } from '../services/match-form.service';
 
 @Component({

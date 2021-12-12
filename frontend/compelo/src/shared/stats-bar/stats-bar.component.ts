@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
 
 @Component({

@@ -5,13 +5,15 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, throwError } from 'rxjs';
-import { loadToken, removeToken, storeToken } from '@shared/jwt';
-import { catchError, filter, switchMap, take } from 'rxjs/operators';
-import { AuthService } from '@core/auth.service';
 import { Router } from '@angular/router';
-import { ToastService } from '@shared/toast';
 import { AuthResponse } from '@api';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
+
+import { AuthService } from '@core/auth.service';
+import { loadToken, removeToken, storeToken } from '@shared/jwt';
+import { ToastService } from '@shared/toast';
+
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

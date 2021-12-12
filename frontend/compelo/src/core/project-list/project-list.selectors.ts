@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import { getSelectedProjectId } from '@core/router';
 
 import { FEATURE_KEY, State } from './project-list.reducer';

@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ActionResolver } from '@core/router';
+
 import { triggerLoadGames, triggerLoadPlayers } from '@core/project';
 import { triggerLoadProjects } from '@core/project-list';
+import { ActionResolver } from '@core/router';
 import { gameIdParam, projectIdParam } from '@shared/route-params';
 
 import { ProjectViewComponent } from './project-view.component';

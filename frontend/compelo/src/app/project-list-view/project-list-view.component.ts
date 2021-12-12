@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateProjectRequest, Project } from '@api';
-import { tokenForProjectIdExists } from '@shared/jwt';
-import { noop } from '@shared/util';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Store } from '@ngrx/store';
 
-import { ProjectSelectModalComponent } from './components';
 import {
   createProject,
   getProjects,
@@ -14,7 +11,11 @@ import {
   selectProjectSuccess,
   State,
 } from '@core/project-list';
+import { tokenForProjectIdExists } from '@shared/jwt';
 import { Payload } from '@shared/models';
+import { noop } from '@shared/util';
+
+import { ProjectSelectModalComponent } from './components';
 
 @Component({
   template: `
