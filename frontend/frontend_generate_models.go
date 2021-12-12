@@ -6,6 +6,7 @@ import (
 	"github.com/tkrajina/typescriptify-golang-structs/typescriptify"
 
 	compelo "compelo/internal"
+
 	"compelo/internal/api/handler"
 	"compelo/internal/api/security"
 	"compelo/internal/db"

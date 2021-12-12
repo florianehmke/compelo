@@ -51,7 +51,7 @@ func New(h *handler.Handler, s *security.Security) http.Handler {
 }
 
 func frontendHandler(w http.ResponseWriter, r *http.Request) {
-	f, err := frontend.Frontend.Open(r.URL.Path)
+	f, err := frontend.FileSystem().Open(r.URL.Path)
 	if err != nil {
 		r.URL.Path = "/"
 	} else {
@@ -59,7 +59,7 @@ func frontendHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 	}
-	http.FileServer(frontend.Frontend).ServeHTTP(w, r)
+	http.FileServer(frontend.FileSystem()).ServeHTTP(w, r)
 }
 
 func corsMiddleware() *cors.Cors {
