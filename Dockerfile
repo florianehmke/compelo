@@ -1,6 +1,7 @@
 ### Frontend Build
 FROM node:16 AS FRONTEND
 
+COPY .git /usr/src/.git
 COPY frontend /usr/src/frontend
 COPY Makefile  /usr/src/
 
