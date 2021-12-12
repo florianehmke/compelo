@@ -35,8 +35,8 @@ frontend-verify: frontend-prepare
 
 frontend: frontend-verify
 	cd $(FRONTEND_PATH) && echo "export const APP_VERSION = '$(VERSION)';" > src/app/version.ts
-	cd $(FRONTEND_PATH) && echo "export const APP_BUILD_DATE = '$(DATE)';" > src/app/version.ts
-	cd $(FRONTEND_PATH) && npm run build-prod
+	cd $(FRONTEND_PATH) && echo "export const APP_BUILD_DATE = '$(DATE)';" >> src/app/version.ts
+	cd $(FRONTEND_PATH) && npm run build-prod && git checkout -- src/app/version.ts
 
 # Backend
 # =================
