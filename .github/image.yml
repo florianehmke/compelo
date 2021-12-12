@@ -1,0 +1,14 @@
+name: Publish Image
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  publish-image:
+    runs-on: ubuntu-latest#
+    steps:
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2.7.0

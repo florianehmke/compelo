@@ -1,5 +1,5 @@
 ### Frontend Build
-FROM node:11 AS FRONTEND
+FROM node:16 AS FRONTEND
 
 COPY frontend /usr/src/frontend
 COPY Makefile  /usr/src/
@@ -9,7 +9,7 @@ WORKDIR /usr/src
 RUN make frontend
 
 ### Backend Build
-FROM golang:1.13-buster AS BACKEND
+FROM golang:1.17-buster AS BACKEND
 
 RUN apt-get install -y -q --no-install-recommends make
 
