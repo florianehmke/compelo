@@ -9,9 +9,10 @@ import { ProjectListViewModule } from './project-list-view/project-list-view.mod
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppHeaderComponent } from './app-header.component';
+import { AppFooterComponent } from './app-footer.component';
 
 @NgModule({
-  declarations: [AppComponent, AppHeaderComponent],
+  declarations: [AppComponent, AppHeaderComponent, AppFooterComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
