@@ -38,7 +38,7 @@ frontend: frontend-verify
 	cd $(FRONTEND_PATH) && rm -f -r dist
 	cd $(FRONTEND_PATH) && echo "export const APP_VERSION = '$(VERSION)';" > src/app/version.ts
 	cd $(FRONTEND_PATH) && echo "export const APP_BUILD_DATE = '$(DATE)';" >> src/app/version.ts
-	cd $(FRONTEND_PATH) && npm run build-prod && git checkout -- src/app/version.ts
+	cd $(FRONTEND_PATH) && npm run build-prod && git rev-parse --is-inside-work-tree && git checkout -- src/app/version.ts
 
 # Backend
 # =================
