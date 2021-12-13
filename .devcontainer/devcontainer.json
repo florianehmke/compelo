@@ -35,6 +35,7 @@
   ],
   "remoteUser": "node",
   "settings": {
+    // SQL Tools
     "sqltools.useNodeRuntime": true,
     "sqltools.connections": [
       {
@@ -50,5 +51,18 @@
       "runScriptArgs": ["run"],
       "autoAccept": true
     },
+    // Eslint + Prettier
+    "eslint.workingDirectories": [ "./frontend/compelo" ],
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "[typescript]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatchData } from '@api';
+
+import { MatchData } from '@generated/api';
 
 @Component({
   selector: 'app-match-list',

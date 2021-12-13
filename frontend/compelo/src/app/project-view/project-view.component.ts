@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Game, Player } from '@api';
 import { Store } from '@ngrx/store';
 
 import {
@@ -9,6 +8,7 @@ import {
   getPlayers,
   State,
 } from '@core/project';
+import { Game, Player } from '@generated/api';
 
 @Component({
   template: `

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CreateProjectRequest, Project } from '@api';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 
@@ -11,6 +10,7 @@ import {
   selectProjectSuccess,
   State,
 } from '@core/project-list';
+import { CreateProjectRequest, Project } from '@generated/api';
 import { tokenForProjectIdExists } from '@shared/jwt';
 import { Payload } from '@shared/models';
 import { noop } from '@shared/util';

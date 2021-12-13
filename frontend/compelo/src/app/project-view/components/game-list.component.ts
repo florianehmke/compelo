@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Game } from '@api';
+
+import { Game } from '@generated/api';
 
 @Component({
   selector: 'app-game-list',

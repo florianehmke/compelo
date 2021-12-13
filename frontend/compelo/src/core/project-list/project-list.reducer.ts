@@ -1,5 +1,6 @@
-import { Project } from '@api';
 import { Action, createReducer, on } from '@ngrx/store';
+
+import { Project } from '@generated/api';
 
 import { loadProjectsSuccess } from './project-list.actions';
 

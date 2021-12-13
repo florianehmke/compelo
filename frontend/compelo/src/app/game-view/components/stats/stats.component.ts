@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { GameStats, PlayerStats } from '@api';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
+
+import { GameStats, PlayerStats } from '@generated/api';
 
 export interface Mode {
   title: string;

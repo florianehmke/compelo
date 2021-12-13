@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Project } from '@api';
+
+import { Project } from '@generated/api';
 
 @Component({
   selector: 'app-project-list',

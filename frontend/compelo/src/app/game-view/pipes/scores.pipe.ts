@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Team } from '@api';
+
+import { Team } from '@generated/api';
 
 @Pipe({
   name: 'scores',

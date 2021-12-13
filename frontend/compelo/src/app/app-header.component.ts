@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Game, Project } from '@api';
+
+import { Game, Project } from '@generated/api';
 
 @Component({
   selector: 'app-header',

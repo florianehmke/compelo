@@ -6,14 +6,13 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthResponse } from '@api';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 
 import { AuthService } from '@core/auth.service';
+import { AuthResponse } from '@generated/api';
 import { loadToken, removeToken, storeToken } from '@shared/jwt';
 import { ToastService } from '@shared/toast';
-
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

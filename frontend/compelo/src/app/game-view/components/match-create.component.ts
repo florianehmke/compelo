@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CreateMatchRequest, Player } from '@api';
+
+import { CreateMatchRequest, Player } from '@generated/api';
 
 @Component({
   selector: 'app-match-create',

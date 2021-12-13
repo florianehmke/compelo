@@ -1,5 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { flatMap, map, take } from 'rxjs/operators';
+
+import { environment } from '@env/environment';
 import {
   CreateMatchRequest,
   Game,
@@ -8,12 +13,7 @@ import {
   MatchData,
   Player,
   PlayerStats,
-} from '@api';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { flatMap, map, take } from 'rxjs/operators';
-
-import { environment } from '@env/environment';
+} from '@generated/api';
 
 import { getSelectedProjectId } from '../router';
 import { State } from '../router/router-state.reducer';

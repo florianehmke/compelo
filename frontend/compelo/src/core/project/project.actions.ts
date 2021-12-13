@@ -1,3 +1,5 @@
+import { createAction, props } from '@ngrx/store';
+
 import {
   CreateMatchRequest,
   Game,
@@ -6,9 +8,7 @@ import {
   MatchData,
   Player,
   PlayerStats,
-} from '@api';
-import { createAction, props } from '@ngrx/store';
-
+} from '@generated/api';
 import { ErrorPayload, Payload } from '@shared/models';
 
 import {
@@ -17,7 +17,6 @@ import {
   LoadMatchesPayload,
   LoadPlayerStatsPayload,
 } from './project.models';
-
 
 export const loadGames = createAction('[Games] Load');
 export const loadGamesSuccess = createAction(

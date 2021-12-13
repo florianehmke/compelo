@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
-import { PlayerStats } from '@api';
 import { Chart, ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Label } from 'ng2-charts';
+
+import { PlayerStats } from '@generated/api';
 
 @Component({
   selector: 'app-player-stats-chart',

@@ -48,7 +48,7 @@
             "pathGroupsExcludedImportTypes": ["builtin"],
             "pathGroups": [
               {
-                "pattern": "+(@api|@env|@shared|@core)/**",
+                "pattern": "+(@generated|@env|@shared|@core)/**",
                 "group": "external",
                 "position": "after"
               }

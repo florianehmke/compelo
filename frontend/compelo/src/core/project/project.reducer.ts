@@ -1,5 +1,13 @@
-import { Game, GameStats, Match, MatchData, Player, PlayerStats } from '@api';
 import { Action, createReducer, on } from '@ngrx/store';
+
+import {
+  Game,
+  GameStats,
+  Match,
+  MatchData,
+  Player,
+  PlayerStats,
+} from '@generated/api';
 
 import {
   filterMatches,

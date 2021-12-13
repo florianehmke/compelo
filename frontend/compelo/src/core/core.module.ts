@@ -8,7 +8,6 @@ import { storeLogger } from 'ngrx-store-logger';
 
 import { environment } from '@env/environment';
 
-
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthService } from './auth.service';
 import { ProjectListModule } from './project-list/project-list.module';

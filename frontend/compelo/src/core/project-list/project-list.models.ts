@@ -1,4 +1,4 @@
-import { AuthRequest, Project } from '@api';
+import { AuthRequest, Project } from '@generated/api';
 
 export interface SelectProjectPayload {
   request: AuthRequest;

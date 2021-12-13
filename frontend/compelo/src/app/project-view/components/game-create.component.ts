@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Game } from '@api';
+
+import { Game } from '@generated/api';
 
 @Component({
   selector: 'app-game-create',

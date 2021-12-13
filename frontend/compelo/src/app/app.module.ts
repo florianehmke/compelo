@@ -11,7 +11,6 @@ import { AppComponent } from './app.component';
 import { ProjectListViewModule } from './project-list-view/project-list-view.module';
 import { ProjectViewModule } from './project-view/project-view.module';
 
-
 @NgModule({
   declarations: [AppComponent, AppHeaderComponent, AppFooterComponent],
   imports: [

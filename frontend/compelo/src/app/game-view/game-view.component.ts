@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CreateMatchRequest } from '@api';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 
@@ -12,12 +11,12 @@ import {
   getPlayerStats,
   State,
 } from '@core/project';
+import { CreateMatchRequest } from '@generated/api';
 
 import {
   MatchFormService,
   MatchFormSettings,
 } from './services/match-form.service';
-
 
 @Component({
   template: `

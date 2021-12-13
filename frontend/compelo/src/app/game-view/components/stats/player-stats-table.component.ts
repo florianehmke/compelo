@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { PlayerStats, Stats } from '@api';
 
+import { PlayerStats, Stats } from '@generated/api';
 import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
 
 @Component({

@@ -12,7 +12,7 @@ import (
 	"compelo/internal/db"
 )
 
-const modelPath = "compelo/src/generated/"
+const modelPath = "compelo/src/generated/api/"
 
 func main() {
 	generateApiModels()
