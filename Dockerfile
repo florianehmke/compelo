@@ -1,10 +1,7 @@
 ### Frontend Build
 FROM node:16 AS FRONTEND
 
-COPY .git /usr/src/.git
-COPY frontend /usr/src/frontend
-COPY Makefile  /usr/src/
-
+COPY . /usr/src/
 WORKDIR /usr/src
 
 RUN make frontend
@@ -14,19 +11,12 @@ FROM golang:1.17-buster AS BACKEND
 
 RUN apt-get install -y -q --no-install-recommends make
 
-COPY Makefile go.mod go.sum /usr/src/
-COPY cmd /usr/src/cmd
-COPY pkg /usr/src/pkg
-COPY internal /usr/src/internal
-
-RUN mkdir -p /usr/src/frontend/compelo/
-COPY frontend/*.go /usr/src/frontend/
-COPY --from=FRONTEND /usr/src/frontend/compelo/dist /usr/src/frontend/compelo/dist
-
+COPY . /usr/src/
 WORKDIR /usr/src
 
 ENV GOOS=linux
 ENV GOARCH=amd64
+
 RUN make backend
 
 ### APP Image
