@@ -1,4 +1,4 @@
-// +build ignore
+//go:build ignore
 
 package main
 
@@ -6,12 +6,13 @@ import (
 	"github.com/tkrajina/typescriptify-golang-structs/typescriptify"
 
 	compelo "compelo/internal"
+
 	"compelo/internal/api/handler"
 	"compelo/internal/api/security"
 	"compelo/internal/db"
 )
 
-const modelPath = "compelo/src/generated/"
+const modelPath = "compelo/src/generated/api/"
 
 func main() {
 	generateApiModels()

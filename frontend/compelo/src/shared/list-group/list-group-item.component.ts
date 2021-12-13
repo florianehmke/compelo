@@ -9,6 +9,6 @@ import { Component } from '@angular/core';
     >
       <ng-content></ng-content>
     </button>
-  `
+  `,
 })
 export class ListGroupItemComponent {}

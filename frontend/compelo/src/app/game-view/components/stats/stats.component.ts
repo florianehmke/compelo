@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { GameStats, PlayerStats } from '@api';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
+
+import { GameStats, PlayerStats } from '@generated/api';
 
 export interface Mode {
   title: string;
@@ -36,8 +37,8 @@ export interface Mode {
       app-icon {
         margin-left: 0.5rem;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class StatsComponent {
   @Input()
@@ -48,17 +49,17 @@ export class StatsComponent {
 
   readonly table: Mode = {
     icon: 'table',
-    title: 'Leaderboard'
+    title: 'Leaderboard',
   };
 
   readonly chart: Mode = {
     icon: 'chart-line',
-    title: 'History Chart'
+    title: 'History Chart',
   };
 
   readonly game: Mode = {
     icon: 'trophy',
-    title: 'Remarkable Games'
+    title: 'Remarkable Games',
   };
 
   currentMode: Mode = this.table;

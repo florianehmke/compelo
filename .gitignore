@@ -1,6 +1,9 @@
+.vscode
 .idea
 *.iml
 
 scripts_vfsdata.go
 frontend_vfsdata.go
-db.sql
+
+/db.sql
+/compelo

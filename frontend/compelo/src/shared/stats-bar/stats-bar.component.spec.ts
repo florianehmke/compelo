@@ -16,7 +16,7 @@ describe('StatsBarComponent', () => {
     spectator.setInput('data', {
       wins: 3,
       draws: 2,
-      lost: 1
+      lost: 1,
     });
 
     expect(spectator.query('.segment.wins')).toHaveText('3');

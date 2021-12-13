@@ -1,7 +1,11 @@
 .PHONY: frontend backend all
 
-TAG?=$(shell git describe --tags)
+VERSION?=$(shell git describe --always)
+TAG?=$(shell git rev-parse --abbrev-ref HEAD)
+DATE?=$(shell date '+%Y-%m-%d %H:%M')
 export TAG
+export VERSION
+export DATE
 
 GOCMD := go
 EXECUTEABLE := compelo
@@ -14,7 +18,8 @@ all: generate frontend backend
 
 generate:
 	mkdir -p $(FRONTEND_PATH)/dist
-	mkdir -p $(FRONTEND_PATH)/src/generated
+	mkdir -p $(FRONTEND_PATH)/src/generated/api
+	touch $(FRONTEND_PATH)/dist/nothing
 	$(GOCMD) generate ./internal/db/scripts
 	$(GOCMD) generate ./frontend
 
@@ -22,7 +27,7 @@ generate:
 # =================
 
 frontend-prepare:
-	cd $(FRONTEND_PATH) && npm install
+	cd $(FRONTEND_PATH) && npm ci
 
 frontend-verify: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run format:check
@@ -30,7 +35,11 @@ frontend-verify: frontend-prepare
 	cd $(FRONTEND_PATH) && npm run test:ci
 
 frontend: frontend-verify
+	cd $(FRONTEND_PATH) && rm -f -r dist
+	cd $(FRONTEND_PATH) && echo "export const APP_VERSION = '$(VERSION)';" > src/app/version.ts
+	cd $(FRONTEND_PATH) && echo "export const APP_BUILD_DATE = '$(DATE)';" >> src/app/version.ts
 	cd $(FRONTEND_PATH) && npm run build-prod
+	cd $(FRONTEND_PATH) && git checkout -- src/app/version.ts || echo "not in git repository"
 
 # Backend
 # =================
@@ -66,6 +75,5 @@ clean:
 
 distclean: clean
 	rm -f -r frontend/compelo/dist
-	rm -f frontend/frontend_vfsdata.go
-	rm -f internal/db/scripts/scripts_vfsdata.go
+	rm -f -r frontend/compelo/node_modules
 	rm frontend/compelo/src/generated/*.models.ts

@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { flatMap, map, take } from 'rxjs/operators';
+
 import { environment } from '@env/environment';
 import {
   CreateMatchRequest,
@@ -9,13 +12,11 @@ import {
   Match,
   MatchData,
   Player,
-  PlayerStats
-} from '@api';
-import { Store } from '@ngrx/store';
-import { flatMap, map, take } from 'rxjs/operators';
+  PlayerStats,
+} from '@generated/api';
 
-import { State } from '../router/router-state.reducer';
 import { getSelectedProjectId } from '../router';
+import { State } from '../router/router-state.reducer';
 
 @Injectable()
 export class ProjectService {
@@ -25,19 +26,19 @@ export class ProjectService {
 
   getGames(): Observable<Game[]> {
     return this.projectUrl().pipe(
-      flatMap(url => this.http.get<Game[]>(`${url}/games`))
+      flatMap((url) => this.http.get<Game[]>(`${url}/games`))
     );
   }
 
   createGame(game: Game): Observable<Game> {
     return this.projectUrl().pipe(
-      flatMap(url => this.http.post<Game>(`${url}/games`, game))
+      flatMap((url) => this.http.post<Game>(`${url}/games`, game))
     );
   }
 
   getGameStats(gameID: number): Observable<GameStats> {
     return this.projectUrl().pipe(
-      flatMap(url =>
+      flatMap((url) =>
         this.http.get<GameStats>(`${url}/games/${gameID}/game-stats`)
       )
     );
@@ -45,19 +46,19 @@ export class ProjectService {
 
   getPlayers(): Observable<Player[]> {
     return this.projectUrl().pipe(
-      flatMap(url => this.http.get<Player[]>(`${url}/players`))
+      flatMap((url) => this.http.get<Player[]>(`${url}/players`))
     );
   }
 
   createPlayer(game: Player): Observable<Player> {
     return this.projectUrl().pipe(
-      flatMap(url => this.http.post<Player>(`${url}/players`, game))
+      flatMap((url) => this.http.post<Player>(`${url}/players`, game))
     );
   }
 
   createMatch(payload: CreateMatchRequest, gameID: number): Observable<Match> {
     return this.projectUrl().pipe(
-      flatMap(url =>
+      flatMap((url) =>
         this.http.post<Match>(`${url}/games/${gameID}/matches`, payload)
       )
     );
@@ -65,7 +66,7 @@ export class ProjectService {
 
   getMatches(gameID: number): Observable<MatchData[]> {
     return this.projectUrl().pipe(
-      flatMap(url =>
+      flatMap((url) =>
         this.http.get<MatchData[]>(`${url}/games/${gameID}/matches`)
       )
     );
@@ -73,7 +74,7 @@ export class ProjectService {
 
   getPlayerStats(gameID: number): Observable<PlayerStats[]> {
     return this.projectUrl().pipe(
-      flatMap(url =>
+      flatMap((url) =>
         this.http.get<PlayerStats[]>(`${url}/games/${gameID}/player-stats`)
       )
     );
@@ -82,7 +83,7 @@ export class ProjectService {
   projectUrl(): Observable<string> {
     return this.routerStore.select(getSelectedProjectId).pipe(
       take(1),
-      map(id => `${this.baseUrl}/${id}`)
+      map((id) => `${this.baseUrl}/${id}`)
     );
   }
 }

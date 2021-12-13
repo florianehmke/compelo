@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Player } from '@api';
+
+import { Player } from '@generated/api';
 
 @Component({
   selector: 'app-player-create',
@@ -19,14 +20,12 @@ import { Player } from '@api';
         </div>
         <div class="col-3 d-flex justify-content-end">
           <button type="submit" appPrimary [disabled]="!form.form.valid">
-            <app-button-label icon="plus">
-              Create
-            </app-button-label>
+            <app-button-label icon="plus"> Create </app-button-label>
           </button>
         </div>
       </div>
     </form>
-  `
+  `,
 })
 export class PlayerCreateComponent {
   @Output()

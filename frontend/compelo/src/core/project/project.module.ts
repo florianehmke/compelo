@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
-import { FEATURE_KEY, reducer } from './project.reducer';
 import { ProjectEffects } from './project.effects';
+import { FEATURE_KEY, reducer } from './project.reducer';
 import { ProjectService } from './project.service';
 
 @NgModule({
@@ -14,8 +14,8 @@ import { ProjectService } from './project.service';
     CommonModule,
     HttpClientModule,
     StoreModule.forFeature(FEATURE_KEY, reducer),
-    EffectsModule.forFeature([ProjectEffects])
+    EffectsModule.forFeature([ProjectEffects]),
   ],
-  providers: [ProjectService]
+  providers: [ProjectService],
 })
 export class ProjectModule {}

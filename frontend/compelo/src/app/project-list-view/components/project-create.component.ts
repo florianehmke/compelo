@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CreateProjectRequest } from '@api';
+
+import { CreateProjectRequest } from '@generated/api';
 
 @Component({
   selector: 'app-project-create',
@@ -29,14 +30,12 @@ import { CreateProjectRequest } from '@api';
         </div>
         <div class="col-md-2 d-flex justify-content-end">
           <button type="submit" appPrimary [disabled]="!form.form.valid">
-            <app-button-label icon="plus">
-              Create
-            </app-button-label>
+            <app-button-label icon="plus"> Create </app-button-label>
           </button>
         </div>
       </div>
     </form>
-  `
+  `,
 })
 export class ProjectCreateComponent {
   @Output()
@@ -48,7 +47,7 @@ export class ProjectCreateComponent {
   onSubmit() {
     this.projectCreated.emit({
       name: this.name,
-      password: this.password
+      password: this.password,
     });
   }
 }

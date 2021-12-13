@@ -2,16 +2,17 @@ import {
   HttpErrorResponse,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest
+  HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, throwError } from 'rxjs';
-import { loadToken, removeToken, storeToken } from '@shared/jwt';
-import { catchError, filter, switchMap, take } from 'rxjs/operators';
-import { AuthService } from '@core/auth.service';
 import { Router } from '@angular/router';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
+
+import { AuthService } from '@core/auth.service';
+import { AuthResponse } from '@generated/api';
+import { loadToken, removeToken, storeToken } from '@shared/jwt';
 import { ToastService } from '@shared/toast';
-import { AuthResponse } from '@api';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -29,7 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
     req = token ? this.addToken(req, token) : req;
 
     return next.handle(req).pipe(
-      catchError(error => {
+      catchError((error) => {
         if (req.url.includes('refresh')) {
           this.handleFailedRefresh();
         }
@@ -57,9 +58,9 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     } else {
       return this.refreshTokenSubject.pipe(
-        filter(token => token != null),
+        filter((token) => token != null),
         take(1),
-        switchMap(token => {
+        switchMap((token) => {
           return next.handle(this.addToken(request, token));
         })
       );
@@ -75,8 +76,8 @@ export class AuthInterceptor implements HttpInterceptor {
   private addToken(request: HttpRequest<any>, token: string): HttpRequest<any> {
     return request.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
   }
 }

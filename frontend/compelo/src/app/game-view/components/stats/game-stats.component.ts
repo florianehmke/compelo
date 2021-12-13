@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { GameStats } from '@api';
+
+import { GameStats } from '@generated/api';
 
 @Component({
   selector: 'app-game-stats',
@@ -38,7 +39,7 @@ import { GameStats } from '@api';
         </div>
       </ng-container>
     </div>
-  `
+  `,
 })
 export class GameStatsComponent {
   @Input()

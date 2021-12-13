@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { getSelectedGame, State as ProjectState } from '@core/project';
-
 import { Store } from '@ngrx/store';
+
+import { getSelectedGame, State as ProjectState } from '@core/project';
 import { getSelectedProject } from '@core/project-list';
 
 @Component({
@@ -12,11 +12,21 @@ import { getSelectedProject } from '@core/project-list';
       [game]="game$ | async"
       [project]="project$ | async"
     ></app-header>
-    <div class="container">
+    <div class="container flex-grow-1">
       <router-outlet></router-outlet>
     </div>
+    <app-footer></app-footer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    `
+      :host {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   game$ = this.projectStore.select(getSelectedGame);

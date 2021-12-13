@@ -1,10 +1,10 @@
 import { MatchCreateComponent } from './match-create.component';
-import { MatchSettingsComponent } from './match-settings.component';
 import { MatchListComponent } from './match-list.component';
-import { StatsComponent } from './stats/stats.component';
+import { MatchSettingsComponent } from './match-settings.component';
 import { GameStatsComponent } from './stats/game-stats.component';
 import { PlayerStatsChartComponent } from './stats/player-stats-chart.component';
 import { PlayerStatsTableComponent } from './stats/player-stats-table.component';
+import { StatsComponent } from './stats/stats.component';
 
 export * from './match-create.component';
 export * from './match-settings.component';
@@ -22,5 +22,5 @@ export const components: any[] = [
   StatsComponent,
   GameStatsComponent,
   PlayerStatsChartComponent,
-  PlayerStatsTableComponent
+  PlayerStatsTableComponent,
 ];

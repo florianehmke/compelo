@@ -5,26 +5,26 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'project-list',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'project-list',
     loadChildren: () =>
       import('./project-list-view/project-list-view.module').then(
-        mod => mod.ProjectListViewModule
-      )
+        (mod) => mod.ProjectListViewModule
+      ),
   },
   {
     path: 'project-view',
     loadChildren: () =>
       import('./project-view/project-view.module').then(
-        mod => mod.ProjectViewModule
-      )
-  }
+        (mod) => mod.ProjectViewModule
+      ),
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

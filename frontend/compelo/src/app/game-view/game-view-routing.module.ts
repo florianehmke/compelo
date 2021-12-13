@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ActionResolver } from '@core/router';
+
 import {
   triggerLoadGames,
   triggerLoadGameStats,
   triggerLoadMatches,
   triggerLoadPlayers,
-  triggerLoadPlayerStats
+  triggerLoadPlayerStats,
 } from '@core/project';
 import { triggerLoadProjects } from '@core/project-list';
+import { ActionResolver } from '@core/router';
 
 import { GameViewComponent } from './game-view.component';
 
@@ -24,14 +25,14 @@ const routes: Routes = [
         triggerLoadGameStats,
         triggerLoadPlayers,
         triggerLoadPlayerStats,
-        triggerLoadMatches
-      ]
-    }
-  }
+        triggerLoadMatches,
+      ],
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class GameViewRoutingModule {}

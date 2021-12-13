@@ -1,12 +1,21 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Game, GameStats, Match, MatchData, Player, PlayerStats } from '@api';
+
+import {
+  Game,
+  GameStats,
+  Match,
+  MatchData,
+  Player,
+  PlayerStats,
+} from '@generated/api';
+
 import {
   filterMatches,
   loadGamesSuccess,
   loadGameStatsSuccess,
   loadMatchesSuccess,
   loadPlayersSuccess,
-  loadPlayerStatsSuccess
+  loadPlayerStatsSuccess,
 } from './project.actions';
 
 export const FEATURE_KEY = 'project';
@@ -26,34 +35,34 @@ export const initialState: State = {
   players: [],
   playerStats: [],
   matches: [],
-  matchFilter: ''
+  matchFilter: '',
 };
 
 const projectReducer = createReducer(
   initialState,
   on(loadGamesSuccess, (state, action) => ({
     ...state,
-    games: action.payload || []
+    games: action.payload || [],
   })),
   on(loadGameStatsSuccess, (state, action) => ({
     ...state,
-    gameStats: action.payload || null
+    gameStats: action.payload || null,
   })),
   on(loadPlayersSuccess, (state, action) => ({
     ...state,
-    players: action.payload || []
+    players: action.payload || [],
   })),
   on(loadPlayerStatsSuccess, (state, action) => ({
     ...state,
-    playerStats: action.payload || []
+    playerStats: action.payload || [],
   })),
   on(loadMatchesSuccess, (state, action) => ({
     ...state,
-    matches: action.payload || []
+    matches: action.payload || [],
   })),
   on(filterMatches, (state, action) => ({
     ...state,
-    matchFilter: action.payload.filter || ''
+    matchFilter: action.payload.filter || '',
   }))
 );
 

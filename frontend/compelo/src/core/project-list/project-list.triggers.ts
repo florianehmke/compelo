@@ -1,5 +1,5 @@
-import { Observable, of } from 'rxjs';
 import { Action } from '@ngrx/store';
+import { Observable, of } from 'rxjs';
 
 import { loadProjects } from './project-list.actions';
 

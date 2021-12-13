@@ -1,6 +1,6 @@
+import { ScoresPipe } from './scores.pipe';
 import { TeamPipe } from './team.pipe';
 import { TeamsPipe } from './teams.pipe';
-import { ScoresPipe } from './scores.pipe';
 
 export * from './team.pipe';
 export * from './teams.pipe';

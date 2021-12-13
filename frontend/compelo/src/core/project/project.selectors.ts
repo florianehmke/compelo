@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import { getSelectedGameId } from '@core/router';
 
 import { FEATURE_KEY, State } from './project.reducer';
@@ -9,7 +10,7 @@ export const getSelectedGame = createSelector(
   getSelectedGameId,
   getProjectState,
   (id, state) => {
-    return state.games.find(value => value.id === parseInt(id, 10));
+    return state.games.find((value) => value.id === parseInt(id, 10));
   }
 );
 
@@ -33,15 +34,13 @@ export const getGameStats = createSelector(
   (state: State) => state.gameStats
 );
 
-export const getMatches = createSelector(
-  getProjectState,
-  (state: State) =>
-    state.matches.filter(match => {
-      const searchTerm = state.matchFilter.toLowerCase();
-      return match.teams.some(team => {
-        return team.players.some(player => {
-          return player.name.toLowerCase().includes(searchTerm);
-        });
+export const getMatches = createSelector(getProjectState, (state: State) =>
+  state.matches.filter((match) => {
+    const searchTerm = state.matchFilter.toLowerCase();
+    return match.teams.some((team) => {
+      return team.players.some((player) => {
+        return player.name.toLowerCase().includes(searchTerm);
       });
-    })
+    });
+  })
 );

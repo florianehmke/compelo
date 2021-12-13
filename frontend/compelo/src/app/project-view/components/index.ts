@@ -12,5 +12,5 @@ export const components: any[] = [
   GameCreateComponent,
   GameListComponent,
   PlayerCreateComponent,
-  PlayerListComponent
+  PlayerListComponent,
 ];

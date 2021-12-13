@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Action, Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isArray } from 'util';
 
 export type Actions = Action | Action[];
 
@@ -25,7 +24,11 @@ export class ActionResolver<T> implements Resolve<boolean> {
 
     actionFactory.forEach((factory: RouteActionFactory<T>) =>
       factory(this.store, route)
-        .pipe(map(actions => (isArray(actions) ? actions : [actions])))
+        .pipe(
+          map((actions) =>
+            actions.toString() === '[object Array]' ? actions : [actions]
+          )
+        )
         .subscribe((actions: Action[]) => {
           actions.forEach((action: Action) => this.store.dispatch(action));
         })

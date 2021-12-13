@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateProjectRequest, Project } from '@api';
-import { tokenForProjectIdExists } from '@shared/jwt';
-import { noop } from '@shared/util';
+import { Store } from '@ngrx/store';
 
-import { ProjectSelectModalComponent } from './components';
 import {
   createProject,
   getProjects,
   selectProject,
   SelectProjectPayload,
   selectProjectSuccess,
-  State
+  State,
 } from '@core/project-list';
+import { CreateProjectRequest, Project } from '@generated/api';
+import { tokenForProjectIdExists } from '@shared/jwt';
 import { Payload } from '@shared/models';
+import { noop } from '@shared/util';
+
+import { ProjectSelectModalComponent } from './components';
 
 @Component({
   template: `
@@ -26,7 +27,7 @@ import { Payload } from '@shared/models';
       [projects]="projects$ | async"
       (projectSelected)="onSelect($event)"
     ></app-project-list>
-  `
+  `,
 })
 export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);
@@ -44,10 +45,10 @@ export class ProjectListViewComponent {
             payload: {
               request: {
                 projectId: project.id,
-                password: pw
+                password: pw,
               },
-              project
-            }
+              project,
+            },
           };
           this.store.dispatch(selectProject(payload));
         }, noop);

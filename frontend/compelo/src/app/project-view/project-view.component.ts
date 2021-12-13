@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
+
 import {
   createGame,
   createPlayer,
   getGames,
   getPlayers,
-  State
+  State,
 } from '@core/project';
-import { Game, Player } from '@api';
+import { Game, Player } from '@generated/api';
 
 @Component({
   template: `
@@ -27,7 +28,7 @@ import { Game, Player } from '@api';
         <app-player-list [players]="players$ | async"></app-player-list>
       </div>
     </div>
-  `
+  `,
 })
 export class ProjectViewComponent {
   games$ = this.store.select(getGames);

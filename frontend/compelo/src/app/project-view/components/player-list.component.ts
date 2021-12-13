@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Player } from '@api';
+
+import { Player } from '@generated/api';
 
 @Component({
   selector: 'app-player-list',
@@ -9,7 +10,7 @@ import { Player } from '@api';
         {{ player?.name }}
       </app-list-group-item>
     </app-list-group>
-  `
+  `,
 })
 export class PlayerListComponent {
   @Input()

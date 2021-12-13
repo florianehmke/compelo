@@ -1,14 +1,13 @@
 import { Component, Input } from '@angular/core';
-import { Game, Project } from '@api';
+
+import { Game, Project } from '@generated/api';
 
 @Component({
   selector: 'app-header',
   template: `
     <div class="header lead d-flex justify-content-between">
       <div>
-        <a [routerLink]="['/']">
-          > compelo
-        </a>
+        <a [routerLink]="['/']"> > compelo </a>
         <ng-container *ngIf="project">
           <span>> </span>
           <a [routerLink]="['project-view', project?.id]">
@@ -44,8 +43,8 @@ import { Game, Project } from '@api';
       span {
         color: white;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class AppHeaderComponent {
   @Input()

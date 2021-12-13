@@ -1,5 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Project } from '@api';
+
+import { Project } from '@generated/api';
+
 import { loadProjectsSuccess } from './project-list.actions';
 
 export const FEATURE_KEY = 'project-list';
@@ -9,14 +11,14 @@ export interface State {
 }
 
 export const initialState: State = {
-  projects: []
+  projects: [],
 };
 
 const projectListReducer = createReducer(
   initialState,
   on(loadProjectsSuccess, (state, action) => ({
     ...state,
-    projects: action.payload
+    projects: action.payload,
   }))
 );
 

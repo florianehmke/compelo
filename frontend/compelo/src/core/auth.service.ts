@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { environment } from '@env/environment';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthRequest, AuthResponse } from '@api';
+
+import { environment } from '@env/environment';
+import { AuthRequest, AuthResponse } from '@generated/api';
 
 @Injectable()
 export class AuthService {

@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ProjectListService } from './project-list.service';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+
+import { storeToken } from '@shared/jwt';
+
+import { AuthService } from '../auth.service';
 import {
   createProject,
   createProjectError,
@@ -11,12 +15,9 @@ import {
   loadProjectsError,
   loadProjectsSuccess,
   selectProject,
-  selectProjectSuccess
+  selectProjectSuccess,
 } from './project-list.actions';
-import { Router } from '@angular/router';
-import { storeToken } from '@shared/jwt';
-
-import { AuthService } from '../auth.service';
+import { ProjectListService } from './project-list.service';
 
 @Injectable()
 export class ProjectListEffects {
@@ -25,8 +26,8 @@ export class ProjectListEffects {
       ofType(loadProjects),
       switchMap(() =>
         this.service.getProjects().pipe(
-          map(projects => loadProjectsSuccess({ payload: projects })),
-          catchError(err => of(loadProjectsError(err)))
+          map((projects) => loadProjectsSuccess({ payload: projects })),
+          catchError((err) => of(loadProjectsError(err)))
         )
       )
     )
@@ -35,15 +36,15 @@ export class ProjectListEffects {
   selectProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(selectProject),
-      switchMap(action =>
+      switchMap((action) =>
         this.authService.login(action.payload.request).pipe(
-          tap(response => storeToken(response.token)),
+          tap((response) => storeToken(response.token)),
           map(() =>
             selectProjectSuccess({
-              payload: { ...action.payload.project }
+              payload: { ...action.payload.project },
             })
           ),
-          catchError(err => of(loadProjectsError(err)))
+          catchError((err) => of(loadProjectsError(err)))
         )
       )
     )
@@ -52,21 +53,21 @@ export class ProjectListEffects {
   createProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createProject),
-      switchMap(action =>
+      switchMap((action) =>
         this.service.createProject(action.payload).pipe(
-          switchMap(createdProject => [
+          switchMap((createdProject) => [
             createProjectSuccess({ payload: createdProject }),
             selectProject({
               payload: {
                 project: createdProject,
                 request: {
                   password: action.payload.password,
-                  projectId: createdProject.id
-                }
-              }
-            })
+                  projectId: createdProject.id,
+                },
+              },
+            }),
           ]),
-          catchError(err => of(createProjectError(err)))
+          catchError((err) => of(createProjectError(err)))
         )
       )
     )
@@ -76,7 +77,9 @@ export class ProjectListEffects {
     () =>
       this.actions$.pipe(
         ofType(selectProjectSuccess),
-        tap(action => this.router.navigate(['project-view', action.payload.id]))
+        tap((action) =>
+          this.router.navigate(['project-view', action.payload.id])
+        )
       ),
     { dispatch: false }
   );

@@ -1,21 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { ListGroupComponent } from './list-group.component';
 import { ListGroupButtonComponent } from './list-group-button.component';
 import { ListGroupItemComponent } from './list-group-item.component';
+import { ListGroupComponent } from './list-group.component';
 
 @NgModule({
   declarations: [
     ListGroupComponent,
     ListGroupButtonComponent,
-    ListGroupItemComponent
+    ListGroupItemComponent,
   ],
   exports: [
     ListGroupComponent,
     ListGroupButtonComponent,
-    ListGroupItemComponent
+    ListGroupItemComponent,
   ],
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class ListGroupModule {}

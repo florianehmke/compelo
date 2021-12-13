@@ -1,14 +1,13 @@
 package db
 
 import (
-	"io/ioutil"
 	"log"
 	"time"
 
+	"compelo/internal/db/migrations"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-
-	"compelo/internal/db/scripts"
 )
 
 type gormDB struct {
@@ -74,15 +73,7 @@ func New(dbPath string) *gormDB {
 	db.Exec("PRAGMA foreign_keys = ON")
 	db.LogMode(false)
 
-	f, err := scripts.Scripts.Open("schema.sql")
-	if err != nil {
-		panic(err)
-	}
-	schema, err := ioutil.ReadAll(f)
-	if err != nil {
-		panic(err)
-	}
-	db.Exec(string(schema))
+	migrations.Migrate(db.DB())
 
 	return &gormDB{db}
 }

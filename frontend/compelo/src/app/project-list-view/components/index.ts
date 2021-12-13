@@ -11,5 +11,5 @@ export const entryComponents: any[] = [ProjectSelectModalComponent];
 export const components: any[] = [
   ProjectCreateComponent,
   ProjectListComponent,
-  ...entryComponents
+  ...entryComponents,
 ];

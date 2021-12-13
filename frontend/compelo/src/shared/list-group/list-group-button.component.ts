@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
     <button type="button" class="list-group-item list-group-item-action">
       <ng-content></ng-content>
     </button>
-  `
+  `,
 })
 export class ListGroupButtonComponent {}

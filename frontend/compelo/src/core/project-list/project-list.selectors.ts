@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import { getSelectedProjectId } from '@core/router';
 
 import { FEATURE_KEY, State } from './project-list.reducer';
@@ -14,6 +15,6 @@ export const getSelectedProject = createSelector(
   getSelectedProjectId,
   getProjectListState,
   (id, state) => {
-    return state.projects.find(value => value.id === parseInt(id, 10));
+    return state.projects.find((value) => value.id === parseInt(id, 10));
   }
 );

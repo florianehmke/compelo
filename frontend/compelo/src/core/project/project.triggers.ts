@@ -1,6 +1,7 @@
-import { Observable, of } from 'rxjs';
-import { Action, Store } from '@ngrx/store';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { Action, Store } from '@ngrx/store';
+import { Observable, of } from 'rxjs';
+
 import { gameIdParam } from '@shared/route-params';
 
 import {
@@ -8,7 +9,7 @@ import {
   loadGameStats,
   loadMatches,
   loadPlayers,
-  loadPlayerStats
+  loadPlayerStats,
 } from './project.actions';
 import { State } from './project.reducer';
 

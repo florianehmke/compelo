@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+
 import { MatchFormSettings } from '../services/match-form.service';
 
 @Component({
@@ -32,9 +33,7 @@ import { MatchFormSettings } from '../services/match-form.service';
       />
       <div class="d-flex flex-row-reverse">
         <button type="submit" appPrimary [disabled]="!form.form.valid">
-          <app-button-label icon="save">
-            Change
-          </app-button-label>
+          <app-button-label icon="save"> Change </app-button-label>
         </button>
       </div>
     </form>
@@ -44,8 +43,8 @@ import { MatchFormSettings } from '../services/match-form.service';
       .form-control {
         margin-bottom: 8px;
       }
-    `
-  ]
+    `,
+  ],
 })
 export class MatchSettingsComponent {
   @Output()
@@ -60,7 +59,7 @@ export class MatchSettingsComponent {
   onSubmit() {
     this.formSettingsChanged.emit({
       teamCount: this.teamCount,
-      teamSize: this.teamSize
+      teamSize: this.teamSize,
     });
     this.settingsClose.emit();
   }
