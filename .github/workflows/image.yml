@@ -12,3 +12,6 @@ jobs:
     steps:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2.7.0
+        with:
+          push: true
+          tags: florianehmke/compelo:latest
