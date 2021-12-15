@@ -1,9 +1,13 @@
+# VS Code
 .vscode
+!.vscode/launch.json
+
+# JetBrains
 .idea
 *.iml
 
-scripts_vfsdata.go
-frontend_vfsdata.go
+# Database
+db.sql
 
-/db.sql
+# Built Binary
 /compelo
