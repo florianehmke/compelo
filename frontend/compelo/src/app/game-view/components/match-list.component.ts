@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
 import { MatchData } from '@generated/api';
 
 @Component({
@@ -14,50 +13,55 @@ import { MatchData } from '@generated/api';
         (input)="filterChange.emit($event.target.value)"
       />
     </div>
-    <table class="table table-bordered bg-white">
-      <tbody>
-        <tr *ngFor="let match of matches | slice: from():to()">
-          <td>
-            <div>{{ match.date | date }}</div>
-            <div>
-              <small class="text-muted">{{
-                match.date | date: 'shortTime'
-              }}</small>
-            </div>
-          </td>
-          <td>
-            <div class="d-flex justify-content-between">
-              <div
-                *ngFor="
-                  let team of match.teams;
-                  let first = first;
-                  let last = last
-                "
-              >
-                <div [ngClass]="matchClassIf(first, last)">
-                  <span>{{ team | team }}</span>
-                </div>
-                <div>
-                  <small class="text-muted">Score: </small>
-                  <small>{{ team?.score }}</small>
-                  <small class="text-muted">, Rating: </small>
-                  <small [ngClass]="ratingClassFor(team?.ratingDelta)">{{
-                    team?.ratingDelta
-                  }}</small>
+    <ng-container *ngIf="isLoaded; else showLoading">
+      <table class="table table-bordered bg-white">
+        <tbody>
+          <tr *ngFor="let match of matches | slice: from():to()">
+            <td>
+              <div>{{ match.date | date }}</div>
+              <div>
+                <small class="text-muted">{{
+                  match.date | date: 'shortTime'
+                }}</small>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex justify-content-between">
+                <div
+                  *ngFor="
+                    let team of match.teams;
+                    let first = first;
+                    let last = last
+                  "
+                >
+                  <div [ngClass]="matchClassIf(first, last)">
+                    <span>{{ team | team }}</span>
+                  </div>
+                  <div>
+                    <small class="text-muted">Score: </small>
+                    <small>{{ team?.score }}</small>
+                    <small class="text-muted">, Rating: </small>
+                    <small [ngClass]="ratingClassFor(team?.ratingDelta)">{{
+                      team?.ratingDelta
+                    }}</small>
+                  </div>
                 </div>
               </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ngb-pagination
-      [(page)]="page"
-      [pageSize]="pageSize"
-      [maxSize]="5"
-      [boundaryLinks]="false"
-      [collectionSize]="matches.length"
-    ></ngb-pagination>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ngb-pagination
+        [(page)]="page"
+        [pageSize]="pageSize"
+        [maxSize]="5"
+        [boundaryLinks]="false"
+        [collectionSize]="matches.length"
+      ></ngb-pagination>
+    </ng-container>
+    <ng-template #showLoading>
+      <app-loading-spinner></app-loading-spinner>
+    </ng-template>
   `,
   styles: [
     `
@@ -70,6 +74,9 @@ import { MatchData } from '@generated/api';
 export class MatchListComponent {
   @Input()
   matches: MatchData[];
+
+  @Input()
+  isLoaded: boolean;
 
   @Output()
   filterChange = new EventEmitter<string>();

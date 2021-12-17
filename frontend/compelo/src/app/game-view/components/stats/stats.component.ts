@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
-
 import { GameStats, PlayerStats } from '@generated/api';
 
 export interface Mode {
@@ -22,15 +21,20 @@ export interface Mode {
         ></app-icon>
       </ng-container>
     </p>
-    <ng-container *ngIf="currentMode === table">
-      <app-player-stats-table [players]="players"></app-player-stats-table>
+    <ng-container *ngIf="isLoaded; else showLoading">
+      <ng-container *ngIf="currentMode === table">
+        <app-player-stats-table [players]="players"></app-player-stats-table>
+      </ng-container>
+      <ng-container *ngIf="currentMode === chart">
+        <app-player-stats-chart [players]="players"></app-player-stats-chart>
+      </ng-container>
+      <ng-container *ngIf="currentMode === game">
+        <app-game-stats [gameStats]="gameStats"></app-game-stats>
+      </ng-container>
     </ng-container>
-    <ng-container *ngIf="currentMode === chart">
-      <app-player-stats-chart [players]="players"></app-player-stats-chart>
-    </ng-container>
-    <ng-container *ngIf="currentMode === game">
-      <app-game-stats [gameStats]="gameStats"></app-game-stats>
-    </ng-container>
+    <ng-template #showLoading>
+      <app-loading-spinner></app-loading-spinner>
+    </ng-template>
   `,
   styles: [
     `
@@ -46,6 +50,9 @@ export class StatsComponent {
 
   @Input()
   gameStats: GameStats;
+
+  @Input()
+  isLoaded: boolean;
 
   readonly table: Mode = {
     icon: 'table',

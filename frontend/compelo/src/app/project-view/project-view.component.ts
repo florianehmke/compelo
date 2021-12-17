@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-
+import { getLoadedBy, State as AppState } from '@core/app';
 import {
   createGame,
   createPlayer,
   getGames,
   getPlayers,
+  loadGames,
+  loadPlayers,
   State,
 } from '@core/project';
 import { Game, Player } from '@generated/api';
+import { Store } from '@ngrx/store';
 
 @Component({
   template: `
@@ -18,23 +20,34 @@ import { Game, Player } from '@generated/api';
           (gameCreated)="onGameCreated($event)"
         ></app-game-create>
         <hr />
-        <app-game-list [games]="games$ | async"></app-game-list>
+        <app-game-list
+          [isLoaded]="gamesLoaded$ | async"
+          [games]="games$ | async"
+        ></app-game-list>
       </div>
       <div class="col-md-6">
         <app-player-create
           (playerCreated)="onPlayerCreated($event)"
         ></app-player-create>
         <hr />
-        <app-player-list [players]="players$ | async"></app-player-list>
+        <app-player-list
+          [isLoaded]="playersLoaded$ | async"
+          [players]="players$ | async"
+        ></app-player-list>
       </div>
     </div>
   `,
 })
 export class ProjectViewComponent {
   games$ = this.store.select(getGames);
+
+  gamesLoaded$ = this.appStore.select(getLoadedBy(loadGames()));
+
   players$ = this.store.select(getPlayers);
 
-  constructor(private store: Store<State>) {}
+  playersLoaded$ = this.appStore.select(getLoadedBy(loadPlayers()));
+
+  constructor(private store: Store<State>, private appStore: Store<AppState>) {}
 
   onGameCreated(game: Game) {
     this.store.dispatch(createGame({ payload: game }));
