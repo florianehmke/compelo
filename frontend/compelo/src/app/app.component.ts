@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-
+import { getLoading, State as AppState } from '@core/app';
 import { getSelectedGame, State as ProjectState } from '@core/project';
 import { getSelectedProject } from '@core/project-list';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-root',
   template: `
     <app-toast></app-toast>
+    {{ loading$ | async | json }}
     <app-header
       [game]="game$ | async"
       [project]="project$ | async"
@@ -31,6 +32,10 @@ import { getSelectedProject } from '@core/project-list';
 export class AppComponent {
   game$ = this.projectStore.select(getSelectedGame);
   project$ = this.projectStore.select(getSelectedProject);
+  loading$ = this.appStore.select(getLoading);
 
-  constructor(private projectStore: Store<ProjectState>) {}
+  constructor(
+    private projectStore: Store<ProjectState>,
+    private appStore: Store<AppState>
+  ) {}
 }
