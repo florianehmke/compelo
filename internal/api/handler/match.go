@@ -4,18 +4,16 @@ import (
 	"net/http"
 	"time"
 
-	"compelo/internal"
+	compelo "compelo/internal"
 	"compelo/internal/db"
 	"compelo/pkg/json"
 )
 
 type CreateMatchRequest struct {
-	Teams []CreateMatchRequestTeam `json:"teams"`
-}
-
-type CreateMatchRequestTeam struct {
-	PlayerIDs []int `json:"playerIds" `
-	Score     int   `json:"score"`
+	Teams []struct {
+		PlayerIDs []int `json:"playerIds" `
+		Score     int   `json:"score"`
+	} `json:"teams"`
 }
 
 func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
