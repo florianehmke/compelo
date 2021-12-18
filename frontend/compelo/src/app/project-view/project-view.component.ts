@@ -41,11 +41,11 @@ import { Store } from '@ngrx/store';
 export class ProjectViewComponent {
   games$ = this.store.select(getGames);
 
-  gamesLoaded$ = this.appStore.select(getLoadedBy(loadGames()));
+  gamesLoaded$ = this.appStore.select(getLoadedBy(loadGames));
 
   players$ = this.store.select(getPlayers);
 
-  playersLoaded$ = this.appStore.select(getLoadedBy(loadPlayers()));
+  playersLoaded$ = this.appStore.select(getLoadedBy(loadPlayers));
 
   constructor(private store: Store<State>, private appStore: Store<AppState>) {}
 

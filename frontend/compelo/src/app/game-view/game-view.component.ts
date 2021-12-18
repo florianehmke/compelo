@@ -63,17 +63,15 @@ export class GameViewComponent {
 
   matches$ = this.store.select(getMatches);
 
-  matchesLoaded$ = this.store.select(
-    getLoadedBy(loadMatches({ payload: null }))
-  );
+  matchesLoaded$ = this.store.select(getLoadedBy(loadMatches));
 
   playerStats$ = this.store.select(getPlayerStats);
 
   gameStats$ = this.store.select(getGameStats);
 
   statsLoaded$ = combineLatest([
-    this.store.select(getLoadedBy(loadPlayerStats({ payload: null }))),
-    this.store.select(getLoadedBy(loadGameStats({ payload: null }))),
+    this.store.select(getLoadedBy(loadPlayerStats)),
+    this.store.select(getLoadedBy(loadGameStats)),
   ]).pipe(
     map(
       ([loadedPlayerStats, loadedGameStats]) =>
