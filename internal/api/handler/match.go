@@ -46,8 +46,8 @@ func (h *Handler) GetAllMatches(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func createMatchParameter(game db.Game, body CreateMatchRequest) compelo.CreateMatchParameter {
-	param := compelo.CreateMatchParameter{
+func createMatchParameter(game db.Game, body CreateMatchRequest) compelo.Match {
+	param := compelo.Match{
 		GameID: game.ID,
 		Date:   time.Now(),
 	}

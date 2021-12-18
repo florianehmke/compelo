@@ -10,6 +10,18 @@ import (
 	"compelo/pkg/rating"
 )
 
+var (
+	ErrTwoTeamsRequired      = errors.New("at least two teams required")
+	ErrSameTeamSizeRequired  = errors.New("all teams need the same amount of players")
+	ErrPlayerInMultipleTeams = errors.New("player can only be in one team")
+)
+
+type Match struct {
+	GameID uint
+	Date   time.Time
+	Teams  []Team
+}
+
 type Team struct {
 	PlayerIDs   []int
 	Score       int
@@ -17,13 +29,61 @@ type Team struct {
 	RatingDelta int
 }
 
-func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
-	if err := param.validate(); err != nil {
+func (p *Match) validate() error {
+	if len(p.Teams) < 2 {
+		return ErrTwoTeamsRequired
+	}
+	teamSize := len(p.Teams[0].PlayerIDs)
+	for _, t := range p.Teams {
+		if len(t.PlayerIDs) != teamSize {
+			return ErrSameTeamSizeRequired
+		}
+	}
+	playerMap := map[int]bool{}
+	for _, t := range p.Teams {
+		for _, pid := range t.PlayerIDs {
+			if _, ok := playerMap[pid]; ok {
+				return ErrPlayerInMultipleTeams
+			}
+			playerMap[pid] = true
+		}
+	}
+	return nil
+}
+
+func (param *Match) determineResult() {
+	highScore := 0
+	highScoreCount := 0
+	for _, t := range param.Teams {
+		if t.Score > highScore {
+			highScore = t.Score
+			highScoreCount = 1
+		} else if t.Score == highScore {
+			highScoreCount += 1
+		}
+	}
+	if highScoreCount < len(param.Teams) {
+		for i := range param.Teams {
+			if param.Teams[i].Score == highScore {
+				param.Teams[i].Result = db.Win
+			} else {
+				param.Teams[i].Result = db.Loss
+			}
+		}
+	} else {
+		for i := range param.Teams {
+			param.Teams[i].Result = db.Draw
+		}
+	}
+}
+
+func (svc *Service) CreateMatch(m Match) (db.Match, error) {
+	if err := m.validate(); err != nil {
 		return db.Match{}, errors.Wrap(err, "create match parameter validation failed")
 	}
-	param.determineResult()
+	m.determineResult()
 
-	if err := svc.calculateTeamElo(&param); err != nil {
+	if err := svc.calculateTeamElo(&m); err != nil {
 		return db.Match{}, errors.Wrap(err, "could not calculate team elo")
 	}
 
@@ -32,12 +92,12 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 		var err error
 
 		// 1. Create match.
-		if match, err = tx.CreateMatch(db.Match{GameID: param.GameID, Date: param.Date}); err != nil {
+		if match, err = tx.CreateMatch(db.Match{GameID: m.GameID, Date: m.Date}); err != nil {
 			return errors.Wrap(err, "create match failed")
 		}
 
 		// 2. Create teams.
-		for _, team := range param.Teams {
+		for _, team := range m.Teams {
 			t, err := tx.CreateTeam(db.Team{
 				MatchID:     match.ID,
 				Score:       team.Score,
@@ -66,14 +126,14 @@ func (svc *Service) CreateMatch(param CreateMatchParameter) (db.Match, error) {
 	}
 
 	// Update the ratings of the players who participated.
-	if err := svc.updatePlayerRatings(param); err != nil {
+	if err := svc.updatePlayerRatings(m); err != nil {
 		return db.Match{}, errors.Wrap(err, "update player ratings failed")
 	}
 
 	return match, nil
 }
 
-func (svc *Service) updatePlayerRatings(param CreateMatchParameter) error {
+func (svc *Service) updatePlayerRatings(param Match) error {
 	for _, t := range param.Teams {
 		for _, playerID := range t.PlayerIDs {
 			_, err := svc.UpdateRating(uint(playerID), param.GameID, t.RatingDelta)
@@ -85,7 +145,7 @@ func (svc *Service) updatePlayerRatings(param CreateMatchParameter) error {
 	return nil
 }
 
-func (svc *Service) calculateTeamElo(param *CreateMatchParameter) error {
+func (svc *Service) calculateTeamElo(param *Match) error {
 	rm := rating.NewRatedMatch()
 	for i, t := range param.Teams {
 		sum := 0

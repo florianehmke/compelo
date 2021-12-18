@@ -55,7 +55,7 @@ func TestMatch(t *testing.T) {
 }
 
 func (bp basicProject) testTwoTeamsRequired(t *testing.T) {
-	p := compelo.CreateMatchParameter{
+	p := compelo.Match{
 		GameID: bp.game.ID,
 		Date:   time.Now(),
 		Teams:  nil,
@@ -66,7 +66,7 @@ func (bp basicProject) testTwoTeamsRequired(t *testing.T) {
 }
 
 func (bp basicProject) testPlayerInMultipleTeams(t *testing.T) {
-	p := compelo.CreateMatchParameter{
+	p := compelo.Match{
 		GameID: bp.game.ID,
 		Date:   time.Now(),
 		Teams: []compelo.Team{
@@ -90,7 +90,7 @@ func (bp basicProject) testPlayerInMultipleTeams(t *testing.T) {
 }
 
 func (bp basicProject) testSameTeamSizeRequired(t *testing.T) {
-	p := compelo.CreateMatchParameter{
+	p := compelo.Match{
 		GameID: bp.game.ID,
 		Date:   time.Now(),
 		Teams: []compelo.Team{
