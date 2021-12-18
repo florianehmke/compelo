@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"compelo/internal"
+	compelo "compelo/internal"
 	"compelo/internal/db"
 	"compelo/pkg/json"
 )
@@ -52,7 +52,7 @@ func createMatchParameter(game db.Game, body CreateMatchRequest) compelo.CreateM
 		Date:   time.Now(),
 	}
 	for _, t := range body.Teams {
-		param.Teams = append(param.Teams, compelo.CreateMatchParameterTeam{
+		param.Teams = append(param.Teams, compelo.Team{
 			PlayerIDs: t.PlayerIDs,
 			Score:     t.Score,
 		})

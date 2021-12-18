@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 
-	"compelo/internal"
+	compelo "compelo/internal"
 	"compelo/internal/db"
 )
 
@@ -69,7 +69,7 @@ func (bp basicProject) testPlayerInMultipleTeams(t *testing.T) {
 	p := compelo.CreateMatchParameter{
 		GameID: bp.game.ID,
 		Date:   time.Now(),
-		Teams: []compelo.CreateMatchParameterTeam{
+		Teams: []compelo.Team{
 			{
 				PlayerIDs: []int{
 					int(bp.player1.ID),
@@ -93,7 +93,7 @@ func (bp basicProject) testSameTeamSizeRequired(t *testing.T) {
 	p := compelo.CreateMatchParameter{
 		GameID: bp.game.ID,
 		Date:   time.Now(),
-		Teams: []compelo.CreateMatchParameterTeam{
+		Teams: []compelo.Team{
 			{
 				PlayerIDs: []int{
 					int(bp.player1.ID),
