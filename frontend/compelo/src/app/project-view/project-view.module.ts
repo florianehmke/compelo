@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { LoadingSpinnerModule } from '@shared/loading-spinner';
 import { SharedModule } from '@shared/shared.module';
 
 import { components } from './components';
@@ -11,6 +12,6 @@ import { ProjectViewGuard } from './project-view.guard';
   declarations: [ProjectViewComponent, ...components],
   exports: [],
   providers: [ProjectViewGuard],
-  imports: [SharedModule, ProjectViewRoutingModule],
+  imports: [SharedModule, ProjectViewRoutingModule, LoadingSpinnerModule],
 })
 export class ProjectViewModule {}

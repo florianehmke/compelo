@@ -5,7 +5,7 @@ import { Game } from '@generated/api';
 @Component({
   selector: 'app-game-list',
   template: `
-    <app-list-group>
+    <app-list-group *ngIf="isLoaded; else showLoading">
       <app-list-group-button
         *ngFor="let game of games"
         [routerLink]="['game', game.id]"
@@ -13,9 +13,15 @@ import { Game } from '@generated/api';
         {{ game?.name }}
       </app-list-group-button>
     </app-list-group>
+    <ng-template #showLoading>
+      <app-loading-spinner></app-loading-spinner>
+    </ng-template>
   `,
 })
 export class GameListComponent {
   @Input()
   games: Game[];
+
+  @Input()
+  isLoaded: boolean;
 }
