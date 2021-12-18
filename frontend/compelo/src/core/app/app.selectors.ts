@@ -9,12 +9,16 @@ export const getLoading = createSelector(
   (state: State) => state.loading
 );
 
-export const getLoadingBy = (actionCreator: ActionCreator<string, any>) => {
+export const getLoadingByActionTypeOf = (
+  actionCreator: ActionCreator<string, any>
+) => {
   const { type: actionType } = actionCreator();
   return createSelector(getLoading, (loading) => loading[actionType]);
 };
 
-export const getLoadedBy = (actionCreator: ActionCreator<string, any>) => {
+export const getLoadedByActionTypeOf = (
+  actionCreator: ActionCreator<string, any>
+) => {
   const { type: actionType } = actionCreator();
   return createSelector(getLoading, (loading) => !loading[actionType]);
 };

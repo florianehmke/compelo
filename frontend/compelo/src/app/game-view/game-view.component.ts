@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getLoadedBy } from '@core/app';
+import { getLoadedByActionTypeOf } from '@core/app';
 import {
   createMatch,
   filterMatches,
@@ -63,15 +63,15 @@ export class GameViewComponent {
 
   matches$ = this.store.select(getMatches);
 
-  matchesLoaded$ = this.store.select(getLoadedBy(loadMatches));
+  matchesLoaded$ = this.store.select(getLoadedByActionTypeOf(loadMatches));
 
   playerStats$ = this.store.select(getPlayerStats);
 
   gameStats$ = this.store.select(getGameStats);
 
   statsLoaded$ = combineLatest([
-    this.store.select(getLoadedBy(loadPlayerStats)),
-    this.store.select(getLoadedBy(loadGameStats)),
+    this.store.select(getLoadedByActionTypeOf(loadPlayerStats)),
+    this.store.select(getLoadedByActionTypeOf(loadGameStats)),
   ]).pipe(
     map(
       ([loadedPlayerStats, loadedGameStats]) =>

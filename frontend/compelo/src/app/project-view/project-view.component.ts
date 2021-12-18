@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getLoadedBy, State as AppState } from '@core/app';
+import { getLoadedByActionTypeOf, State as AppState } from '@core/app';
 import {
   createGame,
   createPlayer,
@@ -41,11 +41,11 @@ import { Store } from '@ngrx/store';
 export class ProjectViewComponent {
   games$ = this.store.select(getGames);
 
-  gamesLoaded$ = this.appStore.select(getLoadedBy(loadGames));
+  gamesLoaded$ = this.appStore.select(getLoadedByActionTypeOf(loadGames));
 
   players$ = this.store.select(getPlayers);
 
-  playersLoaded$ = this.appStore.select(getLoadedBy(loadPlayers));
+  playersLoaded$ = this.appStore.select(getLoadedByActionTypeOf(loadPlayers));
 
   constructor(private store: Store<State>, private appStore: Store<AppState>) {}
 

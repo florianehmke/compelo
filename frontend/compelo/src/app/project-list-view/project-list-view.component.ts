@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getLoadedBy, State as AppState } from '@core/app';
+import { getLoadedByActionTypeOf, State as AppState } from '@core/app';
 import {
   createProject,
   getProjects,
@@ -33,7 +33,7 @@ import { ProjectSelectModalComponent } from './components';
 export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);
 
-  loaded$ = this.appStore.select(getLoadedBy(loadProjects));
+  loaded$ = this.appStore.select(getLoadedByActionTypeOf(loadProjects));
 
   constructor(
     private store: Store<State>,
