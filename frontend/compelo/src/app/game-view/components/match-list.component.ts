@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { MatchData } from '@generated/api';
 
 @Component({

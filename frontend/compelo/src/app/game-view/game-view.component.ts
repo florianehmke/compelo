@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { getLoadedByActionTypeOf } from '@core/app';
 import {
   createMatch,
@@ -13,9 +17,7 @@ import {
   State,
 } from '@core/project';
 import { CreateMatchRequest } from '@generated/api';
-import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 import {
   MatchFormService,
   MatchFormSettings,

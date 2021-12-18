@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { environment } from '@env/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { ActionReducer, StoreModule } from '@ngrx/store';
 import { storeLogger } from 'ngrx-store-logger';
+
+import { environment } from '@env/environment';
+
 import { AppEffects, appFeatureKey, reducer as appReducer } from './app';
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthService } from './auth.service';

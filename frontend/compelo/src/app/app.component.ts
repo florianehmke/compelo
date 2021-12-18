@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+
 import { getSelectedGame, State as ProjectState } from '@core/project';
 import { getSelectedProject } from '@core/project-list';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-root',

@@ -1,6 +1,8 @@
 import { TypedAction } from '@ngrx/store/src/models';
-import { Payload } from '@shared/models';
 import { filter, map } from 'rxjs/operators';
+
+import { Payload } from '@shared/models';
+
 import { AppActions } from './app.actions';
 import {
   DEFAULT_ACTION_TYPES,

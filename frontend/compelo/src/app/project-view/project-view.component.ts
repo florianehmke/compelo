@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+
 import { getLoadedByActionTypeOf, State as AppState } from '@core/app';
 import {
   createGame,
@@ -10,7 +12,6 @@ import {
   State,
 } from '@core/project';
 import { Game, Player } from '@generated/api';
-import { Store } from '@ngrx/store';
 
 @Component({
   template: `

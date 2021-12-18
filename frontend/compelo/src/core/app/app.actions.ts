@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+
 import { Payload } from '@shared/models';
 
 const loading = createAction('[App] Loading', props<Payload<string>>());

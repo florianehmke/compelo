@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { ActionCreator } from '@ngrx/store/src/models';
+
 import { appFeatureKey, State } from './app.reducer';
 
 const getAppState = createFeatureSelector<State>(appFeatureKey);
