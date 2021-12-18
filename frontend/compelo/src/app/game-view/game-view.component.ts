@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { getLoadedByActionTypeOf } from '@core/app';
 import {
   createMatch,
   filterMatches,
@@ -9,6 +11,9 @@ import {
   getMatches,
   getPlayers,
   getPlayerStats,
+  loadGameStats,
+  loadMatches,
+  loadPlayerStats,
   State,
 } from '@core/project';
 import { CreateMatchRequest } from '@generated/api';
@@ -38,26 +43,43 @@ import {
     </div>
     <hr />
     <div class="row">
-      <div class="col-md-6" *ngIf="matches$ | async as matches">
+      <div class="col-md-6">
         <app-match-list
-          [matches]="matches"
+          [matches]="matches$ | async"
+          [isLoaded]="matchesLoaded$ | async"
           (filterChange)="onFilterChange($event)"
         ></app-match-list>
       </div>
-      <div class="col-md-6" *ngIf="stats$ | async as stats">
-        <app-stats [players]="stats[0]" [gameStats]="stats[1]"></app-stats>
+      <div class="col-md-6">
+        <app-stats
+          [isLoaded]="statsLoaded$ | async"
+          [players]="playerStats$ | async"
+          [gameStats]="gameStats$ | async"
+        ></app-stats>
       </div>
     </div>
   `,
 })
 export class GameViewComponent {
   players$ = this.store.select(getPlayers);
+
   matches$ = this.store.select(getMatches);
 
-  stats$ = combineLatest([
-    this.store.select(getPlayerStats),
-    this.store.select(getGameStats),
-  ]);
+  matchesLoaded$ = this.store.select(getLoadedByActionTypeOf(loadMatches));
+
+  playerStats$ = this.store.select(getPlayerStats);
+
+  gameStats$ = this.store.select(getGameStats);
+
+  statsLoaded$ = combineLatest([
+    this.store.select(getLoadedByActionTypeOf(loadPlayerStats)),
+    this.store.select(getLoadedByActionTypeOf(loadGameStats)),
+  ]).pipe(
+    map(
+      ([loadedPlayerStats, loadedGameStats]) =>
+        loadedPlayerStats && loadedGameStats
+    )
+  );
 
   formGroup = this.formService.buildForm({ teamSize: 1, teamCount: 2 });
   showSettings = false;

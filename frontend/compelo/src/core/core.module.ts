@@ -8,6 +8,7 @@ import { storeLogger } from 'ngrx-store-logger';
 
 import { environment } from '@env/environment';
 
+import { AppEffects, appFeatureKey, reducer as appReducer } from './app';
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthService } from './auth.service';
 import { ProjectListModule } from './project-list/project-list.module';
@@ -22,9 +23,12 @@ export const metaReducers = environment.production ? [] : [logger];
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({ router: routerReducer }, { metaReducers }),
+    StoreModule.forRoot(
+      { router: routerReducer, [appFeatureKey]: appReducer },
+      { metaReducers }
+    ),
     StoreRouterConnectingModule.forRoot(),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([AppEffects]),
     ProjectListModule,
     ProjectModule,
   ],

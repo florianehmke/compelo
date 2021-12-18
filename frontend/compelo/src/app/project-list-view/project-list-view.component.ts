@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 
+import { getLoadedByActionTypeOf, State as AppState } from '@core/app';
 import {
   createProject,
   getProjects,
+  loadProjects,
   selectProject,
   SelectProjectPayload,
   selectProjectSuccess,
@@ -25,6 +27,7 @@ import { ProjectSelectModalComponent } from './components';
     <hr />
     <app-project-list
       [projects]="projects$ | async"
+      [isLoaded]="loaded$ | async"
       (projectSelected)="onSelect($event)"
     ></app-project-list>
   `,
@@ -32,7 +35,13 @@ import { ProjectSelectModalComponent } from './components';
 export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);
 
-  constructor(private store: Store<State>, private modalService: NgbModal) {}
+  loaded$ = this.appStore.select(getLoadedByActionTypeOf(loadProjects));
+
+  constructor(
+    private store: Store<State>,
+    private appStore: Store<AppState>,
+    private modalService: NgbModal
+  ) {}
 
   onSelect(project: Project) {
     if (tokenForProjectIdExists(project.id)) {
