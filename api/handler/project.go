@@ -52,7 +52,7 @@ func (h *Handler) ProjectCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		guid := chi.URLParam(r, ProjectGUID)
 		if guid == "" {
-			json.WriteErrorResponse(w, http.StatusBadRequest, errors.New("no guid provided"))
+			json.WriteErrorResponse(w, http.StatusBadRequest, errors.New("no project guid provided"))
 		}
 		project, err := h.q.GetProjectBy(chi.URLParam(r, ProjectGUID))
 		if err != nil {

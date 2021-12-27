@@ -34,8 +34,8 @@ func New(h *handler.Handler, s *security.Security) http.Handler {
 			r.Use(s.ProjectSecurity)
 			r.Post("/players", h.CreatePlayer)
 			r.Get("/players", h.GetAllPlayers)
-			// 	r.Post("/games", h.CreateGame)
-			// 	r.Get("/games", h.GetAllGames)
+			r.Post("/games", h.CreateGame)
+			r.Get("/games", h.GetAllGames)
 			// 	r.Route("/games/{"+handler.GameID+"}", func(r chi.Router) {
 			// 		r.Use(h.GameCtx)
 			// 		r.Use(s.GameSecurity)

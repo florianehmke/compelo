@@ -203,8 +203,8 @@ func TestAPI(t *testing.T) {
 	ts.createPlayers()
 	ts.listPlayers()
 
-	// ts.createGame()
-	// ts.listGames()
+	ts.createGame()
+	ts.listGames()
 
 	// ts.createMatches()
 	// ts.listMatches()
@@ -279,24 +279,24 @@ func (s *testSuite) listPlayers() {
 	}
 }
 
-// func (s *testSuite) createGame() {
-// 	b := JSON{
-// 		"name": s.testData.gameName,
-// 	}
-// 	w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/games", b)
-// 	s.assertEqual(http.StatusCreated, w.Code)
-// }
+func (s *testSuite) createGame() {
+	b := JSON{
+		"name": s.testData.gameName,
+	}
+	w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/games", b)
+	s.assertEqual(http.StatusCreated, w.Code)
+}
 
-// func (s *testSuite) listGames() {
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games")
+func (s *testSuite) listGames() {
+	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games")
 
-// 	var response []db.Game
-// 	s.assertEqual(http.StatusOK, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), &response)
-// 	s.assertTrue(len(response) == 1)
-// 	s.assertEqual(response[0].Name, s.testData.gameName)
-// 	s.testData.gameID = response[0].ID
-// }
+	var response []query.Game
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), &response)
+	s.assertTrue(len(response) == 1)
+	s.assertEqual(response[0].Name, s.testData.gameName)
+	s.testData.gameGUID = response[0].GUID
+}
 
 // func (s *testSuite) createMatches() {
 // 	for _, m := range s.testData.matches {

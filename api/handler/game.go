@@ -1,58 +1,80 @@
 package handler
 
-// const (
-// 	GameID  = "gameID"
-// 	GameKey = "game"
-// )
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
 
-// type CreateGameRequest struct {
-// 	Name string `json:"name"`
-// }
+	"github.com/go-chi/chi"
 
-// func (h *Handler) CreateGame(w http.ResponseWriter, r *http.Request) {
-// 	project := MustLoadProjectFromContext(r)
-// 	var body CreateGameRequest
-// 	if err := Unmarshal(r.Body, &body); err != nil {
-// 		Error(w, http.StatusBadRequest, err)
-// 		return
-// 	}
+	"compelo/api/json"
+	"compelo/command"
+	"compelo/query"
+)
 
-// 	p, err := h.c.CreateNewGame(project.ID, body.Name)
-// 	if err == nil {
-// 		Write(w, http.StatusCreated, p)
-// 	} else {
-// 		Error(w, http.StatusBadRequest, err)
-// 	}
-// }
+const (
+	GameGUID string     = "gameGUID"
+	GameKey  ContextKey = "game"
+)
 
-// func (h *Handler) GetAllGames(w http.ResponseWriter, r *http.Request) {
-// 	project := MustLoadProjectFromContext(r)
-// 	games := h.svc.LoadGamesByProjectID(project.ID)
-// 	Write(w, http.StatusOK, games)
-// }
+type CreateGameRequest struct {
+	Name string `json:"name"`
+}
 
-// func (h *Handler) GameCtx(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		id, err := strconv.Atoi(chi.URLParam(r, GameID))
-// 		if err != nil {
-// 			Error(w, http.StatusBadRequest, err)
-// 			return
-// 		}
-// 		game, err := h.svc.LoadGameByID(uint(id))
-// 		if err != nil {
-// 			msg := fmt.Sprintf("could not set game with id %d in context", id)
-// 			Error(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
-// 			return
-// 		}
-// 		ctx := context.WithValue(r.Context(), GameKey, game)
-// 		next.ServeHTTP(w, r.WithContext(ctx))
-// 	})
-// }
+func (h *Handler) CreateGame(w http.ResponseWriter, r *http.Request) {
+	project := MustLoadProjectFromContext(r)
+	var request CreateGameRequest
+	if err := json.Unmarshal(r.Body, &request); err != nil {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+		return
+	}
 
-// func MustLoadGameFromContext(r *http.Request) query.Game {
-// 	game, ok := r.Context().Value(GameKey).(query.Game)
-// 	if !ok {
-// 		panic("game must be set in context")
-// 	}
-// 	return game
-// }
+	p, err := h.c.CreateNewGame(command.CreateNewGameCommand{
+		ProjectGUID: project.GUID,
+		Name:        request.Name,
+	})
+	if err == nil {
+		json.WriteResponse(w, http.StatusCreated, p)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}
+
+func (h *Handler) GetAllGames(w http.ResponseWriter, r *http.Request) {
+	project := MustLoadProjectFromContext(r)
+	games, err := h.q.GetGamesBy(project.GUID)
+
+	if err == nil {
+		json.WriteResponse(w, http.StatusOK, games)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}
+
+func (h *Handler) GameCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		project := MustLoadProjectFromContext(r)
+		guid := chi.URLParam(r, GameGUID)
+		if guid == "" {
+			json.WriteErrorResponse(w, http.StatusBadRequest, errors.New("no game guid provided"))
+			return
+		}
+		game, err := h.q.GetGameBy(project.GUID, guid)
+		if err != nil {
+			msg := fmt.Sprintf("could not set game with guid %s in context", guid)
+			json.WriteErrorResponse(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
+			return
+		}
+		ctx := context.WithValue(r.Context(), GameKey, game)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+func MustLoadGameFromContext(r *http.Request) query.Game {
+	game, ok := r.Context().Value(GameKey).(query.Game)
+	if !ok {
+		panic("game must be set in context")
+	}
+	return game
+}

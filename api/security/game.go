@@ -1,17 +1,25 @@
 package security
 
-// var gameForbidden = errors.New("game does not belong to your project")
+import (
+	"errors"
+	"net/http"
 
-// func (sec *Security) GameSecurity(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		game := handler.MustLoadGameFromContext(r)
-// 		claims := mustLoadClaimsFromContext(r)
+	"compelo/api/handler"
+	"compelo/api/json"
+)
 
-// 		if game.ProjectID != claims.ProjectID {
-// 			json.Error(w, http.StatusForbidden, gameForbidden)
-// 			return
-// 		}
+var errGameForbidden = errors.New("game does not belong to your project")
 
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
+func (sec *Security) GameSecurity(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		game := handler.MustLoadGameFromContext(r)
+		claims := mustLoadClaimsFromContext(r)
+
+		if game.ProjectGUID != claims.ProjectGUID {
+			json.WriteErrorResponse(w, http.StatusForbidden, errGameForbidden)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}

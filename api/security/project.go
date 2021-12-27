@@ -8,7 +8,7 @@ import (
 	"compelo/api/json"
 )
 
-var projectForbidden = errors.New("not your project")
+var errProjectForbidden = errors.New("not your project")
 
 func (sec *Security) ProjectSecurity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -16,7 +16,7 @@ func (sec *Security) ProjectSecurity(next http.Handler) http.Handler {
 		claims := mustLoadClaimsFromContext(r)
 
 		if project.GUID != claims.ProjectGUID {
-			json.WriteErrorResponse(w, http.StatusForbidden, projectForbidden)
+			json.WriteErrorResponse(w, http.StatusForbidden, errProjectForbidden)
 			return
 		}
 
