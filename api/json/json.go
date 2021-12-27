@@ -1,4 +1,4 @@
-package api
+package json
 
 import (
 	"encoding/json"
@@ -32,7 +32,7 @@ func Write(w http.ResponseWriter, code int, c interface{}) {
 	}
 }
 
-func Error(w http.ResponseWriter, code int, err error) {
+func WriteError(w http.ResponseWriter, code int, err error) {
 	body := map[string]string{
 		"code":    fmt.Sprint(code),
 		"message": err.Error(),

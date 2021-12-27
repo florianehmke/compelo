@@ -2,56 +2,52 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/go-chi/chi"
 
-	"compelo/api"
+	"compelo/api/json"
+	"compelo/command"
+	"compelo/query"
 )
 
 const (
-	ProjectID  = "projectID"
-	ProjectKey = "project"
+	ProjectGUID = "projectGUID"
+	ProjectKey  = "project"
 )
 
-type CreateProjectRequest struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
-
 func (h *Handler) CreateProject(w http.ResponseWriter, r *http.Request) {
-	var body CreateProjectRequest
-	if err := api.Unmarshal(r.Body, &body); err != nil {
-		api.Error(w, http.StatusBadRequest, err)
+	var body command.CreateNewProjectCommand
+	if err := json.Unmarshal(r.Body, &body); err != nil {
+		json.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	p, err := h.svc.CreateProject(body.Name, body.Password)
+	p, err := h.c.CreateNewProject(body)
 	if err == nil {
-		api.Write(w, http.StatusCreated, p)
+		json.Write(w, http.StatusCreated, p)
 	} else {
-		api.Error(w, http.StatusBadRequest, err)
+		json.WriteError(w, http.StatusBadRequest, err)
 	}
 }
 
 func (h *Handler) GetAllProjects(w http.ResponseWriter, r *http.Request) {
-	projects := h.svc.LoadAllProjects()
-	api.Write(w, http.StatusOK, projects)
+	projects := h.q.GetProjects()
+	json.Write(w, http.StatusOK, projects)
 }
 
 func (h *Handler) ProjectCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.Atoi(chi.URLParam(r, ProjectID))
-		if err != nil {
-			api.Error(w, http.StatusBadRequest, err)
-			return
+		guid := chi.URLParam(r, ProjectGUID)
+		if guid == "" {
+			json.WriteError(w, http.StatusBadRequest, errors.New("no guid provided"))
 		}
-		project, err := h.svc.LoadProjectByID(uint(id))
+		project, err := h.q.GetProjectBy(chi.URLParam(r, ProjectGUID))
 		if err != nil {
-			msg := fmt.Sprintf("could not set project with id %d in context", id)
-			api.Error(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
+			msg := fmt.Sprintf("could not set project with guid %s in context", guid)
+			json.WriteError(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
 			return
 		}
 		ctx := context.WithValue(r.Context(), ProjectKey, project)
@@ -59,8 +55,8 @@ func (h *Handler) ProjectCtx(next http.Handler) http.Handler {
 	})
 }
 
-func MustLoadProjectFromContext(r *http.Request) db.Project {
-	project, ok := r.Context().Value(ProjectKey).(db.Project)
+func MustLoadProjectFromContext(r *http.Request) query.Project {
+	project, ok := r.Context().Value(ProjectKey).(query.Project)
 	if !ok {
 		panic("project must be set in context")
 	}

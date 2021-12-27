@@ -73,10 +73,15 @@ func (s *Store) StoreEvent(event Event) error {
 }
 
 func (s *Store) LoadEvents() ([]Event, error) {
-	var events []Event
+	events := []Event{}
 	err := s.db.View(func(tx *bbolt.Tx) error {
-		tx.CreateBucketIfNotExists([]byte(eventsBucket))
 		b := tx.Bucket([]byte(eventsBucket))
+
+		// Bucket is empty.. nothing to load for us.
+		if b == nil {
+			return nil
+		}
+
 		c := b.Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {

@@ -1,237 +1,268 @@
 package tests
 
-// type JSON map[string]interface{}
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"testing"
+	"time"
 
-// type testSuite struct {
-// 	testing  *testing.T
-// 	handler  http.Handler
-// 	testData testData
-// 	token    string
-// }
+	"github.com/stretchr/testify/assert"
 
-// func newTestSuite(t *testing.T, handler http.Handler, ts testData) *testSuite {
-// 	return &testSuite{
-// 		testing:  t,
-// 		handler:  handler,
-// 		testData: ts,
-// 	}
-// }
+	"compelo/api/handler"
+	"compelo/api/router"
+	"compelo/api/security"
+	"compelo/command"
+	"compelo/event"
+	"compelo/query"
+)
 
-// type testData struct {
-// 	projectName     string
-// 	projectPW       string
-// 	projectID       uint   // filled during test
-// 	projectIDString string // filled during test
+type JSON map[string]interface{}
 
-// 	gameName string
-// 	gameID   uint // filled during test
+type testSuite struct {
+	testing  *testing.T
+	handler  http.Handler
+	testData testData
+	token    string
+}
 
-// 	players []testPlayer
-// 	matches []testMatch
+func newTestSuite(t *testing.T, handler http.Handler, ts testData) *testSuite {
+	return &testSuite{
+		testing:  t,
+		handler:  handler,
+		testData: ts,
+	}
+}
 
-// 	stats map[string]testStats
-// }
+type testData struct {
+	projectName string
+	projectPW   string
+	projectGUID string // filled during test
 
-// type testPlayer struct {
-// 	name string
-// }
+	gameName string
+	gameGUID string // filled during test
 
-// type testMatch struct {
-// 	teams []testTeam // sort by score for assertions
-// }
+	players []testPlayer
+	matches []testMatch
 
-// type testTeam struct {
-// 	players []int
-// 	score   int
-// 	result  db.Result
-// }
+	stats map[string]testStats
+}
 
-// type testStats struct {
-// 	rating       int
-// 	peakRating   int
-// 	lowestRating int
-// 	gameCount    int
-// 	winCount     int
-// 	drawCount    int
-// 	lossCount    int
-// }
+type testPlayer struct {
+	name string
+}
 
-// func TestAPI(t *testing.T) {
-// 	testData := testData{
-// 		projectName: "Avengers",
-// 		projectPW:   "secret",
-// 		gameName:    "Fifa",
-// 		players: []testPlayer{
-// 			{name: "Hans"},
-// 			{name: "Peter"},
-// 			{name: "Kevin"},
-// 			{name: "Arnold"},
-// 		},
-// 		matches: []testMatch{
-// 			{
-// 				teams: []testTeam{
-// 					{
-// 						players: []int{1, 2},
-// 						score:   1,
-// 						result:  db.Draw,
-// 					},
-// 					{
-// 						players: []int{3, 4},
-// 						score:   1,
-// 						result:  db.Draw,
-// 					},
-// 				},
-// 			},
-// 			{
-// 				teams: []testTeam{
-// 					{
-// 						players: []int{1, 2},
-// 						score:   4,
-// 						result:  db.Win,
-// 					},
-// 					{
-// 						players: []int{3, 4},
-// 						score:   1,
-// 						result:  db.Loss,
-// 					},
-// 				},
-// 			},
-// 			{
-// 				teams: []testTeam{
-// 					{
-// 						players: []int{1},
-// 						score:   4,
-// 						result:  db.Win,
-// 					},
-// 					{
-// 						players: []int{2},
-// 						score:   4,
-// 						result:  db.Win,
-// 					},
-// 					{
-// 						players: []int{3},
-// 						score:   2,
-// 						result:  db.Loss,
-// 					},
-// 				},
-// 			},
-// 		},
-// 		stats: map[string]testStats{
-// 			"Hans": {
-// 				rating:       1523,
-// 				peakRating:   1523,
-// 				lowestRating: 1500,
-// 				gameCount:    3,
-// 				winCount:     2,
-// 				drawCount:    1,
-// 				lossCount:    0,
-// 			},
-// 			"Peter": {
-// 				rating:       1523,
-// 				peakRating:   1523,
-// 				lowestRating: 1500,
-// 				gameCount:    3,
-// 				winCount:     2,
-// 				drawCount:    1,
-// 				lossCount:    0,
-// 			},
-// 			"Kevin": {
-// 				rating:       1470,
-// 				peakRating:   1500,
-// 				lowestRating: 1470,
-// 				gameCount:    3,
-// 				winCount:     0,
-// 				drawCount:    1,
-// 				lossCount:    2,
-// 			},
-// 			"Arnold": {
-// 				rating:       1484,
-// 				peakRating:   1500,
-// 				lowestRating: 1484,
-// 				gameCount:    2,
-// 				winCount:     0,
-// 				drawCount:    1,
-// 				lossCount:    1,
-// 			},
-// 		},
-// 	}
+type testMatch struct {
+	teams []testTeam // sort by score for assertions
+}
 
-// 	svc := compelo.NewService("file::memory:")
-// 	hdl := handler.New(svc)
-// 	sec := security.New(svc, 60, "test")
-// 	mux := router.New(hdl, sec)
+type testTeam struct {
+	players []int
+	score   int
+	result  query.Result
+}
 
-// 	ts := newTestSuite(t, mux, testData)
+type testStats struct {
+	rating       int
+	peakRating   int
+	lowestRating int
+	gameCount    int
+	winCount     int
+	drawCount    int
+	lossCount    int
+}
 
-// 	ts.createProject()
-// 	ts.listProjects()
-// 	ts.selectProject()
+func TestAPI(t *testing.T) {
+	testData := testData{
+		projectName: "Avengers",
+		projectPW:   "secret",
+		gameName:    "Fifa",
+		players: []testPlayer{
+			{name: "Hans"},
+			{name: "Peter"},
+			{name: "Kevin"},
+			{name: "Arnold"},
+		},
+		matches: []testMatch{
+			{
+				teams: []testTeam{
+					{
+						players: []int{1, 2},
+						score:   1,
+						result:  query.Draw,
+					},
+					{
+						players: []int{3, 4},
+						score:   1,
+						result:  query.Draw,
+					},
+				},
+			},
+			{
+				teams: []testTeam{
+					{
+						players: []int{1, 2},
+						score:   4,
+						result:  query.Win,
+					},
+					{
+						players: []int{3, 4},
+						score:   1,
+						result:  query.Loss,
+					},
+				},
+			},
+			{
+				teams: []testTeam{
+					{
+						players: []int{1},
+						score:   4,
+						result:  query.Win,
+					},
+					{
+						players: []int{2},
+						score:   4,
+						result:  query.Win,
+					},
+					{
+						players: []int{3},
+						score:   2,
+						result:  query.Loss,
+					},
+				},
+			},
+		},
+		stats: map[string]testStats{
+			"Hans": {
+				rating:       1523,
+				peakRating:   1523,
+				lowestRating: 1500,
+				gameCount:    3,
+				winCount:     2,
+				drawCount:    1,
+				lossCount:    0,
+			},
+			"Peter": {
+				rating:       1523,
+				peakRating:   1523,
+				lowestRating: 1500,
+				gameCount:    3,
+				winCount:     2,
+				drawCount:    1,
+				lossCount:    0,
+			},
+			"Kevin": {
+				rating:       1470,
+				peakRating:   1500,
+				lowestRating: 1470,
+				gameCount:    3,
+				winCount:     0,
+				drawCount:    1,
+				lossCount:    2,
+			},
+			"Arnold": {
+				rating:       1484,
+				peakRating:   1500,
+				lowestRating: 1484,
+				gameCount:    2,
+				winCount:     0,
+				drawCount:    1,
+				lossCount:    1,
+			},
+		},
+	}
 
-// 	ts.createPlayers()
-// 	ts.listPlayers()
+	defer os.Remove("api_test.db")
 
-// 	ts.createGame()
-// 	ts.listGames()
+	// Create event store.
+	bus := event.NewBus()
+	store := event.NewStore(bus, "api_test.db")
 
-// 	ts.createMatches()
-// 	ts.listMatches()
+	// Setup query.
+	query := query.New(bus)
 
-// 	ts.loadPlayerStats()
-// 	ts.loadGameStats()
-// }
+	// Load all events from db (rehydrates queries).
+	events, err := store.LoadEvents()
+	assert.Nil(t, err)
 
-// func (s *testSuite) createProject() {
-// 	b := JSON{
-// 		"name":     s.testData.projectName,
-// 		"password": s.testData.projectPW,
-// 	}
-// 	w := s.requestWithBody("POST", "/api/projects", b)
+	// Setup command (from existing events).
+	command := command.New(store, events)
 
-// 	response := &db.Project{}
-// 	s.assertEqual(http.StatusCreated, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), response)
-// 	s.assertTrue(response.ID > 0)
-// 	s.assertEqual(s.testData.projectName, response.Name)
-// }
+	hdl := handler.New(query, command)
+	sec := security.New(query, 60, "test")
+	mux := router.New(hdl, sec)
 
-// func (s *testSuite) listProjects() {
-// 	w := s.request("GET", "/api/projects")
+	ts := newTestSuite(t, mux, testData)
 
-// 	var response []db.Project
-// 	s.assertEqual(http.StatusOK, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), &response)
-// 	s.assertTrue(len(response) == 1)
-// 	s.assertEqual(response[0].Name, s.testData.projectName)
-// 	s.testData.projectID = response[0].ID
-// 	s.testData.projectIDString = strconv.Itoa(int(response[0].ID))
-// }
+	ts.createProject()
+	ts.listProjects()
+	ts.selectProject()
 
-// func (s *testSuite) selectProject() {
-// 	b := JSON{
-// 		"projectId": s.testData.projectID,
-// 		"password":  s.testData.projectPW,
-// 	}
-// 	w := s.requestWithBody("POST", "/api/login", b)
+	// ts.createPlayers()
+	// ts.listPlayers()
 
-// 	type token struct {
-// 		Code   int       `json:"code"`
-// 		Expire time.Time `json:"expire"`
-// 		Token  string    `json:"token"`
-// 	}
-// 	response := &token{}
-// 	s.assertEqual(http.StatusOK, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), response)
-// 	s.assertNotNil(response.Expire)
-// 	s.assertNotEmpty(response.Token)
-// 	s.token = response.Token
-// }
+	// ts.createGame()
+	// ts.listGames()
+
+	// ts.createMatches()
+	// ts.listMatches()
+
+	// ts.loadPlayerStats()
+	// ts.loadGameStats()
+}
+
+func (s *testSuite) createProject() {
+	b := JSON{
+		"name":     s.testData.projectName,
+		"password": s.testData.projectPW,
+	}
+	w := s.requestWithBody("POST", "/api/projects", b)
+
+	response := &query.Project{}
+	s.assertEqual(http.StatusCreated, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), response)
+	s.assertTrue(response.GUID != "")
+}
+
+func (s *testSuite) listProjects() {
+	w := s.request("GET", "/api/projects")
+
+	var response []query.Project
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), &response)
+	s.assertTrue(len(response) == 1)
+	s.assertEqual(response[0].Name, s.testData.projectName)
+	s.testData.projectGUID = response[0].GUID
+}
+
+func (s *testSuite) selectProject() {
+	b := JSON{
+		"projectGuid": s.testData.projectGUID,
+		"password":    s.testData.projectPW,
+	}
+	w := s.requestWithBody("POST", "/api/login", b)
+
+	type token struct {
+		Code   int       `json:"code"`
+		Expire time.Time `json:"expire"`
+		Token  string    `json:"token"`
+	}
+	response := &token{}
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), response)
+	s.assertNotNil(response.Expire)
+	s.assertNotEmpty(response.Token)
+	s.token = response.Token
+}
 
 // func (s *testSuite) createPlayers() {
 // 	for _, p := range s.testData.players {
 // 		b := JSON{
 // 			"name": p.name,
 // 		}
-// 		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectIDString+"/players", b)
+// 		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/players", b)
 // 		s.assertEqual(http.StatusCreated, w.Code)
 // 	}
 // }
@@ -252,12 +283,12 @@ package tests
 // 	b := JSON{
 // 		"name": s.testData.gameName,
 // 	}
-// 	w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectIDString+"/games", b)
+// 	w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/games", b)
 // 	s.assertEqual(http.StatusCreated, w.Code)
 // }
 
 // func (s *testSuite) listGames() {
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games")
+// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games")
 
 // 	var response []db.Game
 // 	s.assertEqual(http.StatusOK, w.Code)
@@ -279,7 +310,7 @@ package tests
 // 		body := JSON{"teams": teams}
 
 // 		gameID := strconv.Itoa(int(s.testData.gameID))
-// 		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/matches", body)
+// 		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/matches", body)
 
 // 		response := &db.Match{}
 // 		s.assertEqual(http.StatusCreated, w.Code)
@@ -291,7 +322,7 @@ package tests
 
 // func (s *testSuite) listMatches() {
 // 	gameID := strconv.Itoa(int(s.testData.gameID))
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/matches")
+// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/matches")
 
 // 	var response []compelo.MatchData
 // 	s.assertEqual(http.StatusOK, w.Code)
@@ -319,7 +350,7 @@ package tests
 
 // func (s *testSuite) loadPlayerStats() {
 // 	gameID := strconv.Itoa(int(s.testData.gameID))
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/player-stats")
+// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/player-stats")
 
 // 	var response []compelo.PlayerStats
 // 	s.assertEqual(http.StatusOK, w.Code)
@@ -339,7 +370,7 @@ package tests
 
 // func (s *testSuite) loadGameStats() {
 // 	gameID := strconv.Itoa(int(s.testData.gameID))
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectIDString+"/games/"+gameID+"/game-stats")
+// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/game-stats")
 
 // 	var response compelo.GameStats
 // 	s.assertEqual(http.StatusOK, w.Code)
@@ -356,59 +387,59 @@ package tests
 // 	s.assertTrue(response.MaxScoreDiff[0].ID == 2)
 // }
 
-// // ------ Helpers ------
+// ------ Helpers ------
 
-// func (s *testSuite) requestWithBody(method, path string, body JSON) *httptest.ResponseRecorder {
-// 	b, err := json.Marshal(body)
-// 	if err != nil {
-// 		s.testing.Error(err)
-// 	}
-// 	req, err := http.NewRequest(method, path, bytes.NewBuffer(b))
-// 	if err != nil {
-// 		s.testing.Error(err)
-// 	}
-// 	req.Header.Set("Content-Type", "application/json")
-// 	if s.token != "" {
-// 		req.Header.Set("Authorization", "Bearer "+s.token)
-// 	}
-// 	w := httptest.NewRecorder()
-// 	s.handler.ServeHTTP(w, req)
-// 	return w
-// }
+func (s *testSuite) requestWithBody(method, path string, body JSON) *httptest.ResponseRecorder {
+	b, err := json.Marshal(body)
+	if err != nil {
+		s.testing.Error(err)
+	}
+	req, err := http.NewRequest(method, path, bytes.NewBuffer(b))
+	if err != nil {
+		s.testing.Error(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if s.token != "" {
+		req.Header.Set("Authorization", "Bearer "+s.token)
+	}
+	w := httptest.NewRecorder()
+	s.handler.ServeHTTP(w, req)
+	return w
+}
 
-// func (s *testSuite) request(method, path string) *httptest.ResponseRecorder {
-// 	req, err := http.NewRequest(method, path, nil)
-// 	if err != nil {
-// 		s.testing.Error(err)
-// 	}
-// 	req.Header.Set("Content-Type", "application/json")
-// 	if s.token != "" {
-// 		req.Header.Set("Authorization", "Bearer "+s.token)
-// 	}
-// 	w := httptest.NewRecorder()
-// 	s.handler.ServeHTTP(w, req)
-// 	return w
-// }
+func (s *testSuite) request(method, path string) *httptest.ResponseRecorder {
+	req, err := http.NewRequest(method, path, nil)
+	if err != nil {
+		s.testing.Error(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if s.token != "" {
+		req.Header.Set("Authorization", "Bearer "+s.token)
+	}
+	w := httptest.NewRecorder()
+	s.handler.ServeHTTP(w, req)
+	return w
+}
 
-// func (s *testSuite) mustUnmarshal(bytes []byte, target interface{}) {
-// 	err := json.Unmarshal(bytes, target)
-// 	if err != nil {
-// 		s.testing.Error(err)
-// 	}
-// }
+func (s *testSuite) mustUnmarshal(bytes []byte, target interface{}) {
+	err := json.Unmarshal(bytes, target)
+	if err != nil {
+		s.testing.Error(err)
+	}
+}
 
-// func (s *testSuite) assertEqual(expected, actual interface{}) {
-// 	assert.Equal(s.testing, expected, actual)
-// }
+func (s *testSuite) assertEqual(expected, actual interface{}) {
+	assert.Equal(s.testing, expected, actual)
+}
 
-// func (s *testSuite) assertTrue(value bool) {
-// 	assert.True(s.testing, value)
-// }
+func (s *testSuite) assertTrue(value bool) {
+	assert.True(s.testing, value)
+}
 
-// func (s *testSuite) assertNotNil(obj interface{}) {
-// 	assert.NotNil(s.testing, obj)
-// }
+func (s *testSuite) assertNotNil(obj interface{}) {
+	assert.NotNil(s.testing, obj)
+}
 
-// func (s *testSuite) assertNotEmpty(obj interface{}) {
-// 	assert.NotEmpty(s.testing, obj)
-// }
+func (s *testSuite) assertNotEmpty(obj interface{}) {
+	assert.NotEmpty(s.testing, obj)
+}

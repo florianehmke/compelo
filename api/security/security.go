@@ -10,7 +10,7 @@ import (
 	"github.com/brianvoe/sjwt"
 	"golang.org/x/crypto/bcrypt"
 
-	"compelo/api"
+	"compelo/api/json"
 	"compelo/query"
 )
 
@@ -48,21 +48,21 @@ type AuthResponse struct {
 
 func (sec *Security) Login(w http.ResponseWriter, r *http.Request) {
 	var login AuthRequest
-	err := api.Unmarshal(r.Body, &login)
+	err := json.Unmarshal(r.Body, &login)
 	if err != nil {
-		api.Error(w, http.StatusBadRequest, err)
+		json.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	project, err := sec.q.GetProjectBy(login.ProjectGUID)
 	if err != nil {
-		api.Error(w, http.StatusUnauthorized, err)
+		json.WriteError(w, http.StatusUnauthorized, err)
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword(project.PasswordHash, []byte(login.Password))
 	if err != nil {
-		api.Error(w, http.StatusUnauthorized, err)
+		json.WriteError(w, http.StatusUnauthorized, err)
 		return
 	}
 
@@ -73,7 +73,7 @@ func (sec *Security) Login(w http.ResponseWriter, r *http.Request) {
 	claims.SetExpiresAt(now.Add(sec.timeout))
 	claims.SetIssuedAt(now)
 
-	api.Write(w, http.StatusOK, AuthResponse{
+	json.Write(w, http.StatusOK, AuthResponse{
 		Token: claims.Generate(sec.secretKey),
 	})
 }
@@ -81,25 +81,25 @@ func (sec *Security) Login(w http.ResponseWriter, r *http.Request) {
 func (sec *Security) Refresh(w http.ResponseWriter, r *http.Request) {
 	tokenStr := tokenFromHeader(r)
 	if valid := sjwt.Verify(tokenStr, sec.secretKey); !valid {
-		api.Error(w, http.StatusUnauthorized, sjwt.ErrTokenInvalid)
+		json.WriteError(w, http.StatusUnauthorized, sjwt.ErrTokenInvalid)
 		return
 	}
 	rawClaims, err := sjwt.Parse(tokenStr)
 	if err != nil {
-		api.Error(w, http.StatusUnauthorized, err)
+		json.WriteError(w, http.StatusUnauthorized, err)
 		return
 	}
 	issuedAt, err := rawClaims.GetIssuedAt()
 	if err != nil {
-		api.Error(w, http.StatusUnauthorized, err)
+		json.WriteError(w, http.StatusUnauthorized, err)
 		return
 	}
 	if (time.Now().Unix() - issuedAt) > sec.maxRefresh {
-		api.Error(w, http.StatusUnauthorized, errors.New("max refresh time exceeded"))
+		json.WriteError(w, http.StatusUnauthorized, errors.New("max refresh time exceeded"))
 		return
 	}
 	rawClaims.SetExpiresAt(time.Now().Add(sec.timeout))
-	api.Write(w, http.StatusOK, AuthResponse{
+	json.Write(w, http.StatusOK, AuthResponse{
 		Token: rawClaims.Generate(sec.secretKey),
 	})
 }
@@ -115,21 +115,21 @@ func (sec *Security) VerifyToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenStr := tokenFromHeader(r)
 		if valid := sjwt.Verify(tokenStr, sec.secretKey); !valid {
-			api.Error(w, http.StatusUnauthorized, sjwt.ErrTokenInvalid)
+			json.WriteError(w, http.StatusUnauthorized, sjwt.ErrTokenInvalid)
 			return
 		}
 		rawClaims, err := sjwt.Parse(tokenStr)
 		if err != nil {
-			api.Error(w, http.StatusUnauthorized, err)
+			json.WriteError(w, http.StatusUnauthorized, err)
 			return
 		}
 		if err := rawClaims.Validate(); err != nil {
-			api.Error(w, http.StatusUnauthorized, err)
+			json.WriteError(w, http.StatusUnauthorized, err)
 			return
 		}
 		var claims Claims
 		if err := rawClaims.ToStruct(&claims); err != nil {
-			api.Error(w, http.StatusUnauthorized, err)
+			json.WriteError(w, http.StatusUnauthorized, err)
 			return
 		}
 		ctx := context.WithValue(r.Context(), ClaimsKey, claims)

@@ -29,11 +29,11 @@ type basicPlayer struct {
 
 func Test(t *testing.T) {
 	log.Println("Starting Test")
-	defer os.Remove("test.db")
+	defer os.Remove("cq_test.db")
 
 	// Create event store.
 	bus := event.NewBus()
-	store := event.NewStore(bus, "test.db")
+	store := event.NewStore(bus, "cq_test.db")
 
 	// Simulate some prior events to ensure re-hydration works.
 	store.StoreEvent(&event.ProjectCreated{GUID: "guid", Name: "First Project"})

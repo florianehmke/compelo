@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"compelo/api"
 	"compelo/api/handler"
+	"compelo/api/json"
 )
 
 var projectForbidden = errors.New("not your project")
@@ -16,8 +16,7 @@ func (sec *Security) ProjectSecurity(next http.Handler) http.Handler {
 		claims := mustLoadClaimsFromContext(r)
 
 		if project.GUID != claims.ProjectGUID {
-			api.
-				api.Error(w, http.StatusForbidden, projectForbidden)
+			json.WriteError(w, http.StatusForbidden, projectForbidden)
 			return
 		}
 
