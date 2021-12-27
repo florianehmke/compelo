@@ -13,44 +13,54 @@ import (
 	"compelo/query"
 )
 
+type ContextKey string
+
 const (
-	ProjectGUID = "projectGUID"
-	ProjectKey  = "project"
+	ProjectGUID string     = "projectGUID"
+	ProjectKey  ContextKey = "project"
 )
 
+type CreateProjectRequest struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
 func (h *Handler) CreateProject(w http.ResponseWriter, r *http.Request) {
-	var body command.CreateNewProjectCommand
-	if err := json.Unmarshal(r.Body, &body); err != nil {
-		json.WriteError(w, http.StatusBadRequest, err)
+	var request CreateProjectRequest
+	if err := json.Unmarshal(r.Body, &request); err != nil {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
-	p, err := h.c.CreateNewProject(body)
+	p, err := h.c.CreateNewProject(command.CreateNewProjectCommand{
+		Name:     request.Name,
+		Password: request.Password,
+	})
 	if err == nil {
-		json.Write(w, http.StatusCreated, p)
+		json.WriteResponse(w, http.StatusCreated, p)
 	} else {
-		json.WriteError(w, http.StatusBadRequest, err)
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
 	}
 }
 
 func (h *Handler) GetAllProjects(w http.ResponseWriter, r *http.Request) {
 	projects := h.q.GetProjects()
-	json.Write(w, http.StatusOK, projects)
+	json.WriteResponse(w, http.StatusOK, projects)
 }
 
 func (h *Handler) ProjectCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		guid := chi.URLParam(r, ProjectGUID)
 		if guid == "" {
-			json.WriteError(w, http.StatusBadRequest, errors.New("no guid provided"))
+			json.WriteErrorResponse(w, http.StatusBadRequest, errors.New("no guid provided"))
 		}
 		project, err := h.q.GetProjectBy(chi.URLParam(r, ProjectGUID))
 		if err != nil {
 			msg := fmt.Sprintf("could not set project with guid %s in context", guid)
-			json.WriteError(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
+			json.WriteErrorResponse(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
 			return
 		}
-		ctx := context.WithValue(r.Context(), ProjectKey, project)
+		ctx := context.WithValue(r.Context(), ProjectKey, *project)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

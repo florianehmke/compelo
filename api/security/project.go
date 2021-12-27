@@ -16,7 +16,7 @@ func (sec *Security) ProjectSecurity(next http.Handler) http.Handler {
 		claims := mustLoadClaimsFromContext(r)
 
 		if project.GUID != claims.ProjectGUID {
-			json.WriteError(w, http.StatusForbidden, projectForbidden)
+			json.WriteErrorResponse(w, http.StatusForbidden, projectForbidden)
 			return
 		}
 

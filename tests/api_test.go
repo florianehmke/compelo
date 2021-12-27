@@ -200,8 +200,8 @@ func TestAPI(t *testing.T) {
 	ts.listProjects()
 	ts.selectProject()
 
-	// ts.createPlayers()
-	// ts.listPlayers()
+	ts.createPlayers()
+	ts.listPlayers()
 
 	// ts.createGame()
 	// ts.listGames()
@@ -257,27 +257,27 @@ func (s *testSuite) selectProject() {
 	s.token = response.Token
 }
 
-// func (s *testSuite) createPlayers() {
-// 	for _, p := range s.testData.players {
-// 		b := JSON{
-// 			"name": p.name,
-// 		}
-// 		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/players", b)
-// 		s.assertEqual(http.StatusCreated, w.Code)
-// 	}
-// }
+func (s *testSuite) createPlayers() {
+	for _, p := range s.testData.players {
+		b := JSON{
+			"name": p.name,
+		}
+		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/players", b)
+		s.assertEqual(http.StatusCreated, w.Code)
+	}
+}
 
-// func (s *testSuite) listPlayers() {
-// 	w := s.request("GET", "/api/projects/1/players")
+func (s *testSuite) listPlayers() {
+	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/players")
 
-// 	var response []db.Player
-// 	s.assertEqual(http.StatusOK, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), &response)
-// 	s.assertTrue(len(response) == len(s.testData.players))
-// 	for i, r := range response {
-// 		s.assertEqual(r.Name, s.testData.players[i].name)
-// 	}
-// }
+	var response []query.Player
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), &response)
+	s.assertTrue(len(response) == len(s.testData.players))
+	for i, r := range response {
+		s.assertEqual(r.Name, s.testData.players[i].name)
+	}
+}
 
 // func (s *testSuite) createGame() {
 // 	b := JSON{

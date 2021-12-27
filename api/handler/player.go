@@ -1,27 +1,43 @@
 package handler
 
-// type CreatePlayerRequest struct {
-// 	Name string `json:"name"`
-// }
+import (
+	"net/http"
 
-// func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
-// 	project := MustLoadProjectFromContext(r)
-// 	var body CreatePlayerRequest
-// 	if err := json.Unmarshal(r.Body, &body); err != nil {
-// 		json.Error(w, http.StatusBadRequest, err)
-// 		return
-// 	}
+	"compelo/api/json"
+	"compelo/command"
+)
 
-// 	p, err := h.svc.CreatePlayer(project.ID, body.Name)
-// 	if err == nil {
-// 		json.Write(w, http.StatusCreated, p)
-// 	} else {
-// 		json.Error(w, http.StatusBadRequest, err)
-// 	}
-// }
+type CreatePlayerRequest struct {
+	Name string `json:"name"`
+}
 
-// func (h *Handler) GetAllPlayers(w http.ResponseWriter, r *http.Request) {
-// 	project := MustLoadProjectFromContext(r)
-// 	players := h.svc.LoadPlayersByProjectID(project.ID)
-// 	json.Write(w, http.StatusOK, players)
-// }
+func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
+	project := MustLoadProjectFromContext(r)
+
+	var request CreatePlayerRequest
+	if err := json.Unmarshal(r.Body, &request); err != nil {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+		return
+	}
+
+	p, err := h.c.CreateNewPlayer(command.CreateNewPlayerCommand{
+		ProjectGUID: project.GUID,
+		Name:        request.Name,
+	})
+	if err == nil {
+		json.WriteResponse(w, http.StatusCreated, p)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}
+
+func (h *Handler) GetAllPlayers(w http.ResponseWriter, r *http.Request) {
+	project := MustLoadProjectFromContext(r)
+	players, err := h.q.GetPlayersBy(project.GUID)
+
+	if err == nil {
+		json.WriteResponse(w, http.StatusOK, players)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}

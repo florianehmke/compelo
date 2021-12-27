@@ -15,7 +15,7 @@ func Marshal(r io.Reader, v interface{}) error {
 	return json.NewDecoder(r).Decode(&v)
 }
 
-func Write(w http.ResponseWriter, code int, c interface{}) {
+func WriteResponse(w http.ResponseWriter, code int, c interface{}) {
 	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -32,10 +32,10 @@ func Write(w http.ResponseWriter, code int, c interface{}) {
 	}
 }
 
-func WriteError(w http.ResponseWriter, code int, err error) {
+func WriteErrorResponse(w http.ResponseWriter, code int, err error) {
 	body := map[string]string{
 		"code":    fmt.Sprint(code),
 		"message": err.Error(),
 	}
-	Write(w, code, body)
+	WriteResponse(w, code, body)
 }
