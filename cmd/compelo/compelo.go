@@ -5,10 +5,12 @@ import (
 	"net/http"
 	"os"
 
-	"compelo/internal"
-	"compelo/internal/api/handler"
-	"compelo/internal/api/router"
-	"compelo/internal/api/security"
+	"compelo/api/handler"
+	"compelo/api/router"
+	"compelo/api/security"
+	"compelo/command"
+	"compelo/event"
+	"compelo/query"
 )
 
 func main() {
@@ -31,8 +33,19 @@ func main() {
 		log.Println("Using default value instead: '8080'.")
 	}
 
-	svc := compelo.NewService(dbPath)
-	hdl := handler.New(svc)
-	sec := security.New(svc, 60*120, secret)
-	log.Fatal(http.ListenAndServe(":"+port, router.New(hdl, sec)))
+	bus := event.NewBus()
+	store := event.NewStore(bus, dbPath)
+	query := query.New(bus)
+
+	// Load events, panic if that does not work.
+	events, err := store.LoadEvents()
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	command := command.New(store, events)
+	handler := handler.New(query, command)
+	security := security.New(query, 60*120, secret)
+
+	log.Fatal(http.ListenAndServe(":"+port, router.New(handler, security)))
 }
