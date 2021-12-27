@@ -32,6 +32,9 @@ func generateApiModels() {
 	converter.Add(query.Game{})
 	converter.Add(query.Match{})
 
+	converter.Add(query.PlayerStats{})
+	converter.Add(query.GameStats{})
+
 	err := converter.ConvertToFile(modelPath + "api.models.ts")
 	if err != nil {
 		panic(err.Error())

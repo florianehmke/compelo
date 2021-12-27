@@ -54,3 +54,23 @@ export interface Match {
   date: string;
   teams: Team[];
 }
+export interface Stats {
+  rating: number;
+  peakRating: number;
+  lowestRating: number;
+  gameCount: number;
+  winCount: number;
+  drawCount: number;
+  lossCount: number;
+}
+export interface PlayerStats {
+  guid: string;
+  projectGuid: string;
+  name: string;
+  current: Stats;
+  history: {[key: string]: Stats};
+}
+export interface GameStats {
+  maxScoreSum: Match[];
+  maxScoreDiff: Match[];
+}
