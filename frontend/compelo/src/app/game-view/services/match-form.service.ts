@@ -33,7 +33,7 @@ export class MatchFormService {
     }
 
     return this.fb.group({
-      playerIds: playerArray,
+      playerGuids: playerArray,
       score: [null, Validators.required],
     });
   }

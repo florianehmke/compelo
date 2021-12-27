@@ -26,6 +26,9 @@ export interface CreateMatchRequest {
   teams: CreateMatchRequestTeam[];
 }
 
+export interface Response {
+  guid: string;
+}
 export interface Project {
   guid: string;
   name: string;

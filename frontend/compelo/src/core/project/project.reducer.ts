@@ -1,13 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
-import {
-  Game,
-  GameStats,
-  Match,
-  MatchData,
-  Player,
-  PlayerStats,
-} from '@generated/api';
+import { Game, GameStats, Match, Player, PlayerStats } from '@generated/api';
 
 import {
   filterMatches,
@@ -25,7 +18,7 @@ export interface State {
   gameStats: GameStats;
   players: Player[];
   playerStats: PlayerStats[];
-  matches: MatchData[];
+  matches: Match[];
   matchFilter: string;
 }
 

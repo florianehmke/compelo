@@ -10,12 +10,12 @@ import {
   Game,
   GameStats,
   Match,
-  MatchData,
+  Response,
   Player,
   PlayerStats,
 } from '@generated/api';
 
-import { getSelectedProjectId } from '../router';
+import { getSelectedProjectGuid } from '../router';
 import { State } from '../router/router-state.reducer';
 
 @Injectable()
@@ -30,16 +30,16 @@ export class ProjectService {
     );
   }
 
-  createGame(game: Game): Observable<Game> {
+  createGame(game: Game): Observable<Response> {
     return this.projectUrl().pipe(
-      flatMap((url) => this.http.post<Game>(`${url}/games`, game))
+      flatMap((url) => this.http.post<Response>(`${url}/games`, game))
     );
   }
 
-  getGameStats(gameID: number): Observable<GameStats> {
+  getGameStats(gameGuid: string): Observable<GameStats> {
     return this.projectUrl().pipe(
       flatMap((url) =>
-        this.http.get<GameStats>(`${url}/games/${gameID}/game-stats`)
+        this.http.get<GameStats>(`${url}/games/${gameGuid}/game-stats`)
       )
     );
   }
@@ -50,38 +50,41 @@ export class ProjectService {
     );
   }
 
-  createPlayer(game: Player): Observable<Player> {
+  createPlayer(game: Player): Observable<Response> {
     return this.projectUrl().pipe(
-      flatMap((url) => this.http.post<Player>(`${url}/players`, game))
+      flatMap((url) => this.http.post<Response>(`${url}/players`, game))
     );
   }
 
-  createMatch(payload: CreateMatchRequest, gameID: number): Observable<Match> {
+  createMatch(
+    payload: CreateMatchRequest,
+    gameGuid: string
+  ): Observable<Response> {
     return this.projectUrl().pipe(
       flatMap((url) =>
-        this.http.post<Match>(`${url}/games/${gameID}/matches`, payload)
+        this.http.post<Response>(`${url}/games/${gameGuid}/matches`, payload)
       )
     );
   }
 
-  getMatches(gameID: number): Observable<MatchData[]> {
+  getMatches(gameGuid: string): Observable<Match[]> {
     return this.projectUrl().pipe(
       flatMap((url) =>
-        this.http.get<MatchData[]>(`${url}/games/${gameID}/matches`)
+        this.http.get<Match[]>(`${url}/games/${gameGuid}/matches`)
       )
     );
   }
 
-  getPlayerStats(gameID: number): Observable<PlayerStats[]> {
+  getPlayerStats(gameGuid: string): Observable<PlayerStats[]> {
     return this.projectUrl().pipe(
       flatMap((url) =>
-        this.http.get<PlayerStats[]>(`${url}/games/${gameID}/player-stats`)
+        this.http.get<PlayerStats[]>(`${url}/games/${gameGuid}/player-stats`)
       )
     );
   }
 
   projectUrl(): Observable<string> {
-    return this.routerStore.select(getSelectedProjectId).pipe(
+    return this.routerStore.select(getSelectedProjectGuid).pipe(
       take(1),
       map((id) => `${this.baseUrl}/${id}`)
     );

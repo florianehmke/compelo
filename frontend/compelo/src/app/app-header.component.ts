@@ -10,13 +10,13 @@ import { Game, Project } from '@generated/api';
         <a [routerLink]="['/']"> > compelo </a>
         <ng-container *ngIf="project">
           <span>> </span>
-          <a [routerLink]="['project-view', project?.id]">
+          <a [routerLink]="['project-view', project?.guid]">
             {{ project?.name }}
           </a>
         </ng-container>
         <ng-container *ngIf="game && project">
           <span>> </span>
-          <a [routerLink]="['project-view', project?.id, 'game', game?.id]">
+          <a [routerLink]="['project-view', project?.guid, 'game', game?.guid]">
             {{ game?.name }}
           </a>
         </ng-container>

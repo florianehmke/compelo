@@ -7,14 +7,15 @@ import {
 } from '@angular/router';
 
 import { tokenForProjectIdExists } from '@shared/jwt';
+import { projectGuidParam } from '@shared/route-params';
 
 @Injectable()
 export class ProjectViewGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const projectId = parseInt(route.paramMap.get('projectId'), 10);
-    if (tokenForProjectIdExists(projectId)) {
+    const projectGuid = route.paramMap.get(projectGuidParam);
+    if (tokenForProjectIdExists(projectGuid)) {
       return true;
     }
     console.warn('token does not belong to project');

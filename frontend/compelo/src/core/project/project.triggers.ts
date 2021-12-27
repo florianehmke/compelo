@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Action, Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 
-import { gameIdParam } from '@shared/route-params';
+import { gameGuidParam } from '@shared/route-params';
 
 import {
   loadGames,
@@ -25,8 +25,8 @@ export function triggerLoadMatches(
   store: Store<State>,
   route: ActivatedRouteSnapshot
 ): Observable<Action> {
-  const gameId = route.params[gameIdParam];
-  const payload = { payload: { gameId: parseInt(gameId, 10) } };
+  const gameGuid = route.params[gameGuidParam];
+  const payload = { payload: { gameGuid: gameGuid } };
   return of(loadMatches(payload));
 }
 
@@ -34,8 +34,8 @@ export function triggerLoadPlayerStats(
   store: Store<State>,
   route: ActivatedRouteSnapshot
 ): Observable<Action> {
-  const gameId = route.params[gameIdParam];
-  const payload = { payload: { gameId: parseInt(gameId, 10) } };
+  const gameGuid = route.params[gameGuidParam];
+  const payload = { payload: { gameGuid: gameGuid } };
   return of(loadPlayerStats(payload));
 }
 
@@ -43,7 +43,7 @@ export function triggerLoadGameStats(
   store: Store<State>,
   route: ActivatedRouteSnapshot
 ): Observable<Action> {
-  const gameId = route.params[gameIdParam];
-  const payload = { payload: { gameId: parseInt(gameId, 10) } };
+  const gameGuid = route.params[gameGuidParam];
+  const payload = { payload: { gameGuid: gameGuid } };
   return of(loadGameStats(payload));
 }

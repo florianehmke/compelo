@@ -1,2 +1,2 @@
-export const projectIdParam = 'projectId';
-export const gameIdParam = 'gameId';
+export const projectGuidParam = 'projectGuid';
+export const gameGuidParam = 'gameGuid';

@@ -7,6 +7,7 @@ import (
 
 	"compelo/api/handler"
 	"compelo/api/security"
+	"compelo/command"
 	"compelo/query"
 )
 
@@ -26,6 +27,8 @@ func generateApiModels() {
 	converter.Add(handler.CreatePlayerRequest{})
 	converter.Add(handler.CreateMatchRequest{})
 	converter.Add(handler.CreateMatchRequestTeam{})
+
+	converter.Add(command.Response{})
 
 	converter.Add(query.Project{})
 	converter.Add(query.Player{})
