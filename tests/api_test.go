@@ -3,6 +3,7 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -52,6 +53,7 @@ type testData struct {
 
 type testPlayer struct {
 	name string
+	guid string
 }
 
 type testMatch struct {
@@ -89,12 +91,12 @@ func TestAPI(t *testing.T) {
 			{
 				teams: []testTeam{
 					{
-						players: []int{1, 2},
+						players: []int{0, 1},
 						score:   1,
 						result:  query.Draw,
 					},
 					{
-						players: []int{3, 4},
+						players: []int{2, 3},
 						score:   1,
 						result:  query.Draw,
 					},
@@ -103,12 +105,12 @@ func TestAPI(t *testing.T) {
 			{
 				teams: []testTeam{
 					{
-						players: []int{1, 2},
+						players: []int{0, 1},
 						score:   4,
 						result:  query.Win,
 					},
 					{
-						players: []int{3, 4},
+						players: []int{2, 3},
 						score:   1,
 						result:  query.Loss,
 					},
@@ -117,17 +119,17 @@ func TestAPI(t *testing.T) {
 			{
 				teams: []testTeam{
 					{
+						players: []int{0},
+						score:   4,
+						result:  query.Win,
+					},
+					{
 						players: []int{1},
 						score:   4,
 						result:  query.Win,
 					},
 					{
 						players: []int{2},
-						score:   4,
-						result:  query.Win,
-					},
-					{
-						players: []int{3},
 						score:   2,
 						result:  query.Loss,
 					},
@@ -206,8 +208,8 @@ func TestAPI(t *testing.T) {
 	ts.createGame()
 	ts.listGames()
 
-	// ts.createMatches()
-	// ts.listMatches()
+	ts.createMatches()
+	ts.listMatches()
 
 	// ts.loadPlayerStats()
 	// ts.loadGameStats()
@@ -258,12 +260,16 @@ func (s *testSuite) selectProject() {
 }
 
 func (s *testSuite) createPlayers() {
-	for _, p := range s.testData.players {
+	for i, p := range s.testData.players {
 		b := JSON{
 			"name": p.name,
 		}
 		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/players", b)
+		var response command.Response
+		s.mustUnmarshal(w.Body.Bytes(), &response)
 		s.assertEqual(http.StatusCreated, w.Code)
+		s.assertTrue(response.GUID != "")
+		s.testData.players[i].guid = response.GUID
 	}
 }
 
@@ -298,55 +304,52 @@ func (s *testSuite) listGames() {
 	s.testData.gameGUID = response[0].GUID
 }
 
-// func (s *testSuite) createMatches() {
-// 	for _, m := range s.testData.matches {
-// 		var teams []JSON
-// 		for _, t := range m.teams {
-// 			teams = append(teams, JSON{
-// 				"playerIds": t.players,
-// 				"score":     t.score,
-// 			})
-// 		}
-// 		body := JSON{"teams": teams}
+func (s *testSuite) createMatches() {
+	for _, m := range s.testData.matches {
+		var teams []JSON
+		for _, t := range m.teams {
+			var playerGUIDs []string
+			for _, idx := range t.players {
+				playerGUIDs = append(playerGUIDs, s.testData.players[idx].guid)
+			}
+			teams = append(teams, JSON{
+				"playerGuids": playerGUIDs,
+				"score":       t.score,
+			})
+		}
+		body := JSON{"teams": teams}
 
-// 		gameID := strconv.Itoa(int(s.testData.gameID))
-// 		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/matches", body)
+		gameGUID := s.testData.gameGUID
+		w := s.requestWithBody("POST", "/api/projects/"+s.testData.projectGUID+"/games/"+gameGUID+"/matches", body)
 
-// 		response := &db.Match{}
-// 		s.assertEqual(http.StatusCreated, w.Code)
-// 		s.mustUnmarshal(w.Body.Bytes(), response)
-// 		s.assertTrue(response.ID > 0)
-// 		s.assertEqual(response.GameID, s.testData.gameID)
-// 	}
-// }
+		response := &command.Response{}
+		s.assertEqual(http.StatusCreated, w.Code)
+		s.mustUnmarshal(w.Body.Bytes(), response)
+		s.assertTrue(response.GUID != "")
+	}
+}
 
-// func (s *testSuite) listMatches() {
-// 	gameID := strconv.Itoa(int(s.testData.gameID))
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/matches")
+func (s *testSuite) listMatches() {
+	gameGUID := s.testData.gameGUID
+	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameGUID+"/matches")
 
-// 	var response []compelo.MatchData
-// 	s.assertEqual(http.StatusOK, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), &response)
-// 	s.assertTrue(len(response) == len(s.testData.matches))
+	var response []query.Match
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), &response)
+	s.assertTrue(len(response) == len(s.testData.matches))
 
-// 	// Sort results by ID so that they are
-// 	// in the same order as the test data.
-// 	sort.Slice(response, func(i, j int) bool {
-// 		return response[i].ID < (response[j].ID)
-// 	})
+	for i, expectedMatch := range s.testData.matches {
+		actualMatch := response[i]
+		s.assertEqual(len(expectedMatch.teams), len(actualMatch.Teams))
 
-// 	for i, expectedMatch := range s.testData.matches {
-// 		actualMatch := response[i]
-// 		s.assertEqual(len(expectedMatch.teams), len(actualMatch.Teams))
-
-// 		for j, expectedTeam := range expectedMatch.teams {
-// 			actualTeam := actualMatch.Teams[j]
-// 			s.assertEqual(len(expectedTeam.players), len(actualTeam.Players))
-// 			s.assertEqual(expectedTeam.score, actualTeam.Score)
-// 			s.assertEqual(expectedTeam.result, actualTeam.Result)
-// 		}
-// 	}
-// }
+		for j, expectedTeam := range expectedMatch.teams {
+			actualTeam := actualMatch.Teams[j]
+			s.assertEqual(len(expectedTeam.players), len(actualTeam.Players))
+			s.assertEqual(expectedTeam.score, actualTeam.Score)
+			s.assertEqual(expectedTeam.result, actualTeam.Result)
+		}
+	}
+}
 
 // func (s *testSuite) loadPlayerStats() {
 // 	gameID := strconv.Itoa(int(s.testData.gameID))
@@ -423,6 +426,7 @@ func (s *testSuite) request(method, path string) *httptest.ResponseRecorder {
 
 func (s *testSuite) mustUnmarshal(bytes []byte, target interface{}) {
 	err := json.Unmarshal(bytes, target)
+	log.Println(string(bytes))
 	if err != nil {
 		s.testing.Error(err)
 	}

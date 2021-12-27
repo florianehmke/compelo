@@ -66,7 +66,7 @@ func (h *Handler) GameCtx(next http.Handler) http.Handler {
 			json.WriteErrorResponse(w, http.StatusNotFound, fmt.Errorf("%s: %v", msg, err))
 			return
 		}
-		ctx := context.WithValue(r.Context(), GameKey, game)
+		ctx := context.WithValue(r.Context(), GameKey, *game)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

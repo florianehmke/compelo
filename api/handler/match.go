@@ -1,52 +1,58 @@
 package handler
 
-// type CreateMatchRequest struct {
-// 	Teams []CreateMatchRequestTeam `json:"teams"`
-// }
+import (
+	"compelo/api/json"
+	"compelo/command"
+	"net/http"
+)
 
-// type CreateMatchRequestTeam struct {
-// 	PlayerIDs []int `json:"playerIds" `
-// 	Score     int   `json:"score"`
-// }
+type CreateMatchRequest struct {
+	Teams []CreateMatchRequestTeam `json:"teams"`
+}
 
-// func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
-// 	game := MustLoadGameFromContext(r)
+type CreateMatchRequestTeam struct {
+	PlayerGUIDs []string `json:"playerGuids" `
+	Score       int      `json:"score"`
+}
 
-// 	var body CreateMatchRequest
-// 	if err := json.Unmarshal(r.Body, &body); err != nil {
-// 		json.Error(w, http.StatusBadRequest, err)
-// 		return
-// 	}
+func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
+	game := MustLoadGameFromContext(r)
 
-// 	m, err := h.svc.CreateMatch(createMatchParameter(game, body))
-// 	if err == nil {
-// 		json.Write(w, http.StatusCreated, m)
-// 	} else {
-// 		json.Error(w, http.StatusBadRequest, err)
-// 	}
-// }
+	var request CreateMatchRequest
+	if err := json.Unmarshal(r.Body, &request); err != nil {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+		return
+	}
 
-// func (h *Handler) GetAllMatches(w http.ResponseWriter, r *http.Request) {
-// 	game := MustLoadGameFromContext(r)
+	c := command.CreateNewMatchCommand{
+		GameGUID:    game.GUID,
+		ProjectGUID: game.ProjectGUID,
+	}
+	for _, t := range request.Teams {
+		c.Teams = append(c.Teams, struct {
+			PlayerGUIDs []string
+			Score       int
+		}{
+			PlayerGUIDs: t.PlayerGUIDs,
+			Score:       t.Score,
+		})
+	}
 
-// 	matches, err := h.svc.LoadMatchesByGameID(game.ID)
-// 	if err == nil {
-// 		json.Write(w, http.StatusOK, matches)
-// 	} else {
-// 		json.Error(w, http.StatusBadRequest, err)
-// 	}
-// }
+	m, err := h.c.CreateNewMatch(c)
+	if err == nil {
+		json.WriteResponse(w, http.StatusCreated, m)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}
 
-// func createMatchParameter(game db.Game, body CreateMatchRequest) compelo.Match {
-// 	param := compelo.Match{
-// 		GameID: game.ID,
-// 		Date:   time.Now(),
-// 	}
-// 	for _, t := range body.Teams {
-// 		param.Teams = append(param.Teams, compelo.Team{
-// 			PlayerIDs: t.PlayerIDs,
-// 			Score:     t.Score,
-// 		})
-// 	}
-// 	return param
-// }
+func (h *Handler) GetAllMatches(w http.ResponseWriter, r *http.Request) {
+	game := MustLoadGameFromContext(r)
+
+	matches, err := h.q.GetMatchesBy(game.ProjectGUID, game.GUID)
+	if err == nil {
+		json.WriteResponse(w, http.StatusOK, matches)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}
