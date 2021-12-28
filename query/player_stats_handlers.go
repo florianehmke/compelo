@@ -10,13 +10,6 @@ type playerStatsHandler struct {
 	c *Compelo
 }
 
-func (h *playerStatsHandler) on(e event.Event) {
-	switch e := e.(type) {
-	case *event.MatchCreated:
-		h.handleMatchCreated(e)
-	}
-}
-
 func (h *playerStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	log.Println("[query:player-stats] handling event", e.GetID(), e.EventType())
 

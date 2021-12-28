@@ -4,6 +4,8 @@ import (
 	"compelo/api/json"
 	"compelo/command"
 	"net/http"
+
+	"github.com/go-chi/chi"
 )
 
 type CreateMatchRequest struct {
@@ -16,8 +18,6 @@ type CreateMatchRequestTeam struct {
 }
 
 func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
-	game := MustLoadGameFromContext(r)
-
 	var request CreateMatchRequest
 	if err := json.Unmarshal(r.Body, &request); err != nil {
 		json.WriteErrorResponse(w, http.StatusBadRequest, err)
@@ -25,8 +25,8 @@ func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c := command.CreateNewMatchCommand{
-		GameGUID:    game.GUID,
-		ProjectGUID: game.ProjectGUID,
+		GameGUID:    chi.URLParam(r, GameGUID),
+		ProjectGUID: chi.URLParam(r, ProjectGUID),
 	}
 	for _, t := range request.Teams {
 		c.Teams = append(c.Teams, struct {
@@ -47,9 +47,7 @@ func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetAllMatches(w http.ResponseWriter, r *http.Request) {
-	game := MustLoadGameFromContext(r)
-
-	matches, err := h.q.GetMatchesBy(game.ProjectGUID, game.GUID)
+	matches, err := h.q.GetMatchesBy(chi.URLParam(r, ProjectGUID), chi.URLParam(r, GameGUID))
 	if err == nil {
 		json.WriteResponse(w, http.StatusOK, matches)
 	} else {

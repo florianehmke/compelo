@@ -3,12 +3,12 @@ package handler
 import (
 	"compelo/api/json"
 	"net/http"
+
+	"github.com/go-chi/chi"
 )
 
 func (h *Handler) GetPlayerStats(w http.ResponseWriter, r *http.Request) {
-	game := MustLoadGameFromContext(r)
-
-	players, err := h.q.GetPlayerStatsBy(game.ProjectGUID, game.GUID)
+	players, err := h.q.GetPlayerStatsBy(chi.URLParam(r, ProjectGUID), chi.URLParam(r, GameGUID))
 	if err == nil {
 		json.WriteResponse(w, http.StatusOK, players)
 	} else {
@@ -17,9 +17,7 @@ func (h *Handler) GetPlayerStats(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetGameStats(w http.ResponseWriter, r *http.Request) {
-	game := MustLoadGameFromContext(r)
-
-	players, err := h.q.GetGameStatsBy(game.ProjectGUID, game.GUID)
+	players, err := h.q.GetGameStatsBy(chi.URLParam(r, ProjectGUID), chi.URLParam(r, GameGUID))
 	if err == nil {
 		json.WriteResponse(w, http.StatusOK, players)
 	} else {

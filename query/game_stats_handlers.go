@@ -10,12 +10,7 @@ type gameStatsHandler struct {
 	c *Compelo
 }
 
-func (h *gameStatsHandler) on(e event.Event) {
-	switch e := e.(type) {
-	case *event.MatchCreated:
-		h.handleMatchCreated(e)
-	}
-}
+const matchesPerStats = 5
 
 func (h *gameStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	log.Println("[query:game-stats] handling event", e.GetID(), e.EventType())
@@ -23,20 +18,30 @@ func (h *gameStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	game := h.c.projects[e.ProjectGUID].games[e.GameGUID]
 	match := game.matches[e.GUID]
 
-	game.gameStats.MaxScoreDiff = append(game.gameStats.MaxScoreDiff, match)
-	sort.Slice(game.gameStats.MaxScoreDiff, func(i, j int) bool {
-		return game.gameStats.MaxScoreDiff[i].scoreDifference() > (game.gameStats.MaxScoreDiff[j].scoreDifference())
+	updateMaxScoreSumStats(game.gameStats, match)
+	updateMaxScoreDiffStats(game.gameStats, match)
+}
+
+func updateMaxScoreSumStats(stats *GameStats, match *Match) {
+	stats.MaxScoreSum = append(stats.MaxScoreSum, match)
+
+	sort.Slice(stats.MaxScoreSum, func(i, j int) bool {
+		return stats.MaxScoreSum[i].scoreSum() > (stats.MaxScoreSum[j].scoreSum())
 	})
-	if len(game.gameStats.MaxScoreDiff) > 3 {
-		game.gameStats.MaxScoreDiff = game.gameStats.MaxScoreDiff[:len(game.gameStats.MaxScoreDiff)-1]
+
+	if len(stats.MaxScoreSum) > matchesPerStats {
+		stats.MaxScoreSum = stats.MaxScoreSum[:len(stats.MaxScoreSum)-1]
 	}
+}
 
-	game.gameStats.MaxScoreSum = append(game.gameStats.MaxScoreSum, match)
-	sort.Slice(game.gameStats.MaxScoreSum, func(i, j int) bool {
-		return game.gameStats.MaxScoreSum[i].scoreSum() > (game.gameStats.MaxScoreSum[j].scoreSum())
+func updateMaxScoreDiffStats(stats *GameStats, match *Match) {
+	stats.MaxScoreDiff = append(stats.MaxScoreDiff, match)
+
+	sort.Slice(stats.MaxScoreDiff, func(i, j int) bool {
+		return stats.MaxScoreDiff[i].scoreDifference() > (stats.MaxScoreDiff[j].scoreDifference())
 	})
 
-	if len(game.gameStats.MaxScoreSum) > 3 {
-		game.gameStats.MaxScoreSum = game.gameStats.MaxScoreSum[:len(game.gameStats.MaxScoreSum)-1]
+	if len(stats.MaxScoreDiff) > matchesPerStats {
+		stats.MaxScoreDiff = stats.MaxScoreDiff[:len(stats.MaxScoreDiff)-1]
 	}
 }

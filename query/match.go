@@ -2,6 +2,7 @@ package query
 
 import (
 	"compelo/rating"
+	"sort"
 	"time"
 )
 
@@ -105,4 +106,10 @@ func (m *Match) scoreSum() int {
 		sum += t.Score
 	}
 	return sum
+}
+
+func sortMatchesByCreatedDate(values []*Match) {
+	sort.Slice(values, func(i, j int) bool {
+		return values[i].getCreatedDate().After(values[j].getCreatedDate())
+	})
 }

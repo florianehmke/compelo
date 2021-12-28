@@ -1,5 +1,7 @@
 package query
 
+import "sort"
+
 type Project struct {
 	MetaData
 	GUID string `json:"guid"`
@@ -9,4 +11,10 @@ type Project struct {
 
 	players map[string]*Player
 	games   map[string]*Game
+}
+
+func sortProjectsByCreatedDate(values []*Project) {
+	sort.Slice(values, func(i, j int) bool {
+		return values[i].getCreatedDate().Before(values[j].getCreatedDate())
+	})
 }

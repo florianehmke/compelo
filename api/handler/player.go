@@ -5,6 +5,8 @@ import (
 
 	"compelo/api/json"
 	"compelo/command"
+
+	"github.com/go-chi/chi"
 )
 
 type CreatePlayerRequest struct {
@@ -12,8 +14,6 @@ type CreatePlayerRequest struct {
 }
 
 func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
-	project := MustLoadProjectFromContext(r)
-
 	var request CreatePlayerRequest
 	if err := json.Unmarshal(r.Body, &request); err != nil {
 		json.WriteErrorResponse(w, http.StatusBadRequest, err)
@@ -21,7 +21,7 @@ func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p, err := h.c.CreateNewPlayer(command.CreateNewPlayerCommand{
-		ProjectGUID: project.GUID,
+		ProjectGUID: chi.URLParam(r, ProjectGUID),
 		Name:        request.Name,
 	})
 	if err == nil {
@@ -32,8 +32,7 @@ func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetAllPlayers(w http.ResponseWriter, r *http.Request) {
-	project := MustLoadProjectFromContext(r)
-	players, err := h.q.GetPlayersBy(project.GUID)
+	players, err := h.q.GetPlayersBy(chi.URLParam(r, ProjectGUID))
 
 	if err == nil {
 		json.WriteResponse(w, http.StatusOK, players)

@@ -3,7 +3,6 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -428,7 +427,6 @@ func (s *testSuite) request(method, path string) *httptest.ResponseRecorder {
 
 func (s *testSuite) mustUnmarshal(bytes []byte, target interface{}) {
 	err := json.Unmarshal(bytes, target)
-	log.Println(string(bytes))
 	if err != nil {
 		s.testing.Error(err)
 	}

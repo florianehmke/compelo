@@ -7,10 +7,25 @@ import (
 	"time"
 )
 
+type Service struct {
+	sync.RWMutex
+	bus *event.Bus
+
+	compelo *Compelo
+
+	defaultHandler     *defaultHandler
+	gameStatsHandler   *gameStatsHandler
+	playerStatsHandler *playerStatsHandler
+}
+
+type defaultHandler struct {
+}
+
 type Compelo struct {
 	projects map[string]*Project
 
-	handlers []handler
+	gameStatsHandler   *gameStatsHandler
+	playerStatsHandler *playerStatsHandler
 
 	sync.RWMutex
 	bus *event.Bus
@@ -23,19 +38,13 @@ func New(bus *event.Bus) *Compelo {
 	}
 
 	// attach secondary handlers
-	c.handlers = []handler{
-		&playerStatsHandler{&c},
-		&gameStatsHandler{&c},
-	}
+	c.gameStatsHandler = &gameStatsHandler{&c}
+	c.playerStatsHandler = &playerStatsHandler{&c}
 
 	channel := bus.Subscribe()
 	go func() {
 		for event := range channel {
 			c.on(event)
-
-			for _, h := range c.handlers {
-				h.on(event)
-			}
 		}
 	}()
 
@@ -59,11 +68,9 @@ func (c *Compelo) on(e event.Event) {
 		c.handlePlayerCreated(e)
 	case *event.MatchCreated:
 		c.handleMatchCreated(e)
+		c.gameStatsHandler.handleMatchCreated(e)
+		c.playerStatsHandler.handleMatchCreated(e)
 	}
-}
-
-type handler interface {
-	on(e event.Event)
 }
 
 // MetaData contains common meta data for query objects.
