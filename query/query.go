@@ -4,6 +4,7 @@ import (
 	"compelo/event"
 	"log"
 	"sync"
+	"time"
 )
 
 type Compelo struct {
@@ -47,4 +48,18 @@ func (c *Compelo) on(e event.Event) {
 	case *event.MatchCreated:
 		c.handleMatchCreated(e)
 	}
+}
+
+// MetaData contains common meta data for query objects.
+type MetaData struct {
+	CreatedDate time.Time `json:"createdDate"`
+	UpdatedDate time.Time `json:"updatedDate"`
+}
+
+func (md *MetaData) getCreatedDate() time.Time {
+	return md.CreatedDate
+}
+
+func (md *MetaData) getUpdatedDate() time.Time {
+	return md.getUpdatedDate()
 }

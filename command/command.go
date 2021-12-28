@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 )
 
 type Compelo struct {
@@ -51,6 +52,8 @@ func (c *Compelo) on(e event.Event) {
 }
 
 func (c *Compelo) raise(event event.Event) error {
+	event.SetDate(time.Now())
+
 	c.changes = append(c.changes, event)
 	c.on(event)
 

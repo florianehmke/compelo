@@ -21,6 +21,7 @@ func (c *Compelo) GetGamesBy(projectGUID string) ([]*Game, error) {
 		list = append(list, value)
 	}
 
+	sortGamesByCreatedDate(list)
 	return list, nil
 }
 

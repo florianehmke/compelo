@@ -21,6 +21,7 @@ func (c *Compelo) GetMatchesBy(projectGUID string, gameGUID string) ([]*Match, e
 		list = append(list, value)
 	}
 
+	sortMatchesByCreatedDate(list)
 	return list, nil
 }
 

@@ -14,6 +14,7 @@ const (
 )
 
 type Match struct {
+	MetaData
 	GUID        string `json:"guid"`
 	GameGUID    string `json:"gameGuid"`
 	ProjectGUID string `json:"projectGuid"`

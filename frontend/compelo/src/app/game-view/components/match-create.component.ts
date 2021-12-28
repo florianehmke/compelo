@@ -42,7 +42,6 @@ import { CreateMatchRequest, Player } from '@generated/api';
           </div>
         </div>
       </div>
-      {{ formGroup.value | json }}
       <div class="d-flex flex-row-reverse">
         <button type="submit" appPrimary [disabled]="!formGroup.valid">
           <app-button-label icon="plus"> Submit </app-button-label>

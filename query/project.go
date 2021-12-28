@@ -1,6 +1,7 @@
 package query
 
 type Project struct {
+	MetaData
 	GUID string `json:"guid"`
 
 	Name         string `json:"name"`

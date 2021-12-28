@@ -20,6 +20,7 @@ func (c *Compelo) handleMatchCreated(e *event.MatchCreated) {
 				log.Fatalf("unexpected error in handler: %s", err.Error())
 			}
 		}
+		sortPlayersByCreatedDate(players)
 
 		teams = append(teams, &Team{
 			Score:   t.Score,
@@ -28,6 +29,10 @@ func (c *Compelo) handleMatchCreated(e *event.MatchCreated) {
 	}
 
 	match := Match{
+		MetaData: MetaData{
+			CreatedDate: e.Date,
+			UpdatedDate: e.Date,
+		},
 		GUID:        e.GUID,
 		GameGUID:    e.GameGUID,
 		ProjectGUID: e.ProjectGUID,

@@ -16,6 +16,7 @@ func (c *Compelo) GetProjects() []*Project {
 		list = append(list, value)
 	}
 
+	sortProjectsByCreatedDate(list)
 	return list
 }
 

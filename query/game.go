@@ -1,6 +1,7 @@
 package query
 
 type Game struct {
+	MetaData
 	GUID        string `json:"guid"`
 	ProjectGUID string `json:"projectGuid"`
 

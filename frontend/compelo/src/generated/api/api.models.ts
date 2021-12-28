@@ -29,17 +29,26 @@ export interface CreateMatchRequest {
 export interface Response {
   guid: string;
 }
+export interface Time {
+
+}
 export interface Project {
+  createdDate: Time;
+  updatedDate: Time;
   guid: string;
   name: string;
   passwordHash: number[];
 }
 export interface Player {
+  createdDate: Time;
+  updatedDate: Time;
   guid: string;
   projectGuid: string;
   name: string;
 }
 export interface Game {
+  createdDate: Time;
+  updatedDate: Time;
   guid: string;
   projectGuid: string;
   name: string;
@@ -51,6 +60,8 @@ export interface Team {
   ratingDelta: number;
 }
 export interface Match {
+  createdDate: Time;
+  updatedDate: Time;
   guid: string;
   gameGuid: string;
   projectGuid: string;
@@ -67,6 +78,8 @@ export interface Stats {
   lossCount: number;
 }
 export interface PlayerStats {
+  createdDate: Time;
+  updatedDate: Time;
   guid: string;
   projectGuid: string;
   name: string;

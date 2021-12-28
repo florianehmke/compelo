@@ -3,6 +3,7 @@ package query
 import "compelo/rating"
 
 type Rating struct {
+	MetaData
 	PlayerGUID string `json:"playerGuid"`
 	GameGUID   string `json:"gameGuid"`
 
