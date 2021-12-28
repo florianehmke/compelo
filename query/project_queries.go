@@ -7,12 +7,12 @@ import (
 
 var ErrProjectNotFound = errors.New("project not found")
 
-func (c *Compelo) GetProjects() []*Project {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetProjects() []*Project {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	list := make([]*Project, 0, len(c.projects))
-	for _, value := range c.projects {
+	list := make([]*Project, 0, len(svc.data.projects))
+	for _, value := range svc.data.projects {
 		list = append(list, value)
 	}
 
@@ -20,15 +20,15 @@ func (c *Compelo) GetProjects() []*Project {
 	return list
 }
 
-func (c *Compelo) GetProjectBy(projectGUID string) (*Project, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetProjectBy(projectGUID string) (*Project, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	return c.getProjectBy(projectGUID)
+	return svc.getProjectBy(projectGUID)
 }
 
-func (c *Compelo) getProjectBy(projectGUID string) (*Project, error) {
-	if project, ok := c.projects[projectGUID]; ok {
+func (svc *Service) getProjectBy(projectGUID string) (*Project, error) {
+	if project, ok := svc.data.projects[projectGUID]; ok {
 		return project, nil
 	}
 	return nil, fmt.Errorf("get project by guid (%s) failed: %w", projectGUID, ErrProjectNotFound)

@@ -11,65 +11,53 @@ type Service struct {
 	sync.RWMutex
 	bus *event.Bus
 
-	compelo *Compelo
+	data *data
 
 	defaultHandler     *defaultHandler
 	gameStatsHandler   *gameStatsHandler
 	playerStatsHandler *playerStatsHandler
 }
 
-type defaultHandler struct {
-}
+func NewService(bus *event.Bus) *Service {
+	data := &data{projects: make(map[string]*Project)}
 
-type Compelo struct {
-	projects map[string]*Project
-
-	gameStatsHandler   *gameStatsHandler
-	playerStatsHandler *playerStatsHandler
-
-	sync.RWMutex
-	bus *event.Bus
-}
-
-func New(bus *event.Bus) *Compelo {
-	c := Compelo{
-		projects: make(map[string]*Project),
-		bus:      bus,
+	svc := Service{
+		bus:                bus,
+		data:               data,
+		defaultHandler:     &defaultHandler{data: data},
+		gameStatsHandler:   &gameStatsHandler{data: data},
+		playerStatsHandler: &playerStatsHandler{data: data},
 	}
-
-	// attach secondary handlers
-	c.gameStatsHandler = &gameStatsHandler{&c}
-	c.playerStatsHandler = &playerStatsHandler{&c}
 
 	channel := bus.Subscribe()
 	go func() {
 		for event := range channel {
-			c.on(event)
+			svc.on(event)
 		}
 	}()
 
-	return &c
+	return &svc
 }
 
-func (c *Compelo) on(e event.Event) {
-	defer c.bus.MessageProcessed()
+func (svc *Service) on(e event.Event) {
+	defer svc.bus.MessageProcessed()
 
-	c.Lock()
-	defer c.Unlock()
+	svc.Lock()
+	defer svc.Unlock()
 
 	log.Println("[query] handling event", e.GetID(), e.EventType())
 
 	switch e := e.(type) {
 	case *event.ProjectCreated:
-		c.handleProjectCreated(e)
+		svc.defaultHandler.handleProjectCreated(e)
 	case *event.GameCreated:
-		c.handleGameCreated(e)
+		svc.defaultHandler.handleGameCreated(e)
 	case *event.PlayerCreated:
-		c.handlePlayerCreated(e)
+		svc.defaultHandler.handlePlayerCreated(e)
 	case *event.MatchCreated:
-		c.handleMatchCreated(e)
-		c.gameStatsHandler.handleMatchCreated(e)
-		c.playerStatsHandler.handleMatchCreated(e)
+		svc.defaultHandler.handleMatchCreated(e)
+		svc.gameStatsHandler.handleMatchCreated(e)
+		svc.playerStatsHandler.handleMatchCreated(e)
 	}
 }
 
@@ -85,4 +73,12 @@ func (md *MetaData) getCreatedDate() time.Time {
 
 func (md *MetaData) getUpdatedDate() time.Time {
 	return md.getUpdatedDate()
+}
+
+type defaultHandler struct {
+	data *data
+}
+
+type data struct {
+	projects map[string]*Project
 }

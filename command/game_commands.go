@@ -12,16 +12,16 @@ type CreateNewGameCommand struct {
 	Name        string `json:"name"`
 }
 
-func (c *Compelo) CreateNewGame(cmd CreateNewGameCommand) (Response, error) {
-	c.Lock()
-	defer c.Unlock()
+func (svc *Service) CreateNewGame(cmd CreateNewGameCommand) (Response, error) {
+	svc.Lock()
+	defer svc.Unlock()
 
-	if err := c.checkUniqueConstraint(cmd.ProjectGUID + ":" + cmd.Name); err != nil {
+	if err := svc.checkUniqueConstraint(cmd.ProjectGUID + ":" + cmd.Name); err != nil {
 		return Response{}, fmt.Errorf("game name is taken: %w", err)
 	}
 
 	guid := uuid.New().String()
-	c.raise(&event.GameCreated{
+	svc.raise(&event.GameCreated{
 		GUID:        guid,
 		ProjectGUID: cmd.ProjectGUID,
 		Name:        cmd.Name,

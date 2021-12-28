@@ -2,7 +2,7 @@ package command
 
 import "compelo/event"
 
-func (c *Compelo) handleMatchCreated(e *event.MatchCreated) {
+func (svc *Service) handleMatchCreated(e *event.MatchCreated) {
 
 	// Map teams to interal type.
 	var teams []team
@@ -13,7 +13,7 @@ func (c *Compelo) handleMatchCreated(e *event.MatchCreated) {
 		})
 	}
 
-	c.projects[e.ProjectGUID].games[e.GameGUID].matches[e.GUID] = match{
+	svc.data.projects[e.ProjectGUID].games[e.GameGUID].matches[e.GUID] = match{
 		guid:        e.GUID,
 		gameGUID:    e.GameGUID,
 		projectGUID: e.ProjectGUID,

@@ -4,11 +4,11 @@ import (
 	"fmt"
 )
 
-func (c *Compelo) GetGameStatsBy(projectGUID string, gameGUID string) (*GameStats, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetGameStatsBy(projectGUID string, gameGUID string) (*GameStats, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	game, err := c.getGameBy(projectGUID, gameGUID)
+	game, err := svc.getGameBy(projectGUID, gameGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get matches failed: %w", err)
 	}

@@ -7,17 +7,17 @@ import (
 
 var ErrGameNotFound = errors.New("game not found")
 
-func (c *Compelo) GetGamesBy(projectGUID string) ([]*Game, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetGamesBy(projectGUID string) ([]*Game, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	project, err := c.getProjectBy(projectGUID)
+	project, err := svc.getProjectBy(projectGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get games failed: %w", err)
 	}
 
 	list := make([]*Game, 0, len(project.games))
-	for _, value := range c.projects[projectGUID].games {
+	for _, value := range svc.data.projects[projectGUID].games {
 		list = append(list, value)
 	}
 
@@ -25,15 +25,15 @@ func (c *Compelo) GetGamesBy(projectGUID string) ([]*Game, error) {
 	return list, nil
 }
 
-func (c *Compelo) GetGameBy(projectGUID string, gameGUID string) (*Game, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetGameBy(projectGUID string, gameGUID string) (*Game, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	return c.getGameBy(projectGUID, gameGUID)
+	return svc.getGameBy(projectGUID, gameGUID)
 }
 
-func (c *Compelo) getGameBy(projectGUID string, gameGUID string) (*Game, error) {
-	project, err := c.getProjectBy(projectGUID)
+func (svc *Service) getGameBy(projectGUID string, gameGUID string) (*Game, error) {
+	project, err := svc.getProjectBy(projectGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get game failed: %w", err)
 	}

@@ -7,11 +7,11 @@ import (
 
 var ErrPlayerNotFound = errors.New("player not found")
 
-func (c *Compelo) GetPlayersBy(projectGUID string) ([]*Player, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetPlayersBy(projectGUID string) ([]*Player, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	project, err := c.getProjectBy(projectGUID)
+	project, err := svc.getProjectBy(projectGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get players failed: %w", err)
 	}
@@ -25,15 +25,15 @@ func (c *Compelo) GetPlayersBy(projectGUID string) ([]*Player, error) {
 	return list, nil
 }
 
-func (c *Compelo) GetPlayerBy(projectGUID string, playerGUID string) (*Player, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetPlayerBy(projectGUID string, playerGUID string) (*Player, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	return c.getPlayerBy(projectGUID, playerGUID)
+	return svc.getPlayerBy(projectGUID, playerGUID)
 }
 
-func (c *Compelo) getPlayerBy(projectGUID string, playerGUID string) (*Player, error) {
-	project, err := c.getProjectBy(projectGUID)
+func (svc *Service) getPlayerBy(projectGUID string, playerGUID string) (*Player, error) {
+	project, err := svc.getProjectBy(projectGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get player failed: %w", err)
 	}

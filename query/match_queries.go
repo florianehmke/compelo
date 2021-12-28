@@ -7,11 +7,11 @@ import (
 
 var ErrMatchNotFound = errors.New("match not found")
 
-func (c *Compelo) GetMatchesBy(projectGUID string, gameGUID string) ([]*Match, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetMatchesBy(projectGUID string, gameGUID string) ([]*Match, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	game, err := c.getGameBy(projectGUID, gameGUID)
+	game, err := svc.getGameBy(projectGUID, gameGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get matches failed: %w", err)
 	}
@@ -25,11 +25,11 @@ func (c *Compelo) GetMatchesBy(projectGUID string, gameGUID string) ([]*Match, e
 	return list, nil
 }
 
-func (c *Compelo) GetMatchBy(projectGUID string, gameGUID string, matchGUID string) (*Match, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetMatchBy(projectGUID string, gameGUID string, matchGUID string) (*Match, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	game, err := c.getGameBy(projectGUID, gameGUID)
+	game, err := svc.getGameBy(projectGUID, gameGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get matches failed: %w", err)
 	}

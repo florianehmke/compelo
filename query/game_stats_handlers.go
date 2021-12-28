@@ -7,7 +7,7 @@ import (
 )
 
 type gameStatsHandler struct {
-	c *Compelo
+	data *data
 }
 
 const matchesPerStats = 5
@@ -15,7 +15,7 @@ const matchesPerStats = 5
 func (h *gameStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	log.Println("[query:game-stats] handling event", e.GetID(), e.EventType())
 
-	game := h.c.projects[e.ProjectGUID].games[e.GameGUID]
+	game := h.data.projects[e.ProjectGUID].games[e.GameGUID]
 	match := game.matches[e.GUID]
 
 	updateMaxScoreSumStats(game.gameStats, match)

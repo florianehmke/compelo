@@ -2,22 +2,25 @@ package query
 
 import (
 	"compelo/event"
-	"log"
 )
 
-func (c *Compelo) handleMatchCreated(e *event.MatchCreated) {
+func (h *defaultHandler) handleMatchCreated(e *event.MatchCreated) {
+	project := h.data.projects[e.ProjectGUID]
 	ratings := make(map[string]*Rating)
 	teams := []*Team{}
 
 	for _, t := range e.Teams {
 		var players []*Player
 		for _, guid := range t.PlayerGUIDs {
-			players = append(players, c.projects[e.ProjectGUID].players[guid])
+			players = append(players, project.players[guid])
 
-			if rating, err := c.getRatingBy(e.ProjectGUID, guid, e.GameGUID); err == nil {
+			if rating, ok := project.players[guid].ratings[e.GameGUID]; ok {
 				ratings[guid] = rating
 			} else {
-				log.Fatalf("unexpected error in handler: %s", err.Error())
+				rating := initialRatingFor(guid, e.GameGUID)
+				ratings[guid] = rating
+				project.players[guid].ratings = make(map[string]*Rating)
+				project.players[guid].ratings[e.GameGUID] = rating
 			}
 		}
 		sortPlayersByCreatedDate(players)
@@ -44,5 +47,5 @@ func (c *Compelo) handleMatchCreated(e *event.MatchCreated) {
 	match.calculateTeamElo(ratings)
 	match.updatePlayerRatings(ratings)
 
-	c.projects[e.ProjectGUID].games[e.GameGUID].matches[e.GUID] = &match
+	h.data.projects[e.ProjectGUID].games[e.GameGUID].matches[e.GUID] = &match
 }

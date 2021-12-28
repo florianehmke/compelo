@@ -8,9 +8,9 @@ import (
 	"time"
 )
 
-type Compelo struct {
-	projects map[string]project
+type Service struct {
 	uniqueConstraints
+	data *data
 
 	sync.RWMutex
 	changes []event.Event
@@ -22,10 +22,12 @@ type Response struct {
 	GUID string `json:"guid"`
 }
 
-func New(store *event.Store, events []event.Event) *Compelo {
-	p := &Compelo{
-		projects: make(map[string]project),
-		store:    store,
+func NewService(store *event.Store, events []event.Event) *Service {
+	p := &Service{
+		data: &data{
+			projects: make(map[string]project),
+		},
+		store: store,
 	}
 
 	for _, event := range events {
@@ -35,31 +37,35 @@ func New(store *event.Store, events []event.Event) *Compelo {
 	return p
 }
 
-func (c *Compelo) on(e event.Event) {
+func (svc *Service) on(e event.Event) {
 	log.Println("[command] handling event", e.GetID(), e.EventType())
 
 	switch e := e.(type) {
 	case *event.ProjectCreated:
-		c.handleProjectCreated(e)
+		svc.handleProjectCreated(e)
 	case *event.GameCreated:
-		c.handleGameCreated(e)
+		svc.handleGameCreated(e)
 	case *event.PlayerCreated:
-		c.handlePlayerCreated(e)
+		svc.handlePlayerCreated(e)
 	case *event.MatchCreated:
-		c.handleMatchCreated(e)
+		svc.handleMatchCreated(e)
 	}
-	c.version++
+	svc.version++
 }
 
-func (c *Compelo) raise(event event.Event) error {
+func (svc *Service) raise(event event.Event) error {
 	event.SetDate(time.Now())
 
-	c.changes = append(c.changes, event)
-	c.on(event)
+	svc.changes = append(svc.changes, event)
+	svc.on(event)
 
-	if err := c.store.StoreEvent(event); err != nil {
+	if err := svc.store.StoreEvent(event); err != nil {
 		return fmt.Errorf("storing event failed: %w", err)
 	}
 
 	return nil
+}
+
+type data struct {
+	projects map[string]project
 }

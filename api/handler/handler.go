@@ -6,10 +6,10 @@ import (
 )
 
 type Handler struct {
-	q *query.Compelo
-	c *command.Compelo
+	q *query.Service
+	c *command.Service
 }
 
-func New(q *query.Compelo, c *command.Compelo) *Handler {
+func New(q *query.Service, c *command.Service) *Handler {
 	return &Handler{q: q, c: c}
 }

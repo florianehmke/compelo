@@ -35,7 +35,7 @@ func main() {
 
 	bus := event.NewBus()
 	store := event.NewStore(bus, dbPath)
-	query := query.New(bus)
+	query := query.NewService(bus)
 
 	// Load events, panic if that does not work.
 	events, err := store.LoadEvents()
@@ -43,7 +43,7 @@ func main() {
 		log.Panicln(err)
 	}
 
-	command := command.New(store, events)
+	command := command.NewService(store, events)
 	handler := handler.New(query, command)
 	security := security.New(query, 60*120, secret)
 

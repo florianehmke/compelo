@@ -17,14 +17,14 @@ import (
 const ClaimsKey = "claims"
 
 type Security struct {
-	q *query.Compelo
+	q *query.Service
 
 	timeout    time.Duration
 	maxRefresh int64
 	secretKey  []byte
 }
 
-func New(q *query.Compelo, timeoutSec int, secretKey string) *Security {
+func New(q *query.Service, timeoutSec int, secretKey string) *Security {
 	return &Security{
 		q:          q,
 		timeout:    time.Second * time.Duration(timeoutSec),

@@ -13,7 +13,7 @@ type CreateNewProjectCommand struct {
 	Password string `json:"password"`
 }
 
-func (c *Compelo) CreateNewProject(cmd CreateNewProjectCommand) (Response, error) {
+func (c *Service) CreateNewProject(cmd CreateNewProjectCommand) (Response, error) {
 	c.Lock()
 	defer c.Unlock()
 

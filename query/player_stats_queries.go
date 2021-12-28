@@ -5,11 +5,11 @@ import (
 	"sort"
 )
 
-func (c *Compelo) GetPlayerStatsBy(projectGUID string, gameGUID string) ([]*PlayerStats, error) {
-	c.RLock()
-	defer c.RUnlock()
+func (svc *Service) GetPlayerStatsBy(projectGUID string, gameGUID string) ([]*PlayerStats, error) {
+	svc.RLock()
+	defer svc.RUnlock()
 
-	game, err := c.getGameBy(projectGUID, gameGUID)
+	game, err := svc.getGameBy(projectGUID, gameGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get matches failed: %w", err)
 	}

@@ -12,7 +12,7 @@ type CreateNewPlayerCommand struct {
 	Name        string `json:"name"`
 }
 
-func (c *Compelo) CreateNewPlayer(cmd CreateNewPlayerCommand) (Response, error) {
+func (c *Service) CreateNewPlayer(cmd CreateNewPlayerCommand) (Response, error) {
 	c.Lock()
 	defer c.Unlock()
 

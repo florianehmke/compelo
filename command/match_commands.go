@@ -16,14 +16,14 @@ type CreateNewMatchCommand struct {
 	} `json:"teams"`
 }
 
-func (c *Compelo) CreateNewMatch(cmd CreateNewMatchCommand) (Response, error) {
-	c.Lock()
-	defer c.Unlock()
+func (svc *Service) CreateNewMatch(cmd CreateNewMatchCommand) (Response, error) {
+	svc.Lock()
+	defer svc.Unlock()
 
 	// TODO: validate event
 
 	guid := uuid.New().String()
-	c.raise(&event.MatchCreated{
+	svc.raise(&event.MatchCreated{
 		GUID:        guid,
 		GameGUID:    cmd.GameGUID,
 		ProjectGUID: cmd.ProjectGUID,

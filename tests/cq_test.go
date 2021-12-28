@@ -39,20 +39,20 @@ func Test(t *testing.T) {
 	store.StoreEvent(&event.ProjectCreated{GUID: "guid", Name: "First Project"})
 
 	// Setup query.
-	query := query.New(bus)
+	query := query.NewService(bus)
 
 	// Load all events from db (rehydrates queries).
 	events, err := store.LoadEvents()
 	assert.Nil(t, err)
 
 	// Setup command (from existing events).
-	command := command.New(store, events)
+	command := command.NewService(store, events)
 
 	// Simulate interaction with command.
 	testBasicWorkflow(t, command, query)
 }
 
-func testBasicWorkflow(t *testing.T, c *command.Compelo, q *query.Compelo) {
+func testBasicWorkflow(t *testing.T, c *command.Service, q *query.Service) {
 	var testProject = basicProject{
 		projectName: "Project 1",
 		gameName:    "Game 1",
@@ -115,7 +115,7 @@ func checkCommandResults(t *testing.T, testProject basicProject) {
 	assert.NotEmpty(t, testProject.matchGuid)
 }
 
-func checkQuery(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQuery(t *testing.T, q *query.Service, testProject basicProject) {
 	checkQueryGetProjects(t, q, testProject)
 	checkQueryGetPlayersBy(t, q, testProject)
 	checkQueryGetGamesBy(t, q, testProject)
@@ -128,11 +128,11 @@ func checkQuery(t *testing.T, q *query.Compelo, testProject basicProject) {
 	checkQueryGetRatingBy(t, q, testProject)
 }
 
-func checkQueryGetProjects(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetProjects(t *testing.T, q *query.Service, testProject basicProject) {
 	assert.Len(t, q.GetProjects(), 2)
 }
 
-func checkQueryGetPlayersBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetPlayersBy(t *testing.T, q *query.Service, testProject basicProject) {
 	players, err := q.GetPlayersBy(testProject.projectGuid)
 	assert.Len(t, players, 2)
 	assert.Nil(t, err)
@@ -142,7 +142,7 @@ func checkQueryGetPlayersBy(t *testing.T, q *query.Compelo, testProject basicPro
 	assert.True(t, errors.Is(err, query.ErrProjectNotFound))
 }
 
-func checkQueryGetGamesBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetGamesBy(t *testing.T, q *query.Service, testProject basicProject) {
 	games, err := q.GetGamesBy(testProject.projectGuid)
 	assert.Len(t, games, 1)
 	assert.Nil(t, err)
@@ -152,7 +152,7 @@ func checkQueryGetGamesBy(t *testing.T, q *query.Compelo, testProject basicProje
 	assert.True(t, errors.Is(err, query.ErrProjectNotFound))
 }
 
-func checkQueryGetMatchesBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetMatchesBy(t *testing.T, q *query.Service, testProject basicProject) {
 	matches, err := q.GetMatchesBy(testProject.projectGuid, testProject.gameGuid)
 	assert.Len(t, matches, 1)
 	assert.Nil(t, err)
@@ -166,7 +166,7 @@ func checkQueryGetMatchesBy(t *testing.T, q *query.Compelo, testProject basicPro
 	assert.True(t, errors.Is(err, query.ErrGameNotFound))
 }
 
-func checkQueryGetProjectBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetProjectBy(t *testing.T, q *query.Service, testProject basicProject) {
 	project, err := q.GetProjectBy(testProject.projectGuid)
 	assert.NotNil(t, project)
 	assert.Nil(t, err)
@@ -177,7 +177,7 @@ func checkQueryGetProjectBy(t *testing.T, q *query.Compelo, testProject basicPro
 	assert.True(t, errors.Is(err, query.ErrProjectNotFound))
 }
 
-func checkQueryGetGameBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetGameBy(t *testing.T, q *query.Service, testProject basicProject) {
 	game, err := q.GetGameBy(testProject.projectGuid, testProject.gameGuid)
 	assert.NotNil(t, game)
 	assert.Nil(t, err)
@@ -193,7 +193,7 @@ func checkQueryGetGameBy(t *testing.T, q *query.Compelo, testProject basicProjec
 	assert.True(t, errors.Is(err, query.ErrGameNotFound))
 }
 
-func checkQueryGetPlayerBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetPlayerBy(t *testing.T, q *query.Service, testProject basicProject) {
 	for _, p := range testProject.players {
 		player, err := q.GetPlayerBy(testProject.projectGuid, p.guid)
 		assert.NotNil(t, player)
@@ -211,7 +211,7 @@ func checkQueryGetPlayerBy(t *testing.T, q *query.Compelo, testProject basicProj
 	}
 }
 
-func checkQueryGetMatchBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetMatchBy(t *testing.T, q *query.Service, testProject basicProject) {
 	match, err := q.GetMatchBy(testProject.projectGuid, testProject.gameGuid, testProject.matchGuid)
 	assert.NotNil(t, match)
 	assert.Nil(t, err)
@@ -242,7 +242,7 @@ func checkQueryGetMatchBy(t *testing.T, q *query.Compelo, testProject basicProje
 	assert.True(t, errors.Is(err, query.ErrMatchNotFound))
 }
 
-func checkQueryGetRatingBy(t *testing.T, q *query.Compelo, testProject basicProject) {
+func checkQueryGetRatingBy(t *testing.T, q *query.Service, testProject basicProject) {
 	for i, p := range testProject.players {
 		rating, err := q.GetRatingBy(testProject.projectGuid, p.guid, testProject.gameGuid)
 		assert.NotNil(t, rating)

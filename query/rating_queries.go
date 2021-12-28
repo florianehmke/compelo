@@ -1,18 +1,21 @@
 package query
 
 import (
+	"errors"
 	"fmt"
 )
 
-func (c *Compelo) GetRatingBy(projectGUID string, playerGUID string, gameGUID string) (*Rating, error) {
-	c.RLock()
-	defer c.RUnlock()
+var ErrRatingNotFound = errors.New("rating not found")
 
-	return c.getRatingBy(projectGUID, playerGUID, gameGUID)
+func (svc *Service) GetRatingBy(projectGUID string, playerGUID string, gameGUID string) (*Rating, error) {
+	svc.RLock()
+	defer svc.RUnlock()
+
+	return svc.getRatingBy(projectGUID, playerGUID, gameGUID)
 }
 
-func (c *Compelo) getRatingBy(projectGUID string, playerGUID string, gameGUID string) (*Rating, error) {
-	player, err := c.getPlayerBy(projectGUID, playerGUID)
+func (svc *Service) getRatingBy(projectGUID string, playerGUID string, gameGUID string) (*Rating, error) {
+	player, err := svc.getPlayerBy(projectGUID, playerGUID)
 	if err != nil {
 		return nil, fmt.Errorf("get rating failed: %w", err)
 	}
@@ -20,7 +23,6 @@ func (c *Compelo) getRatingBy(projectGUID string, playerGUID string, gameGUID st
 	if r, ok := player.ratings[gameGUID]; ok {
 		return r, nil
 	} else {
-		player.ratings[gameGUID] = initialRatingFor(playerGUID, gameGUID)
-		return player.ratings[gameGUID], nil
+		return nil, fmt.Errorf("get rating by player guid (%s) failed: %w", playerGUID, ErrRatingNotFound)
 	}
 }

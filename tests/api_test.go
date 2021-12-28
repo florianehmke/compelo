@@ -182,14 +182,14 @@ func TestAPI(t *testing.T) {
 	store := event.NewStore(bus, "api_test.db")
 
 	// Setup query.
-	query := query.New(bus)
+	query := query.NewService(bus)
 
 	// Load all events from db (rehydrates queries).
 	events, err := store.LoadEvents()
 	assert.Nil(t, err)
 
 	// Setup command (from existing events).
-	command := command.New(store, events)
+	command := command.NewService(store, events)
 
 	hdl := handler.New(query, command)
 	sec := security.New(query, 60, "test")

@@ -7,13 +7,13 @@ import (
 )
 
 type playerStatsHandler struct {
-	c *Compelo
+	data *data
 }
 
 func (h *playerStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	log.Println("[query:player-stats] handling event", e.GetID(), e.EventType())
 
-	game := h.c.projects[e.ProjectGUID].games[e.GameGUID]
+	game := h.data.projects[e.ProjectGUID].games[e.GameGUID]
 	match := game.matches[e.GUID]
 	for _, t := range match.Teams {
 		for _, p := range t.Players {

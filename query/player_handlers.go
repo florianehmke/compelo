@@ -2,8 +2,8 @@ package query
 
 import "compelo/event"
 
-func (c *Compelo) handlePlayerCreated(e *event.PlayerCreated) {
-	c.projects[e.ProjectGUID].players[e.GUID] = &Player{
+func (h *defaultHandler) handlePlayerCreated(e *event.PlayerCreated) {
+	h.data.projects[e.ProjectGUID].players[e.GUID] = &Player{
 		MetaData: MetaData{
 			CreatedDate: e.Date,
 			UpdatedDate: e.Date,
