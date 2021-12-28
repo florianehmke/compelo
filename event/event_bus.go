@@ -27,7 +27,7 @@ func (bus *Bus) Publish(event Event) {
 	}
 
 	for _, ch := range bus.subs {
-		log.Println("Publishing", event.EventType())
+		log.Println("[event-bus] publishing", event.EventType())
 		bus.wg.Add(1)
 		ch <- event
 	}

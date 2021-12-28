@@ -10,6 +10,8 @@ import (
 type Compelo struct {
 	projects map[string]*Project
 
+	handlers []handler
+
 	sync.RWMutex
 	bus *event.Bus
 }
@@ -20,10 +22,20 @@ func New(bus *event.Bus) *Compelo {
 		bus:      bus,
 	}
 
+	// attach secondary handlers
+	c.handlers = []handler{
+		&playerStatsHandler{&c},
+		&gameStatsHandler{&c},
+	}
+
 	channel := bus.Subscribe()
 	go func() {
 		for event := range channel {
 			c.on(event)
+
+			for _, h := range c.handlers {
+				h.on(event)
+			}
 		}
 	}()
 
@@ -36,7 +48,7 @@ func (c *Compelo) on(e event.Event) {
 	c.Lock()
 	defer c.Unlock()
 
-	log.Println("Query handling event ", e.GetID(), e.EventType())
+	log.Println("[query] handling event", e.GetID(), e.EventType())
 
 	switch e := e.(type) {
 	case *event.ProjectCreated:
@@ -48,6 +60,10 @@ func (c *Compelo) on(e event.Event) {
 	case *event.MatchCreated:
 		c.handleMatchCreated(e)
 	}
+}
+
+type handler interface {
+	on(e event.Event)
 }
 
 // MetaData contains common meta data for query objects.

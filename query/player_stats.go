@@ -1,7 +1,5 @@
 package query
 
-// FIXME
-
 type PlayerStats struct {
 	Player                   // embedded player
 	Current Stats            `json:"current"`
@@ -16,9 +14,4 @@ type Stats struct {
 	WinCount     int `json:"winCount"`
 	DrawCount    int `json:"drawCount"`
 	LossCount    int `json:"lossCount"`
-}
-
-type GameStats struct {
-	MaxScoreSum  []Match `json:"maxScoreSum"`
-	MaxScoreDiff []Match `json:"maxScoreDiff"`
 }

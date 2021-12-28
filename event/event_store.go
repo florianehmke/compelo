@@ -59,7 +59,7 @@ func (s *Store) StoreEvent(event Event) error {
 		if err != nil {
 			return fmt.Errorf("marshal of raw event failed: %w", err)
 		}
-		log.Println("Saving Event: " + string(buf))
+		log.Println("[event-store] saving event: " + string(buf))
 
 		// Persist bytes to users bucket.
 		return b.Put(itob(id), buf)

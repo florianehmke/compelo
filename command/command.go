@@ -36,7 +36,7 @@ func New(store *event.Store, events []event.Event) *Compelo {
 }
 
 func (c *Compelo) on(e event.Event) {
-	log.Println("Command handling event ", e.GetID(), e.EventType())
+	log.Println("[command] handling event", e.GetID(), e.EventType())
 
 	switch e := e.(type) {
 	case *event.ProjectCreated:
