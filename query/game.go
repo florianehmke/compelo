@@ -9,4 +9,5 @@ type Game struct {
 
 	matches     map[string]*Match
 	playerStats map[string]*PlayerStats
+	gameStats   *GameStats
 }

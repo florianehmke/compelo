@@ -16,13 +16,13 @@ func (h *Handler) GetPlayerStats(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (h *Handler) GetGameStats(w http.ResponseWriter, r *http.Request) {
-// 	game := MustLoadGameFromContext(r)
+func (h *Handler) GetGameStats(w http.ResponseWriter, r *http.Request) {
+	game := MustLoadGameFromContext(r)
 
-// 	players, err := h.svc.LoadGameStats(game.ID)
-// 	if err == nil {
-// 		json.Write(w, http.StatusOK, players)
-// 	} else {
-// 		json.Error(w, http.StatusBadRequest, err)
-// 	}
-// }
+	players, err := h.q.GetGameStatsBy(game.ProjectGUID, game.GUID)
+	if err == nil {
+		json.WriteResponse(w, http.StatusOK, players)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}

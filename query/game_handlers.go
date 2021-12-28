@@ -13,5 +13,6 @@ func (c *Compelo) handleGameCreated(e *event.GameCreated) {
 		Name:        e.Name,
 		matches:     make(map[string]*Match),
 		playerStats: make(map[string]*PlayerStats),
+		gameStats:   &GameStats{},
 	}
 }

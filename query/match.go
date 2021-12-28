@@ -84,3 +84,25 @@ func (m *Match) updatePlayerRatings(ratings map[string]*Rating) {
 		}
 	}
 }
+
+func (m *Match) scoreDifference() int {
+	lowestScore := 0
+	highestScore := 0
+	for i, t := range m.Teams {
+		if t.Score < lowestScore || i == 0 {
+			lowestScore = t.Score
+		}
+		if t.Score > highestScore || i == 0 {
+			highestScore = t.Score
+		}
+	}
+	return highestScore - lowestScore
+}
+
+func (m *Match) scoreSum() int {
+	sum := 0
+	for _, t := range m.Teams {
+		sum += t.Score
+	}
+	return sum
+}

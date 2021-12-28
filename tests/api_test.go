@@ -211,8 +211,8 @@ func TestAPI(t *testing.T) {
 	ts.createMatches()
 	ts.listMatches()
 
-	// ts.loadPlayerStats()
-	// ts.loadGameStats()
+	ts.loadPlayerStats()
+	ts.loadGameStats()
 }
 
 func (s *testSuite) createProject() {
@@ -352,44 +352,45 @@ func (s *testSuite) listMatches() {
 	}
 }
 
-// func (s *testSuite) loadPlayerStats() {
-// 	gameID := strconv.Itoa(int(s.testData.gameID))
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/player-stats")
+func (s *testSuite) loadPlayerStats() {
+	gameGUID := s.testData.gameGUID
+	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameGUID+"/player-stats")
 
-// 	var response []compelo.PlayerStats
-// 	s.assertEqual(http.StatusOK, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), &response)
-// 	s.assertTrue(len(response) == len(s.testData.players))
+	var response []query.PlayerStats
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), &response)
+	s.assertTrue(len(response) == len(s.testData.players))
 
-// 	for _, v := range response {
-// 		s.assertEqual(s.testData.stats[v.Name].rating, v.Current.Rating)
-// 		s.assertEqual(s.testData.stats[v.Name].peakRating, v.Current.PeakRating)
-// 		s.assertEqual(s.testData.stats[v.Name].lowestRating, v.Current.LowestRating)
-// 		s.assertEqual(s.testData.stats[v.Name].gameCount, v.Current.GameCount)
-// 		s.assertEqual(s.testData.stats[v.Name].winCount, v.Current.WinCount)
-// 		s.assertEqual(s.testData.stats[v.Name].drawCount, v.Current.DrawCount)
-// 		s.assertEqual(s.testData.stats[v.Name].lossCount, v.Current.LossCount)
-// 	}
-// }
+	for _, v := range response {
+		s.assertEqual(s.testData.stats[v.Name].rating, v.Current.Rating)
+		s.assertEqual(s.testData.stats[v.Name].peakRating, v.Current.PeakRating)
+		s.assertEqual(s.testData.stats[v.Name].lowestRating, v.Current.LowestRating)
+		s.assertEqual(s.testData.stats[v.Name].gameCount, v.Current.GameCount)
+		s.assertEqual(s.testData.stats[v.Name].winCount, v.Current.WinCount)
+		s.assertEqual(s.testData.stats[v.Name].drawCount, v.Current.DrawCount)
+		s.assertEqual(s.testData.stats[v.Name].lossCount, v.Current.LossCount)
+	}
+}
 
-// func (s *testSuite) loadGameStats() {
-// 	gameID := strconv.Itoa(int(s.testData.gameID))
-// 	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameID+"/game-stats")
+func (s *testSuite) loadGameStats() {
+	gameGUID := s.testData.gameGUID
+	w := s.request("GET", "/api/projects/"+s.testData.projectGUID+"/games/"+gameGUID+"/game-stats")
 
-// 	var response compelo.GameStats
-// 	s.assertEqual(http.StatusOK, w.Code)
-// 	s.mustUnmarshal(w.Body.Bytes(), &response)
+	var response query.GameStats
+	s.assertEqual(http.StatusOK, w.Code)
+	s.mustUnmarshal(w.Body.Bytes(), &response)
 
-// 	// Only three test games so far, all should appear in stats.
-// 	s.assertTrue(len(response.MaxScoreDiff) == len(s.testData.matches))
-// 	s.assertTrue(len(response.MaxScoreSum) == len(s.testData.matches))
+	// Only three test games so far, all should appear in stats.
+	s.assertTrue(len(response.MaxScoreDiff) == len(s.testData.matches))
+	s.assertTrue(len(response.MaxScoreSum) == len(s.testData.matches))
 
-// 	// The third test-game, 1v1v1 (4:4:2)
-// 	s.assertTrue(response.MaxScoreSum[0].ID == 3)
+	// The third test-game, 1v1v1 (4:4:2)
+	s.assertTrue(len(response.MaxScoreSum[0].Teams) == 3)
 
-// 	// The second test-game, 1v1 (4:1)
-// 	s.assertTrue(response.MaxScoreDiff[0].ID == 2)
-// }
+	// The second test-game, 1v1 (4:1)
+	s.assertTrue(response.MaxScoreDiff[0].Teams[0].Score == 4)
+	s.assertTrue(response.MaxScoreDiff[0].Teams[1].Score == 1)
+}
 
 // ------ Helpers ------
 
