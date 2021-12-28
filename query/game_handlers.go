@@ -12,5 +12,6 @@ func (c *Compelo) handleGameCreated(e *event.GameCreated) {
 		ProjectGUID: e.ProjectGUID,
 		Name:        e.Name,
 		matches:     make(map[string]*Match),
+		playerStats: make(map[string]*PlayerStats),
 	}
 }

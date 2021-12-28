@@ -6,7 +6,7 @@ import (
 )
 
 type gameStatsHandler struct {
-	*Compelo // embedded root query handler
+	c *Compelo
 }
 
 func (h *gameStatsHandler) on(e event.Event) {

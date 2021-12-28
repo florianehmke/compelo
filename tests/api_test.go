@@ -338,8 +338,9 @@ func (s *testSuite) listMatches() {
 	s.mustUnmarshal(w.Body.Bytes(), &response)
 	s.assertTrue(len(response) == len(s.testData.matches))
 
+	matchCount := len(s.testData.matches)
 	for i, expectedMatch := range s.testData.matches {
-		actualMatch := response[i]
+		actualMatch := response[matchCount-i-1] // matches are sorted: newest first
 		s.assertEqual(len(expectedMatch.teams), len(actualMatch.Teams))
 
 		for j, expectedTeam := range expectedMatch.teams {

@@ -22,6 +22,6 @@ func sortPlayersByCreatedDate(values []*Player) {
 
 func sortMatchesByCreatedDate(values []*Match) {
 	sort.Slice(values, func(i, j int) bool {
-		return values[i].getCreatedDate().Before(values[j].getCreatedDate())
+		return values[i].getCreatedDate().After(values[j].getCreatedDate())
 	})
 }

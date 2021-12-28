@@ -1,15 +1,20 @@
 package handler
 
-// func (h *Handler) GetPlayerStats(w http.ResponseWriter, r *http.Request) {
-// 	game := MustLoadGameFromContext(r)
+import (
+	"compelo/api/json"
+	"net/http"
+)
 
-// 	players, err := h.svc.LoadPlayerStatsByGameID(game.ID)
-// 	if err == nil {
-// 		json.Write(w, http.StatusOK, players)
-// 	} else {
-// 		json.Error(w, http.StatusBadRequest, err)
-// 	}
-// }
+func (h *Handler) GetPlayerStats(w http.ResponseWriter, r *http.Request) {
+	game := MustLoadGameFromContext(r)
+
+	players, err := h.q.GetPlayerStatsBy(game.ProjectGUID, game.GUID)
+	if err == nil {
+		json.WriteResponse(w, http.StatusOK, players)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}
 
 // func (h *Handler) GetGameStats(w http.ResponseWriter, r *http.Request) {
 // 	game := MustLoadGameFromContext(r)
