@@ -14,7 +14,9 @@ import (
 	"compelo/query"
 )
 
-const ClaimsKey = "claims"
+type claims string
+
+const claimsKey claims = "claims"
 
 type Security struct {
 	q *query.Service
@@ -132,7 +134,7 @@ func (sec *Security) VerifyToken(next http.Handler) http.Handler {
 			json.WriteErrorResponse(w, http.StatusUnauthorized, err)
 			return
 		}
-		ctx := context.WithValue(r.Context(), ClaimsKey, claims)
+		ctx := context.WithValue(r.Context(), claimsKey, claims)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -146,7 +148,7 @@ func tokenFromHeader(r *http.Request) string {
 }
 
 func mustLoadClaimsFromContext(r *http.Request) Claims {
-	claims, ok := r.Context().Value(ClaimsKey).(Claims)
+	claims, ok := r.Context().Value(claimsKey).(Claims)
 	if !ok {
 		panic("claims must be set in context")
 	}

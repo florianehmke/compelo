@@ -13,10 +13,6 @@ RUN npm install -g @angular/cli
 RUN wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz \
     && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
 
-RUN cd /usr/local/bin \
-    && curl -L https://github.com/golang-migrate/migrate/releases/download/v$GO_MIGRATE_VERSION/migrate.linux-arm64.tar.gz | tar xvz \
-    && rm README.md
-
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 EXPOSE 4200

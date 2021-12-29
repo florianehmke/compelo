@@ -34,6 +34,7 @@
     "golang.Go"
   ],
   "remoteUser": "node",
+  "remoteEnv": { "PATH": "${containerEnv:PATH}:/home/node/go/bin" },
   "settings": {
     // SQL Tools
     "sqltools.useNodeRuntime": true,
@@ -52,7 +53,7 @@
       "autoAccept": true
     },
     // Eslint + Prettier
-    "eslint.workingDirectories": [ "./frontend/compelo" ],
+    "eslint.workingDirectories": ["./frontend/compelo"],
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true
     },
@@ -63,6 +64,8 @@
     "[javascript]": {
       "editor.formatOnSave": true,
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "go.lintTool": "revive",
+    "go.lintFlags": ["--config=${workspaceRoot}/revive.toml"]
   }
 }

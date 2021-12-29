@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// A Service provides access to commands and holds the write model.
 type Service struct {
 	uniqueConstraints
 	data *data
@@ -18,10 +19,13 @@ type Service struct {
 	store   *event.Store
 }
 
+// Response is returned by commands in case of success.
 type Response struct {
 	GUID string `json:"guid"`
 }
 
+// NewService constructs a new service and populates
+// the write model from the given events.
 func NewService(store *event.Store, events []event.Event) *Service {
 	p := &Service{
 		data: &data{
