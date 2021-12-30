@@ -1,15 +1,15 @@
 package tests
 
 import (
-	"compelo/command"
-	"compelo/event"
-	"compelo/query"
 	"errors"
-	"log"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"compelo/command"
+	"compelo/event"
+	"compelo/query"
 )
 
 type basicProject struct {
@@ -28,7 +28,6 @@ type basicPlayer struct {
 }
 
 func Test(t *testing.T) {
-	log.Println("Starting Test")
 	defer os.Remove("cq_test.db")
 
 	// Create event store.
