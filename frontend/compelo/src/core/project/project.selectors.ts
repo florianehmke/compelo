@@ -1,16 +1,16 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { getSelectedGameId } from '@core/router';
+import { getSelectedGameGuid } from '@core/router';
 
 import { FEATURE_KEY, State } from './project.reducer';
 
 export const getProjectState = createFeatureSelector<State>(FEATURE_KEY);
 
 export const getSelectedGame = createSelector(
-  getSelectedGameId,
+  getSelectedGameGuid,
   getProjectState,
-  (id, state) => {
-    return state.games.find((value) => value.id === parseInt(id, 10));
+  (guid, state) => {
+    return state.games.find((value) => value.guid === guid);
   }
 );
 

@@ -4,6 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+import { Project } from '@generated/api';
 import { storeToken } from '@shared/jwt';
 
 import { AuthService } from '../auth.service';
@@ -55,14 +56,17 @@ export class ProjectListEffects {
       ofType(createProject),
       switchMap((action) =>
         this.service.createProject(action.payload).pipe(
-          switchMap((createdProject) => [
-            createProjectSuccess({ payload: createdProject }),
+          switchMap((response) => [
+            createProjectSuccess({ payload: response }),
             selectProject({
               payload: {
-                project: createdProject,
+                project: {
+                  guid: response.guid,
+                  name: action.payload.name,
+                } as Project,
                 request: {
                   password: action.payload.password,
-                  projectId: createdProject.id,
+                  projectGuid: response.guid,
                 },
               },
             }),
@@ -78,7 +82,7 @@ export class ProjectListEffects {
       this.actions$.pipe(
         ofType(selectProjectSuccess),
         tap((action) =>
-          this.router.navigate(['project-view', action.payload.id])
+          this.router.navigate(['project-view', action.payload.guid])
         )
       ),
     { dispatch: false }

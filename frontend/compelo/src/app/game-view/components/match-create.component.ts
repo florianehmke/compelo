@@ -28,14 +28,14 @@ import { CreateMatchRequest, Player } from '@generated/api';
             class="form-control"
             formControlName="score"
           />
-          <div formArrayName="playerIds">
+          <div formArrayName="playerGuids">
             <select
               class="custom-select"
               [formControlName]="j.toString()"
-              [compareWith]="compareByID"
+              [compareWith]="compareByGuid"
               *ngFor="let player of getPlayers(team); let j = index"
             >
-              <option *ngFor="let p of players" [ngValue]="p?.id">
+              <option *ngFor="let p of players" [ngValue]="p?.guid">
                 {{ p?.name }}
               </option>
             </select>
@@ -84,11 +84,11 @@ export class MatchCreateComponent {
   }
 
   getPlayers(form) {
-    return form.controls.playerIds.controls;
+    return form.controls.playerGuids.controls;
   }
 
-  compareByID(p1, p2): boolean {
-    return p1 && p2 && p1.id === p2.id;
+  compareByGuid(p1, p2): boolean {
+    return p1 && p2 && p1.guid === p2.guid;
   }
 
   onSettingsClick() {

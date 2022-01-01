@@ -8,7 +8,7 @@ import { Game } from '@generated/api';
     <app-list-group *ngIf="isLoaded; else showLoading">
       <app-list-group-button
         *ngFor="let game of games"
-        [routerLink]="['game', game.id]"
+        [routerLink]="['game', game.guid]"
       >
         {{ game?.name }}
       </app-list-group-button>

@@ -1,13 +1,13 @@
 export interface LoadMatchesPayload {
-  gameId: number;
+  gameGuid: string;
 }
 
 export interface LoadPlayerStatsPayload {
-  gameId: number;
+  gameGuid: string;
 }
 
 export interface LoadGameStatsPayload {
-  gameId: number;
+  gameGuid: string;
 }
 
 export interface FilterMatchesPayload {

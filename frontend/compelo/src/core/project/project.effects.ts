@@ -75,7 +75,7 @@ export class ProjectEffects {
     this.actions$.pipe(
       ofType(loadGameStats),
       switchMap((action) =>
-        this.service.getGameStats(action.payload.gameId).pipe(
+        this.service.getGameStats(action.payload.gameGuid).pipe(
           map((gameStats) => loadGameStatsSuccess({ payload: gameStats })),
           catchError((err) => of(loadGameStatsError(err)))
         )
@@ -99,7 +99,7 @@ export class ProjectEffects {
     this.actions$.pipe(
       ofType(loadPlayerStats),
       switchMap((action) =>
-        this.service.getPlayerStats(action.payload.gameId).pipe(
+        this.service.getPlayerStats(action.payload.gameGuid).pipe(
           map((players) => loadPlayerStatsSuccess({ payload: players })),
           catchError((err) => of(loadPlayerStatsError(err)))
         )
@@ -127,12 +127,12 @@ export class ProjectEffects {
       ofType(createMatch),
       withLatestFrom(this.store.select(getSelectedGame)),
       switchMap(([action, game]) =>
-        this.service.createMatch(action.payload, game.id).pipe(
+        this.service.createMatch(action.payload, game.guid).pipe(
           switchMap((response) => [
             createMatchSuccess({ payload: response }),
-            loadMatches({ payload: { gameId: game.id } }),
-            loadPlayerStats({ payload: { gameId: game.id } }),
-            loadGameStats({ payload: { gameId: game.id } }),
+            loadMatches({ payload: { gameGuid: game.guid } }),
+            loadPlayerStats({ payload: { gameGuid: game.guid } }),
+            loadGameStats({ payload: { gameGuid: game.guid } }),
           ]),
           catchError((err) => of(createMatchError(err)))
         )
@@ -144,7 +144,7 @@ export class ProjectEffects {
     this.actions$.pipe(
       ofType(loadMatches),
       switchMap((action) =>
-        this.service.getMatches(action.payload.gameId).pipe(
+        this.service.getMatches(action.payload.gameGuid).pipe(
           map((matches) => loadMatchesSuccess({ payload: matches })),
           catchError((err) => of(loadMatchesError(err)))
         )

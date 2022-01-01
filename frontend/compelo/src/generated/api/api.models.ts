@@ -2,7 +2,7 @@
 
 
 export interface AuthRequest {
-  projectId: number;
+  projectGuid: string;
   password: string;
 }
 export interface AuthResponse {
@@ -19,9 +19,74 @@ export interface CreatePlayerRequest {
   name: string;
 }
 export interface CreateMatchRequestTeam {
-  playerIds: number[];
+  playerGuids: string[];
   score: number;
 }
 export interface CreateMatchRequest {
   teams: CreateMatchRequestTeam[];
+}
+
+export interface Response {
+  guid: string;
+}
+export interface Time {
+
+}
+export interface Project {
+  createdDate: Time;
+  updatedDate: Time;
+  guid: string;
+  name: string;
+  passwordHash: number[];
+}
+export interface Player {
+  createdDate: Time;
+  updatedDate: Time;
+  guid: string;
+  projectGuid: string;
+  name: string;
+}
+export interface Game {
+  createdDate: Time;
+  updatedDate: Time;
+  guid: string;
+  projectGuid: string;
+  name: string;
+}
+export interface Team {
+  players: Player[];
+  score: number;
+  result: string;
+  ratingDelta: number;
+}
+export interface Match {
+  createdDate: Time;
+  updatedDate: Time;
+  guid: string;
+  gameGuid: string;
+  projectGuid: string;
+  date: string;
+  teams: Team[];
+}
+export interface Stats {
+  rating: number;
+  peakRating: number;
+  lowestRating: number;
+  gameCount: number;
+  winCount: number;
+  drawCount: number;
+  lossCount: number;
+}
+export interface PlayerStats {
+  createdDate: Time;
+  updatedDate: Time;
+  guid: string;
+  projectGuid: string;
+  name: string;
+  current: Stats;
+  history: {[key: string]: Stats};
+}
+export interface GameStats {
+  maxScoreSum: Match[];
+  maxScoreDiff: Match[];
 }

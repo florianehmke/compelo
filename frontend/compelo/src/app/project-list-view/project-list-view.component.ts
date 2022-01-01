@@ -44,7 +44,7 @@ export class ProjectListViewComponent {
   ) {}
 
   onSelect(project: Project) {
-    if (tokenForProjectIdExists(project.id)) {
+    if (tokenForProjectIdExists(project.guid)) {
       this.store.dispatch(selectProjectSuccess({ payload: project }));
     } else {
       this.modalService
@@ -53,7 +53,7 @@ export class ProjectListViewComponent {
           const payload: Payload<SelectProjectPayload> = {
             payload: {
               request: {
-                projectId: project.id,
+                projectGuid: project.guid,
                 password: pw,
               },
               project,

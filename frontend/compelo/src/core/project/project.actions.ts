@@ -5,7 +5,7 @@ import {
   Game,
   GameStats,
   Match,
-  MatchData,
+  Response,
   Player,
   PlayerStats,
 } from '@generated/api';
@@ -34,7 +34,7 @@ export const createGame = createAction(
 );
 export const createGameSuccess = createAction(
   '[Games] Create Success',
-  props<Payload<Game>>()
+  props<Payload<Response>>()
 );
 export const createGameError = createAction(
   '[Games] Create Error',
@@ -70,7 +70,7 @@ export const createPlayer = createAction(
 );
 export const createPlayerSuccess = createAction(
   '[Players] Create Success',
-  props<Payload<Player>>()
+  props<Payload<Response>>()
 );
 export const createPlayerError = createAction(
   '[Players] Create Error',
@@ -83,7 +83,7 @@ export const createMatch = createAction(
 );
 export const createMatchSuccess = createAction(
   '[Matches] Create Match Success',
-  props<Payload<Match>>()
+  props<Payload<Response>>()
 );
 export const createMatchError = createAction(
   '[Matches] Create Match Error',
@@ -96,7 +96,7 @@ export const loadMatches = createAction(
 );
 export const loadMatchesSuccess = createAction(
   '[Matches] Load Success',
-  props<Payload<MatchData[]>>()
+  props<Payload<Match[]>>()
 );
 export const loadMatchesError = createAction(
   '[Matches] Load Error',

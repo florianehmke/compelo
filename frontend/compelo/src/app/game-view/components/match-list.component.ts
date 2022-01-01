@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { MatchData } from '@generated/api';
+import { Match } from '@generated/api';
 
 @Component({
   selector: 'app-match-list',
@@ -74,7 +74,7 @@ import { MatchData } from '@generated/api';
 })
 export class MatchListComponent {
   @Input()
-  matches: MatchData[];
+  matches: Match[];
 
   @Input()
   isLoaded: boolean;
