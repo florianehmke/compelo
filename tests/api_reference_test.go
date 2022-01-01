@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"compelo/api/handler"
+	"compelo/query"
 )
 
 func TestReferenceProject(t *testing.T) {
@@ -48,9 +49,31 @@ func TestReferenceProject(t *testing.T) {
 				},
 			},
 		},
+		1: {
+			Teams: []handler.CreateMatchRequestTeam{
+				{
+					PlayerGUIDs: []string{suite.playerGUIDs[0]},
+					Score:       0,
+				},
+				{
+					PlayerGUIDs: []string{suite.playerGUIDs[1]},
+					Score:       3,
+				},
+			},
+		},
 	}
 
 	suite.createMatches()
+
+	suite.expectedMatchResponses = map[int]query.Match{
+		0: {
+			GUID: suite.matchGUIDs[0],
+		},
+		1: {
+			GUID: suite.matchGUIDs[1],
+		},
+	}
+
 	suite.listMatches()
 	suite.loadGameStats()
 	suite.loadPlayerStats()

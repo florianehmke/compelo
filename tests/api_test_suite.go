@@ -45,6 +45,10 @@ type apiTestSuite struct {
 	matches       map[int]query.Match
 	gameStats     query.GameStats
 	playerStats   query.PlayerStats
+
+	expectedMatchResponses map[int]query.Match
+	expectedPlayerStats    map[int]query.PlayerStats
+	expectedGameStats      map[int]query.GameStats
 }
 
 func createAPITestSuite(t *testing.T, dbName string) *apiTestSuite {
@@ -70,7 +74,9 @@ func createAPITestSuite(t *testing.T, dbName string) *apiTestSuite {
 		testing:     t,
 		handler:     mux,
 		playerGUIDs: make(map[int]string),
+		players:     make(map[int]query.Player),
 		matchGUIDs:  make(map[int]string),
+		matches:     make(map[int]query.Match),
 	}
 }
 
@@ -95,6 +101,7 @@ func (s *apiTestSuite) listProjects() {
 	s.assertTrue(len(response) == 1)
 	s.assertEqual(response[0].Name, s.projectRequest.Name)
 	s.assertEqual(response[0].GUID, s.projectGUID)
+	s.project = response[0]
 }
 
 func (s *apiTestSuite) selectProject() {
@@ -139,6 +146,7 @@ func (s *apiTestSuite) listGames() {
 	s.assertTrue(len(response) == 1)
 	s.assertEqual(response[0].Name, s.gameRequest.Name)
 	s.assertEqual(response[0].GUID, s.gameGUID)
+	s.game = response[0]
 }
 
 func (s *apiTestSuite) createPlayers() {
@@ -162,9 +170,10 @@ func (s *apiTestSuite) listPlayers() {
 	s.assertEqual(http.StatusOK, w.Code)
 
 	s.assertTrue(len(response) == len(s.playerRequests))
-	for i, r := range response {
-		s.assertEqual(r.GUID, s.playerGUIDs[i])
-		s.assertEqual(r.Name, s.playerRequests[i].Name)
+	for i, player := range response {
+		s.players[i] = player
+		s.assertEqual(player.GUID, s.playerGUIDs[i])
+		s.assertEqual(player.Name, s.playerRequests[i].Name)
 	}
 }
 
@@ -190,14 +199,28 @@ func (s *apiTestSuite) listMatches() {
 	s.assertEqual(http.StatusOK, w.Code)
 	s.assertTrue(len(response) == len(s.matchRequests))
 
-	for i, match := range response {
-		matchRequest := response[len(s.matchRequests)-i-1] // matches are sorted: newest first
+	for i := range response {
+		match := response[len(s.matchRequests)-i-1] // matches are sorted: newest first
+
+		s.assertEqual(s.matchGUIDs[i], match.GUID)
+		s.assertEqual(s.gameGUID, match.GameGUID)
+		s.assertEqual(s.projectGUID, match.ProjectGUID)
+
+		matchRequest := s.matchRequests[i]
 		s.assertEqual(len(matchRequest.Teams), len(match.Teams))
+		s.assertNotEmpty(match.CreatedDate)
+		s.assertNotEmpty(match.UpdatedDate)
+		s.matches[i] = match
 
 		for j, team := range match.Teams {
-			s.assertEqual(len(matchRequest.Teams[j].Players), len(team.Players))
+			s.assertEqual(len(matchRequest.Teams[j].PlayerGUIDs), len(team.Players))
 			s.assertEqual(matchRequest.Teams[j].Score, team.Score)
 			s.assertNotEmpty(team.Result)
+		}
+
+		if s.expectedMatchResponses != nil {
+			expectedResponse := s.expectedMatchResponses[i]
+			s.assertEqual(expectedResponse.GUID, s.matches[i].GUID)
 		}
 	}
 }
