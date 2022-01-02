@@ -1,22 +1,22 @@
 package scheduling
 
-const dummy = "D"
+const dummy = -1
 
 type Pairing struct {
-	A string
-	B string
+	A int
+	B int
 }
 
 type RoundRobin struct {
-	players []string
+	players []int
 }
 
 func NewRoundRobin() *RoundRobin {
 	return &RoundRobin{}
 }
 
-func (r *RoundRobin) AddPlayer(name string) {
-	r.players = append(r.players, name)
+func (r *RoundRobin) AddPlayer(id int) {
+	r.players = append(r.players, id)
 }
 
 func (r *RoundRobin) Count() int {
@@ -43,7 +43,7 @@ func (r *RoundRobin) initialize() {
 	}
 }
 
-func pairings(halfA []string, halfB []string) []Pairing {
+func pairings(halfA []int, halfB []int) []Pairing {
 	var pairings []Pairing
 	for i := 0; i < len(halfA); i++ {
 		if halfA[i] != dummy && halfB[i] != dummy {
@@ -56,20 +56,20 @@ func pairings(halfA []string, halfB []string) []Pairing {
 	return pairings
 }
 
-func rotate(slice []string) []string {
+func rotate(slice []int) []int {
 	s := copySlice(slice)
 	fixed := s[0]
 	moves := s[len(s)-1]
-	return append([]string([]string{fixed, moves}), s[1:len(s)-1]...)
+	return append([]int([]int{fixed, moves}), s[1:len(s)-1]...)
 }
 
-func bisect(slice []string) ([]string, []string) {
+func bisect(slice []int) ([]int, []int) {
 	s := copySlice(slice)
 	halfA, halfB := divide(s)
 	return halfA, reverse(halfB)
 }
 
-func reverse(slice []string) []string {
+func reverse(slice []int) []int {
 	s := copySlice(slice)
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
 		s[i], s[j] = s[j], s[i]
@@ -77,7 +77,7 @@ func reverse(slice []string) []string {
 	return s
 }
 
-func divide(slice []string) ([]string, []string) {
+func divide(slice []int) ([]int, []int) {
 	s := copySlice(slice)
 	half := len(s) / 2
 	halfA := s[:half]
@@ -85,8 +85,8 @@ func divide(slice []string) ([]string, []string) {
 	return halfA, halfB
 }
 
-func copySlice(slice []string) []string {
-	s := make([]string, len(slice))
+func copySlice(slice []int) []int {
+	s := make([]int, len(slice))
 	copy(s, slice)
 	return s
 }

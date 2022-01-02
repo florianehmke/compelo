@@ -101,6 +101,20 @@ func testBasicWorkflow(t *testing.T, c *command.Service, q *query.Service) {
 	assert.Nil(t, err)
 	testProject.matchGUID = response.GUID
 
+	// 5. Create Competition
+	response, err = c.CreateNewCompetition(command.CreateNewCompetitionCommand{
+		GameGUID:    testProject.gameGUID,
+		ProjectGUID: testProject.projectGUID,
+		Name:        "Competition 1",
+		Rounds:      2,
+		Teams: []struct {
+			PlayerGUIDs []string
+		}{
+			{PlayerGUIDs: []string{testProject.players[0].guid}},
+			{PlayerGUIDs: []string{testProject.players[1].guid}},
+		},
+	})
+
 	checkCommandResults(t, testProject)
 	checkQuery(t, q, testProject)
 

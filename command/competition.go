@@ -1,14 +1,13 @@
 package command
 
-type match struct {
+type competition struct {
 	guid        string
 	gameGUID    string
 	projectGUID string
 
-	teams []matchTeam
+	teams []competitionTeam
 }
 
-type matchTeam struct {
+type competitionTeam struct {
 	playerGUIDs []string
-	score       int
 }
