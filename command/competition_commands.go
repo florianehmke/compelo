@@ -26,13 +26,12 @@ func (c *Service) CreateNewCompetition(cmd CreateNewCompetitionCommand) (Respons
 	c.Lock()
 	defer c.Unlock()
 
-	// TODO: validate event
+	// TODO:
+	// - validate rounds >= 1
 
 	if err := c.checkUniqueConstraint(cmd.ProjectGUID + ":" + cmd.Name); err != nil {
 		return Response{}, fmt.Errorf("schedule name is taken: %w", err)
 	}
-
-	// TODO: add match "index" for competition
 
 	guid := uuid.New().String()
 	ev := &event.CompetitionCreated{
@@ -55,16 +54,18 @@ func createMatchCommands(competitionEvent *event.CompetitionCreated) {
 	for i := range competitionEvent.Teams {
 		s.AddPlayer(i)
 	}
-	schedule := s.Schedule()
+	schedules := s.ScheduleRounds(competitionEvent.Rounds)
 
-	for i := 0; i < competitionEvent.Rounds; i++ {
-		for _, pairings := range schedule {
+	for competitionRound, round := range schedules {
+		for competitionDay, pairings := range round {
 			for _, pairing := range pairings {
 				ev := event.MatchCreated{
-					GUID:            uuid.New().String(),
-					CompetitionGUID: competitionEvent.GUID,
-					GameGUID:        competitionEvent.GameGUID,
-					ProjectGUID:     competitionEvent.ProjectGUID,
+					GUID:             uuid.New().String(),
+					CompetitionGUID:  competitionEvent.GUID,
+					GameGUID:         competitionEvent.GameGUID,
+					ProjectGUID:      competitionEvent.ProjectGUID,
+					CompetitionRound: competitionRound + 1,
+					CompetitionDay:   competitionDay + 1,
 				}
 				msg, _ := json.MarshalIndent(ev, "", "  ")
 				log.Println(string(msg))
@@ -78,6 +79,8 @@ func createMatchCommands(competitionEvent *event.CompetitionCreated) {
 				// TODO: add teams
 				// TODO: switch sides based on round odd / even, or move to scheduling?
 			}
+
 		}
 	}
+
 }

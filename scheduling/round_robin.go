@@ -30,11 +30,23 @@ func (r *RoundRobin) Schedule() map[int][]Pairing {
 	players := r.players
 	for i := 0; i < len(r.players)-1; i++ {
 		halfA, halfB := bisect(players)
-		schedule[i] = pairings(halfA, halfB)
+		schedule[i] = pairings(i, halfA, halfB)
 		players = rotate(players)
 	}
 
 	return schedule
+}
+
+func (r *RoundRobin) ScheduleRounds(rounds int) map[int]map[int][]Pairing {
+	schedules := make(map[int]map[int][]Pairing)
+
+	schedule := r.Schedule()
+	for i := 0; i < rounds; i++ {
+		schedules[i] = schedule
+		schedule = swapSides(schedule)
+	}
+
+	return schedules
 }
 
 func (r *RoundRobin) initialize() {
@@ -43,14 +55,23 @@ func (r *RoundRobin) initialize() {
 	}
 }
 
-func pairings(halfA []int, halfB []int) []Pairing {
+func pairings(day int, halfA []int, halfB []int) []Pairing {
 	var pairings []Pairing
 	for i := 0; i < len(halfA); i++ {
 		if halfA[i] != dummy && halfB[i] != dummy {
-			pairings = append(pairings, Pairing{
-				A: halfA[i],
-				B: halfB[i],
-			})
+			var a int
+			var b int
+
+			// swap side based on day
+			if day%2 == 0 {
+				a = halfA[i]
+				b = halfB[i]
+			} else {
+				a = halfB[i]
+				b = halfA[i]
+			}
+
+			pairings = append(pairings, Pairing{A: a, B: b})
 		}
 	}
 	return pairings
@@ -89,4 +110,15 @@ func copySlice(slice []int) []int {
 	s := make([]int, len(slice))
 	copy(s, slice)
 	return s
+}
+
+func swapSides(schedule map[int][]Pairing) map[int][]Pairing {
+	swapped := make(map[int][]Pairing)
+	for i, pairings := range schedule {
+		swapped[i] = make([]Pairing, 0)
+		for _, pairing := range pairings {
+			swapped[i] = append(swapped[i], Pairing{A: pairing.B, B: pairing.A})
+		}
+	}
+	return swapped
 }
