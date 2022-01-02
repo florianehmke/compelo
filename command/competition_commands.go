@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -44,7 +43,6 @@ func (c *Service) CreateNewCompetition(cmd CreateNewCompetitionCommand) (Respons
 		GUID:        uuid.New().String(),
 		GameGUID:    cmd.GameGUID,
 		ProjectGUID: cmd.ProjectGUID,
-		Date:        time.Now(),
 		Name:        cmd.Name,
 		Rounds:      cmd.Rounds,
 		Teams:       cmd.Teams,

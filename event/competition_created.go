@@ -1,9 +1,5 @@
 package event
 
-import (
-	"time"
-)
-
 const CompetitionCreatedType EventType = "CompetitionCreated"
 
 type CompetitionCreated struct {
@@ -12,9 +8,8 @@ type CompetitionCreated struct {
 	GameGUID    string `json:"gameGuid"`
 	ProjectGUID string `json:"projectGuid"`
 
-	Date   time.Time `json:"date" ts_type:"string"`
-	Name   string    `json:"name"`
-	Rounds int       `json:"rounds"`
+	Name   string `json:"name"`
+	Rounds int    `json:"rounds"`
 	Teams  []struct {
 		PlayerGUIDs []string
 	} `json:"teams"`

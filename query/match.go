@@ -20,11 +20,11 @@ type Match struct {
 	GameGUID    string `json:"gameGuid"`
 	ProjectGUID string `json:"projectGuid"`
 
-	Date  time.Time `json:"date" ts_type:"string"`
-	Teams []*Team   `json:"teams"`
+	Date  time.Time    `json:"date" ts_type:"string"`
+	Teams []*MatchTeam `json:"teams"`
 }
 
-type Team struct {
+type MatchTeam struct {
 	Players     []*Player `json:"players"`
 	Score       int       `json:"score"`
 	Result      Result    `json:"result"`
@@ -39,7 +39,7 @@ func (m *Match) determineResult() {
 			highScore = t.Score
 			highScoreCount = 1
 		} else if t.Score == highScore {
-			highScoreCount += 1
+			highScoreCount++
 		}
 	}
 	if highScoreCount < len(m.Teams) {
@@ -78,7 +78,7 @@ func (m *Match) calculateTeamElo(ratings map[string]*Rating) {
 	}
 }
 
-func (m *Match) updatePlayerRatings(ratings map[string]*Rating) {
+func (m *Match) updatePlayerRatings() {
 	for _, team := range m.Teams {
 		for _, player := range team.Players {
 			player.ratings[m.GameGUID].Current += team.RatingDelta

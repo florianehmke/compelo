@@ -88,7 +88,9 @@ func TestReferenceProject(t *testing.T) {
 	suite.listMatches()
 	suite.loadGameStats()
 	suite.loadPlayerStats()
+
 	suite.createCompetition()
+	suite.listCompetitions()
 
 	log.Println("Done!")
 }

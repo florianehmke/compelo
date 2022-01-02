@@ -51,3 +51,12 @@ func (h *Handler) CreateCompetition(w http.ResponseWriter, r *http.Request) {
 		json.WriteErrorResponse(w, http.StatusBadRequest, err)
 	}
 }
+
+func (h *Handler) GetAllCompetitions(w http.ResponseWriter, r *http.Request) {
+	matches, err := h.q.GetCompetitionsBy(chi.URLParam(r, ProjectGUID), chi.URLParam(r, GameGUID))
+	if err == nil {
+		json.WriteResponse(w, http.StatusOK, matches)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}

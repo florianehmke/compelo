@@ -7,7 +7,7 @@ import (
 func (h *defaultHandler) handleMatchCreated(e *event.MatchCreated) {
 	project := h.data.projects[e.ProjectGUID]
 	ratings := make(map[string]*Rating)
-	teams := []*Team{}
+	teams := []*MatchTeam{}
 
 	for _, t := range e.Teams {
 		var players []*Player
@@ -25,7 +25,7 @@ func (h *defaultHandler) handleMatchCreated(e *event.MatchCreated) {
 		}
 		sortPlayersByCreatedDate(players)
 
-		teams = append(teams, &Team{
+		teams = append(teams, &MatchTeam{
 			Score:   t.Score,
 			Players: players,
 		})
@@ -46,7 +46,7 @@ func (h *defaultHandler) handleMatchCreated(e *event.MatchCreated) {
 
 	match.determineResult()
 	match.calculateTeamElo(ratings)
-	match.updatePlayerRatings(ratings)
+	match.updatePlayerRatings()
 
 	h.data.projects[e.ProjectGUID].games[e.GameGUID].matches[e.GUID] = &match
 }

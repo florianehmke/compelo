@@ -18,7 +18,7 @@ type Stats struct {
 	LossCount    int `json:"lossCount"`
 }
 
-func (p *PlayerStats) addResult(match *Match, team *Team) {
+func (p *PlayerStats) addResult(match *Match, team *MatchTeam) {
 	// rating (peak, low, current)
 	p.Current.Rating = p.Current.Rating + team.RatingDelta
 	if p.Current.Rating > p.Current.PeakRating {

@@ -9,9 +9,10 @@ type Game struct {
 
 	Name string `json:"name"`
 
-	matches     map[string]*Match
-	playerStats map[string]*PlayerStats
-	gameStats   *GameStats
+	matches      map[string]*Match
+	playerStats  map[string]*PlayerStats
+	gameStats    *GameStats
+	competitions map[string]*Competition
 }
 
 func sortGamesByCreatedDate(values []*Game) {

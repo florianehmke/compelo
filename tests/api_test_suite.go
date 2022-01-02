@@ -58,6 +58,7 @@ type apiTestSuite struct {
 	// 5. Competitions
 	competitionRequest handler.CreateCompetitionRequest
 	competitionGUID    string
+	competition        query.Competition
 }
 
 func createAPITestSuite(t *testing.T) *apiTestSuite {
@@ -279,6 +280,21 @@ func (s *apiTestSuite) createCompetition() {
 	s.assertEqual(http.StatusCreated, w.Code)
 	s.assertNotEmpty(response.GUID)
 	s.competitionGUID = response.GUID
+}
+
+func (s *apiTestSuite) listCompetitions() {
+	w := s.request("GET", "/api/projects/"+s.projectGUID+"/games/"+s.gameGUID+"/competitions", nil)
+
+	var response []query.Competition
+	s.mustUnmarshal(w.Body.Bytes(), &response)
+
+	s.assertEqual(http.StatusOK, w.Code)
+	s.assertTrue(len(response) == 1)
+	s.assertEqual(s.competitionGUID, response[0].GUID)
+	s.assertEqual(s.competitionRequest.Name, response[0].Name)
+	s.assertEqual(s.competitionRequest.Rounds, response[0].Rounds)
+	s.assertEqual(len(s.competitionRequest.Teams), len(response[0].Teams))
+	s.competition = response[0]
 }
 
 // ------ Helpers ------

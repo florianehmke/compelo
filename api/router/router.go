@@ -41,6 +41,7 @@ func New(h *handler.Handler, s *security.Security) http.Handler {
 				r.Get("/game-stats", h.GetGameStats)
 				r.Get("/player-stats", h.GetPlayerStats)
 				r.Post("/competitions", h.CreateCompetition)
+				r.Get("/competitions", h.GetAllCompetitions)
 			})
 		})
 	})
