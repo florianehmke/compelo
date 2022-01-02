@@ -23,6 +23,9 @@ type apiTestSuite struct {
 	testing *testing.T
 	dbName  string
 
+	q *query.Service
+	c *command.Service
+
 	handler http.Handler
 	token   string
 
@@ -82,6 +85,8 @@ func createAPITestSuite(t *testing.T) *apiTestSuite {
 		dbName:      dbName,
 		testing:     t,
 		handler:     mux,
+		c:           c,
+		q:           q,
 		playerGUIDs: make(map[int]string),
 		players:     make(map[int]query.Player),
 		matchGUIDs:  make(map[int]string),

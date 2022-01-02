@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"log"
 	"os"
 	"testing"
 
@@ -88,4 +89,6 @@ func TestReferenceProject(t *testing.T) {
 	suite.loadGameStats()
 	suite.loadPlayerStats()
 	suite.createCompetition()
+
+	log.Println("Done!")
 }

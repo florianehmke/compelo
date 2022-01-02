@@ -53,6 +53,8 @@ func (svc *Service) on(e event.Event) {
 		svc.handlePlayerCreated(e)
 	case *event.MatchCreated:
 		svc.handleMatchCreated(e)
+	case *event.CompetitionCreated:
+		svc.handleCompetitionCreated(e)
 	}
 	svc.version++
 }

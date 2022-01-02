@@ -5,6 +5,9 @@ type competition struct {
 	gameGUID    string
 	projectGUID string
 
+	name   string
+	rounds int
+
 	teams []competitionTeam
 }
 

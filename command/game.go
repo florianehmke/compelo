@@ -6,5 +6,6 @@ type game struct {
 
 	name string
 
-	matches map[string]match
+	matches      map[string]match
+	competitions map[string]competition
 }
