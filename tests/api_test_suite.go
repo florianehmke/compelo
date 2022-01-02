@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
 	"compelo/api/handler"
@@ -20,6 +21,7 @@ import (
 
 type apiTestSuite struct {
 	testing *testing.T
+	dbName  string
 
 	handler http.Handler
 	token   string
@@ -55,7 +57,9 @@ type apiTestSuite struct {
 	competitionGUID    string
 }
 
-func createAPITestSuite(t *testing.T, dbName string) *apiTestSuite {
+func createAPITestSuite(t *testing.T) *apiTestSuite {
+	dbName := uuid.New().String() + ".db"
+
 	// Create event store.
 	bus := event.NewBus()
 	store := event.NewStore(bus, dbName)
@@ -75,6 +79,7 @@ func createAPITestSuite(t *testing.T, dbName string) *apiTestSuite {
 	mux := router.New(hdl, sec)
 
 	return &apiTestSuite{
+		dbName:      dbName,
 		testing:     t,
 		handler:     mux,
 		playerGUIDs: make(map[int]string),
@@ -203,18 +208,28 @@ func (s *apiTestSuite) listMatches() {
 	s.assertEqual(http.StatusOK, w.Code)
 	s.assertTrue(len(response) == len(s.matchRequests))
 
-	for i := range response {
-		match := response[len(s.matchRequests)-i-1] // matches are sorted: newest first
+	for _, match := range response {
+		matchIndex := -1
 
-		s.assertEqual(s.matchGUIDs[i], match.GUID)
+		// Map iteration is not ordered, the matches are created in a random order.
+		// Therefore we have to determine the index of the match that is checked here
+		// by its guid.
+		for i, guid := range s.matchGUIDs {
+			if guid == match.GUID {
+				matchIndex = i
+				break
+			}
+		}
+
+		s.assertEqual(s.matchGUIDs[matchIndex], match.GUID)
 		s.assertEqual(s.gameGUID, match.GameGUID)
 		s.assertEqual(s.projectGUID, match.ProjectGUID)
 
-		matchRequest := s.matchRequests[i]
+		matchRequest := s.matchRequests[matchIndex]
 		s.assertEqual(len(matchRequest.Teams), len(match.Teams))
 		s.assertNotEmpty(match.CreatedDate)
 		s.assertNotEmpty(match.UpdatedDate)
-		s.matches[i] = match
+		s.matches[matchIndex] = match
 
 		for j, team := range match.Teams {
 			s.assertEqual(len(matchRequest.Teams[j].PlayerGUIDs), len(team.Players))
@@ -223,8 +238,8 @@ func (s *apiTestSuite) listMatches() {
 		}
 
 		if s.expectedMatches != nil {
-			expectedResponse := s.expectedMatches[i]
-			s.assertEqual(expectedResponse.GUID, s.matches[i].GUID)
+			expectedResponse := s.expectedMatches[matchIndex]
+			s.assertEqual(expectedResponse.GUID, s.matches[matchIndex].GUID)
 		}
 	}
 }

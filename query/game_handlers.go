@@ -5,6 +5,7 @@ import "compelo/event"
 func (h *defaultHandler) handleGameCreated(e *event.GameCreated) {
 	h.data.projects[e.ProjectGUID].games[e.GUID] = &Game{
 		MetaData: MetaData{
+			ID:          e.GetID(),
 			CreatedDate: e.Date,
 			UpdatedDate: e.Date,
 		},

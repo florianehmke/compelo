@@ -33,6 +33,7 @@ func (h *defaultHandler) handleMatchCreated(e *event.MatchCreated) {
 
 	match := Match{
 		MetaData: MetaData{
+			ID:          e.GetID(),
 			CreatedDate: e.Date,
 			UpdatedDate: e.Date,
 		},

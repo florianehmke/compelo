@@ -110,6 +110,6 @@ func (m *Match) scoreSum() int {
 
 func sortMatchesByCreatedDate(values []*Match) {
 	sort.Slice(values, func(i, j int) bool {
-		return values[i].getCreatedDate().After(values[j].getCreatedDate())
+		return values[i].ID > values[j].ID
 	})
 }

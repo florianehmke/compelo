@@ -9,8 +9,8 @@ import (
 )
 
 func TestReferenceProject(t *testing.T) {
-	defer os.Remove("reference.db")
-	suite := createAPITestSuite(t, "reference.db")
+	suite := createAPITestSuite(t)
+	defer os.Remove(suite.dbName)
 
 	suite.projectRequest = handler.CreateProjectRequest{
 		Name:     "Reference Project",

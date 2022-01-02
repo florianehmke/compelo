@@ -14,6 +14,6 @@ type Player struct {
 
 func sortPlayersByCreatedDate(values []*Player) {
 	sort.Slice(values, func(i, j int) bool {
-		return values[i].getCreatedDate().Before(values[j].getCreatedDate())
+		return values[i].ID < values[j].ID
 	})
 }

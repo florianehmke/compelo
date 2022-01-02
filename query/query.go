@@ -63,6 +63,7 @@ func (svc *Service) on(e event.Event) {
 
 // MetaData contains common meta data for query objects.
 type MetaData struct {
+	ID          uint64    `json:"id"`
 	CreatedDate time.Time `json:"createdDate"`
 	UpdatedDate time.Time `json:"updatedDate"`
 }
