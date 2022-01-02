@@ -2,6 +2,7 @@ package command
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -11,6 +12,9 @@ import (
 	"compelo/event"
 	"compelo/scheduling"
 )
+
+var ErrAtLeastTwoTeams = errors.New("at least two teams required for competition")
+var ErrAtLeastOneRound = errors.New("at one round required for competition")
 
 type CreateNewCompetitionCommand struct {
 	GameGUID    string `json:"gameGuid"`
@@ -26,16 +30,18 @@ func (c *Service) CreateNewCompetition(cmd CreateNewCompetitionCommand) (Respons
 	c.Lock()
 	defer c.Unlock()
 
-	// TODO:
-	// - validate rounds >= 1
-
+	if cmd.Rounds < 1 {
+		return Response{}, ErrAtLeastOneRound
+	}
+	if len(cmd.Teams) < 2 {
+		return Response{}, ErrAtLeastTwoTeams
+	}
 	if err := c.checkUniqueConstraint(cmd.ProjectGUID + ":" + cmd.Name); err != nil {
 		return Response{}, fmt.Errorf("schedule name is taken: %w", err)
 	}
 
-	guid := uuid.New().String()
 	ev := &event.CompetitionCreated{
-		GUID:        guid,
+		GUID:        uuid.New().String(),
 		GameGUID:    cmd.GameGUID,
 		ProjectGUID: cmd.ProjectGUID,
 		Date:        time.Now(),
@@ -46,7 +52,7 @@ func (c *Service) CreateNewCompetition(cmd CreateNewCompetitionCommand) (Respons
 	c.raise(ev)
 	createMatchCommands(ev)
 
-	return Response{GUID: guid}, nil
+	return Response{GUID: ev.GUID}, nil
 }
 
 func createMatchCommands(competitionEvent *event.CompetitionCreated) {
@@ -77,7 +83,6 @@ func createMatchCommands(competitionEvent *event.CompetitionCreated) {
 				log.Println(string(msg))
 
 				// TODO: add teams
-				// TODO: switch sides based on round odd / even, or move to scheduling?
 			}
 
 		}

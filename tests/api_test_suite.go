@@ -46,9 +46,13 @@ type apiTestSuite struct {
 	gameStats     query.GameStats
 	playerStats   query.PlayerStats
 
-	expectedMatchResponses map[int]query.Match
-	expectedPlayerStats    map[int]query.PlayerStats
-	expectedGameStats      map[int]query.GameStats
+	expectedMatches     map[int]query.Match
+	expectedPlayerStats map[int]query.PlayerStats
+	expectedGameStats   map[int]query.GameStats
+
+	// 5. Competitions
+	competitionRequest handler.CreateCompetitionRequest
+	competitionGUID    string
 }
 
 func createAPITestSuite(t *testing.T, dbName string) *apiTestSuite {
@@ -218,8 +222,8 @@ func (s *apiTestSuite) listMatches() {
 			s.assertNotEmpty(team.Result)
 		}
 
-		if s.expectedMatchResponses != nil {
-			expectedResponse := s.expectedMatchResponses[i]
+		if s.expectedMatches != nil {
+			expectedResponse := s.expectedMatches[i]
 			s.assertEqual(expectedResponse.GUID, s.matches[i].GUID)
 		}
 	}
@@ -244,6 +248,17 @@ func (s *apiTestSuite) loadGameStats() {
 	s.assertEqual(http.StatusOK, w.Code)
 	s.assertTrue(len(response.MaxScoreDiff) == len(s.matchRequests))
 	s.assertTrue(len(response.MaxScoreSum) == len(s.matchRequests))
+}
+
+func (s *apiTestSuite) createCompetition() {
+	w := s.request("POST", "/api/projects/"+s.projectGUID+"/games/"+s.gameGUID+"/competitions", s.competitionRequest)
+
+	response := &command.Response{}
+	s.mustUnmarshal(w.Body.Bytes(), response)
+
+	s.assertEqual(http.StatusCreated, w.Code)
+	s.assertNotEmpty(response.GUID)
+	s.competitionGUID = response.GUID
 }
 
 // ------ Helpers ------

@@ -62,10 +62,20 @@ func TestReferenceProject(t *testing.T) {
 			},
 		},
 	}
+	suite.competitionRequest = handler.CreateCompetitionRequest{
+		Rounds: 2,
+		Name:   "Competition 1",
+		Teams: []handler.CreateCompetitionRequestTeam{
+			{PlayerGUIDs: []string{suite.playerGUIDs[0]}},
+			{PlayerGUIDs: []string{suite.playerGUIDs[1]}},
+			{PlayerGUIDs: []string{suite.playerGUIDs[2]}},
+			{PlayerGUIDs: []string{suite.playerGUIDs[3]}},
+		},
+	}
 
 	suite.createMatches()
 
-	suite.expectedMatchResponses = map[int]query.Match{
+	suite.expectedMatches = map[int]query.Match{
 		0: {
 			GUID: suite.matchGUIDs[0],
 		},
@@ -77,4 +87,5 @@ func TestReferenceProject(t *testing.T) {
 	suite.listMatches()
 	suite.loadGameStats()
 	suite.loadPlayerStats()
+	suite.createCompetition()
 }
