@@ -63,7 +63,7 @@ func frontendHandler(w http.ResponseWriter, r *http.Request) {
 
 func corsMiddleware() *cors.Cors {
 	return cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:4200"},
+		AllowedOrigins:   []string{"http://localhost*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},
