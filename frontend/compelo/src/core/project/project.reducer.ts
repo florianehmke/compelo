@@ -1,7 +1,15 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
-import { Game, GameStats, Match, Player, PlayerStats } from '@generated/api';
+import {
+  Competition,
+  Game,
+  GameStats,
+  Match,
+  Player,
+  PlayerStats,
+} from '@generated/api';
 
+import { loadCompetitionsSuccess } from '.';
 import {
   filterMatches,
   loadGamesSuccess,
@@ -20,6 +28,7 @@ export interface State {
   playerStats: PlayerStats[];
   matches: Match[];
   matchFilter: string;
+  competitions: Competition[];
 }
 
 export const initialState: State = {
@@ -29,6 +38,7 @@ export const initialState: State = {
   playerStats: [],
   matches: [],
   matchFilter: '',
+  competitions: [],
 };
 
 const projectReducer = createReducer(
@@ -56,6 +66,10 @@ const projectReducer = createReducer(
   on(filterMatches, (state, action) => ({
     ...state,
     matchFilter: action.payload.filter || '',
+  })),
+  on(loadCompetitionsSuccess, (state, action) => ({
+    ...state,
+    competitions: action.payload || [],
   }))
 );
 

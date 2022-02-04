@@ -27,6 +27,7 @@ func generateApiModels() {
 	converter.Add(handler.CreatePlayerRequest{})
 	converter.Add(handler.CreateMatchRequest{})
 	converter.Add(handler.CreateMatchRequestTeam{})
+	converter.Add(handler.CreateCompetitionRequest{})
 
 	converter.Add(command.Response{})
 
@@ -34,9 +35,9 @@ func generateApiModels() {
 	converter.Add(query.Player{})
 	converter.Add(query.Game{})
 	converter.Add(query.Match{})
-
 	converter.Add(query.PlayerStats{})
 	converter.Add(query.GameStats{})
+	converter.Add(query.Competition{})
 
 	err := converter.ConvertToFile(modelPath + "api.models.ts")
 	if err != nil {

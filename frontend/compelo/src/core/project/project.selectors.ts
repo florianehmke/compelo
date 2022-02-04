@@ -44,3 +44,8 @@ export const getMatches = createSelector(getProjectState, (state: State) =>
     });
   })
 );
+
+export const getCompetitions = createSelector(
+  getProjectState,
+  (state: State) => state.competitions
+);

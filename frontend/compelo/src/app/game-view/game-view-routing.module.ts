@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import {
+  triggerLoadCompetitions,
   triggerLoadGames,
   triggerLoadGameStats,
   triggerLoadMatches,
@@ -26,6 +27,7 @@ const routes: Routes = [
         triggerLoadPlayers,
         triggerLoadPlayerStats,
         triggerLoadMatches,
+        triggerLoadCompetitions,
       ],
     },
   },

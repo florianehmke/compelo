@@ -13,6 +13,14 @@ import {
 import { ToastService } from '@shared/toast';
 
 import {
+  createCompetitionError,
+  loadCompetitions,
+  loadCompetitionsError,
+  loadCompetitionsSuccess,
+} from '.';
+import {
+  createCompetition,
+  createCompetitionSuccess,
   createGame,
   createGameError,
   createGameSuccess,
@@ -159,6 +167,31 @@ export class ProjectEffects {
         tap((action) => this.toastService.success('Created!'))
       ),
     { dispatch: false }
+  );
+
+  createCompetition$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createCompetition),
+      withLatestFrom(this.store.select(getSelectedGame)),
+      switchMap(([action, game]) =>
+        this.service.createCompetition(action.payload, game.guid).pipe(
+          map((response) => createCompetitionSuccess({ payload: response })),
+          catchError((err) => of(createCompetitionError(err)))
+        )
+      )
+    )
+  );
+
+  loadCompetitions$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadCompetitions),
+      switchMap((action) =>
+        this.service.getCompetitions(action.payload.gameGuid).pipe(
+          map((payload) => loadCompetitionsSuccess({ payload })),
+          catchError((err) => of(loadCompetitionsError(err)))
+        )
+      )
+    )
   );
 
   constructor(

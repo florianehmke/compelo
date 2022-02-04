@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 
 import { gameGuidParam } from '@shared/route-params';
 
+import { loadCompetitions } from '.';
 import {
   loadGames,
   loadGameStats,
@@ -46,4 +47,13 @@ export function triggerLoadGameStats(
   const gameGuid = route.params[gameGuidParam];
   const payload = { payload: { gameGuid: gameGuid } };
   return of(loadGameStats(payload));
+}
+
+export function triggerLoadCompetitions(
+  store: Store<State>,
+  route: ActivatedRouteSnapshot
+): Observable<Action> {
+  const gameGuid = route.params[gameGuidParam];
+  const payload = { payload: { gameGuid: gameGuid } };
+  return of(loadCompetitions(payload));
 }

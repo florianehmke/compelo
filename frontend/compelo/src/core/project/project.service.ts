@@ -13,6 +13,8 @@ import {
   Response,
   Player,
   PlayerStats,
+  Competition,
+  CreateCompetitionRequest,
 } from '@generated/api';
 
 import { getSelectedProjectGuid } from '../router';
@@ -79,6 +81,28 @@ export class ProjectService {
     return this.projectUrl().pipe(
       flatMap((url) =>
         this.http.get<PlayerStats[]>(`${url}/games/${gameGuid}/player-stats`)
+      )
+    );
+  }
+
+  createCompetition(
+    payload: CreateCompetitionRequest,
+    gameGuid: string
+  ): Observable<Response> {
+    return this.projectUrl().pipe(
+      flatMap((url) =>
+        this.http.post<Response>(
+          `${url}/games/${gameGuid}/competitions`,
+          payload
+        )
+      )
+    );
+  }
+
+  getCompetitions(gameGuid: string): Observable<Competition[]> {
+    return this.projectUrl().pipe(
+      flatMap((url) =>
+        this.http.get<Competition[]>(`${url}/games/${gameGuid}/competitions`)
       )
     );
   }

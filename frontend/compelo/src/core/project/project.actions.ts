@@ -8,6 +8,8 @@ import {
   Response,
   Player,
   PlayerStats,
+  Competition,
+  CreateCompetitionRequest,
 } from '@generated/api';
 import { ErrorPayload, Payload } from '@shared/models';
 
@@ -119,4 +121,30 @@ export const loadPlayerStatsError = createAction(
 export const filterMatches = createAction(
   '[Matches] Filter',
   props<Payload<FilterMatchesPayload>>()
+);
+
+export const createCompetition = createAction(
+  '[Competitions] Create Competition',
+  props<Payload<CreateCompetitionRequest>>()
+);
+export const createCompetitionSuccess = createAction(
+  '[Competitions] Create Competition Success',
+  props<Payload<Response>>()
+);
+export const createCompetitionError = createAction(
+  '[Competitions] Create Competition Error',
+  props<ErrorPayload>()
+);
+
+export const loadCompetitions = createAction(
+  '[Competitions] Load All',
+  props<Payload<LoadPlayerStatsPayload>>()
+);
+export const loadCompetitionsSuccess = createAction(
+  '[Competitions] Load All Success',
+  props<Payload<Competition[]>>()
+);
+export const loadCompetitionsError = createAction(
+  '[Competitions] Load All Error',
+  props<ErrorPayload>()
 );

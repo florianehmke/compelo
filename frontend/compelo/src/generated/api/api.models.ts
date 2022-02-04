@@ -26,6 +26,14 @@ export interface CreateMatchRequest {
   teams: CreateMatchRequestTeam[];
 }
 
+export interface CreateCompetitionRequestTeam {
+  playerGuids: string[];
+}
+export interface CreateCompetitionRequest {
+  rounds: number;
+  name: string;
+  teams: CreateCompetitionRequestTeam[];
+}
 export interface Response {
   guid: string;
 }
@@ -94,4 +102,18 @@ export interface PlayerStats {
 export interface GameStats {
   maxScoreSum: Match[];
   maxScoreDiff: Match[];
+}
+export interface CompetitionTeam {
+  players: Player[];
+}
+export interface Competition {
+  id: number;
+  createdDate: Time;
+  updatedDate: Time;
+  guid: string;
+  gameGuid: string;
+  projectGuid: string;
+  name: string;
+  rounds: number;
+  teams: CompetitionTeam[];
 }

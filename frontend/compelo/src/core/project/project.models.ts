@@ -13,3 +13,7 @@ export interface LoadGameStatsPayload {
 export interface FilterMatchesPayload {
   filter: string;
 }
+
+export interface LoadCompetitionsPayload {
+  gameGuid: string;
+}
