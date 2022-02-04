@@ -28,7 +28,7 @@ FROM debian:buster
 RUN adduser --home /srv --no-create-home --system --uid 1000 --group app
 RUN chown 1000:1000 /srv
 
-COPY --from=BACKEND /usr/src/compelo /usr/local/bin/compelo
+COPY --from=BACKEND /usr/src/dist/compelo /usr/local/bin/compelo
 
 VOLUME /srv
 

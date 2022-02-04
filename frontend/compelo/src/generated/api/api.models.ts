@@ -33,6 +33,7 @@ export interface Time {
 
 }
 export interface Project {
+  id: number;
   createdDate: Time;
   updatedDate: Time;
   guid: string;
@@ -40,6 +41,7 @@ export interface Project {
   passwordHash: number[];
 }
 export interface Player {
+  id: number;
   createdDate: Time;
   updatedDate: Time;
   guid: string;
@@ -47,26 +49,28 @@ export interface Player {
   name: string;
 }
 export interface Game {
+  id: number;
   createdDate: Time;
   updatedDate: Time;
   guid: string;
   projectGuid: string;
   name: string;
 }
-export interface Team {
+export interface MatchTeam {
   players: Player[];
   score: number;
   result: string;
   ratingDelta: number;
 }
 export interface Match {
+  id: number;
   createdDate: Time;
   updatedDate: Time;
   guid: string;
   gameGuid: string;
   projectGuid: string;
   date: string;
-  teams: Team[];
+  teams: MatchTeam[];
 }
 export interface Stats {
   rating: number;
@@ -78,6 +82,7 @@ export interface Stats {
   lossCount: number;
 }
 export interface PlayerStats {
+  id: number;
   createdDate: Time;
   updatedDate: Time;
   guid: string;

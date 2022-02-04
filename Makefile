@@ -8,7 +8,7 @@ export VERSION
 export DATE
 
 GOCMD := go
-EXECUTEABLE := compelo
+EXECUTEABLE := dist/compelo
 FRONTEND_PATH := frontend/compelo
 
 all: generate frontend backend
