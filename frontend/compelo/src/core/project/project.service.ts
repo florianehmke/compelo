@@ -6,15 +6,15 @@ import { flatMap, map, take } from 'rxjs/operators';
 
 import { environment } from '@env/environment';
 import {
+  Competition,
+  CreateCompetitionRequest,
   CreateMatchRequest,
   Game,
   GameStats,
   Match,
-  Response,
   Player,
   PlayerStats,
-  Competition,
-  CreateCompetitionRequest,
+  Response,
 } from '@generated/api';
 
 import { getSelectedProjectGuid } from '../router';
@@ -65,6 +65,16 @@ export class ProjectService {
     return this.projectUrl().pipe(
       flatMap((url) =>
         this.http.post<Response>(`${url}/games/${gameGuid}/matches`, payload)
+      )
+    );
+  }
+
+  deleteMatch(matchGuid: string, gameGuid: string): Observable<Response> {
+    return this.projectUrl().pipe(
+      flatMap((url) =>
+        this.http.delete<Response>(
+          `${url}/games/${gameGuid}/matches/${matchGuid}`
+        )
       )
     );
   }

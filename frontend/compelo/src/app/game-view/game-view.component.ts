@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { getLoadedByActionTypeOf } from '@core/app';
 import {
   createMatch,
+  deleteMatch,
   filterMatches,
   getGameStats,
   getMatches,
@@ -54,6 +55,7 @@ import {
           [matches]="matches$ | async"
           [isLoaded]="matchesLoaded$ | async"
           (filterChange)="onFilterChange($event)"
+          (deleteMatch)="onDeleteMatch($event)"
         ></app-match-list>
       </div>
       <div class="col-md-6">
@@ -101,6 +103,10 @@ export class GameViewComponent {
 
   onMatchCreated(payload: CreateMatchRequest) {
     this.store.dispatch(createMatch({ payload }));
+  }
+
+  onDeleteMatch(payload: string) {
+    this.store.dispatch(deleteMatch({ payload }));
   }
 
   onFilterChange(filter: string) {

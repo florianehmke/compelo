@@ -39,6 +39,7 @@ import { Match } from '@generated/api';
                     <span>{{ team | team }}</span>
                   </div>
                   <div>
+                    <a (click)="onDelete(match)">Delete</a>
                     <small class="text-muted">Score: </small>
                     <small>{{ team?.score }}</small>
                     <small class="text-muted">, Rating: </small>
@@ -82,6 +83,9 @@ export class MatchListComponent {
   @Output()
   filterChange = new EventEmitter<string>();
 
+  @Output()
+  deleteMatch = new EventEmitter<string>();
+
   page = 1;
   pageSize = 7;
 
@@ -105,5 +109,9 @@ export class MatchListComponent {
 
   ratingClassFor(delta: number): string {
     return 0 < delta ? 'text-success' : 'text-danger';
+  }
+
+  onDelete(match: Match) {
+    this.deleteMatch.emit(match.guid);
   }
 }

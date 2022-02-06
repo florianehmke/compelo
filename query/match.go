@@ -118,8 +118,8 @@ func (ml *eloMatchList) addEloMatch(m *Match) {
 	ml.addMatch(m)
 }
 
-func (ml *eloMatchList) removeEloMatch(m *Match) {
-	ml.removeMatch(m)
+func (ml *eloMatchList) removeEloMatch(guid string) {
+	ml.removeMatch(ml.entries[guid])
 	ml.recalculateElo()
 }
 

@@ -8,6 +8,10 @@ import (
 	"github.com/go-chi/chi"
 )
 
+const (
+	MatchGUID string = "matchGUID"
+)
+
 type CreateMatchRequest struct {
 	Teams []CreateMatchRequestTeam `json:"teams"`
 }
@@ -41,6 +45,21 @@ func (h *Handler) CreateMatch(w http.ResponseWriter, r *http.Request) {
 	m, err := h.c.CreateNewMatch(c)
 	if err == nil {
 		json.WriteResponse(w, http.StatusCreated, m)
+	} else {
+		json.WriteErrorResponse(w, http.StatusBadRequest, err)
+	}
+}
+
+func (h *Handler) DeleteMatch(w http.ResponseWriter, r *http.Request) {
+	c := command.DeleteMatchCommand{
+		ProjectGUID: chi.URLParam(r, ProjectGUID),
+		GameGUID:    chi.URLParam(r, GameGUID),
+		GUID:        chi.URLParam(r, MatchGUID),
+	}
+
+	m, err := h.c.DeleteMatch(c)
+	if err == nil {
+		json.WriteResponse(w, http.StatusOK, m)
 	} else {
 		json.WriteErrorResponse(w, http.StatusBadRequest, err)
 	}

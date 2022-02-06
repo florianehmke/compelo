@@ -38,6 +38,8 @@ func (et EventType) Unmarshal(data []byte) (Event, error) {
 		target = &ProjectCreated{}
 	case MatchCreatedType:
 		target = &MatchCreated{}
+	case MatchDeletedType:
+		target = &MatchDeleted{}
 	}
 
 	if err := json.Unmarshal(data, &target); err != nil {

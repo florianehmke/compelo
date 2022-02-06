@@ -30,6 +30,8 @@ import {
   createPlayer,
   createPlayerError,
   createPlayerSuccess,
+  deleteMatch,
+  deleteMatchSuccess,
   loadGames,
   loadGamesError,
   loadGamesSuccess,
@@ -143,6 +145,22 @@ export class ProjectEffects {
             loadGameStats({ payload: { gameGuid: game.guid } }),
           ]),
           catchError((err) => of(createMatchError(err)))
+        )
+      )
+    )
+  );
+
+  deleteMatch$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteMatch),
+      withLatestFrom(this.store.select(getSelectedGame)),
+      switchMap(([action, game]) =>
+        this.service.deleteMatch(action.payload, game.guid).pipe(
+          switchMap((response) => [
+            deleteMatchSuccess({ payload: response }),
+            loadMatches({ payload: { gameGuid: game.guid } }),
+          ]),
+          catchError((err) => of(createPlayerError(err)))
         )
       )
     )

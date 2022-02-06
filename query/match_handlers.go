@@ -36,3 +36,7 @@ func (h *defaultHandler) handleMatchCreated(e *event.MatchCreated) {
 
 	h.data.projects[e.ProjectGUID].games[e.GameGUID].eloMatchList.addEloMatch(&match)
 }
+
+func (h *defaultHandler) handleMatchDeleted(e *event.MatchDeleted) {
+	h.data.projects[e.ProjectGUID].games[e.GameGUID].eloMatchList.removeEloMatch(e.GUID)
+}

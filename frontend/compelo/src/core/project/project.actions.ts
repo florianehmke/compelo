@@ -92,6 +92,19 @@ export const createMatchError = createAction(
   props<ErrorPayload>()
 );
 
+export const deleteMatch = createAction(
+  '[Matches] Delete Match',
+  props<Payload<string>>()
+);
+export const deleteMatchSuccess = createAction(
+  '[Matches] Delete Match Success',
+  props<Payload<Response>>()
+);
+export const deleteMatchError = createAction(
+  '[Matches] Delete Match Error',
+  props<ErrorPayload>()
+);
+
 export const loadMatches = createAction(
   '[Matches] Load',
   props<Payload<LoadMatchesPayload>>()

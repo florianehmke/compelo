@@ -20,3 +20,7 @@ func (svc *Service) handleMatchCreated(e *event.MatchCreated) {
 		teams:       teams,
 	}
 }
+
+func (svc *Service) handleMatchDeleted(e *event.MatchDeleted) {
+	delete(svc.data.projects[e.ProjectGUID].games[e.GameGUID].matches, e.GUID)
+}

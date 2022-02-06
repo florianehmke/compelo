@@ -37,6 +37,7 @@ func New(h *handler.Handler, s *security.Security) http.Handler {
 			r.Get("/games", h.GetAllGames)
 			r.Route("/games/{"+handler.GameGUID+"}", func(r chi.Router) {
 				r.Post("/matches", h.CreateMatch)
+				r.Delete("/matches/{"+handler.MatchGUID+"}", h.DeleteMatch)
 				r.Get("/matches", h.GetAllMatches)
 				r.Get("/game-stats", h.GetGameStats)
 				r.Get("/player-stats", h.GetPlayerStats)

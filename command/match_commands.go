@@ -32,3 +32,21 @@ func (svc *Service) CreateNewMatch(cmd CreateNewMatchCommand) (Response, error) 
 	})
 	return Response{GUID: guid}, nil
 }
+
+type DeleteMatchCommand struct {
+	ProjectGUID string `json:"projectGuid"`
+	GameGUID    string `json:"gameGuid"`
+	GUID        string `json:"matchGuid"`
+}
+
+func (svc *Service) DeleteMatch(cmd DeleteMatchCommand) (Response, error) {
+	svc.Lock()
+	defer svc.Unlock()
+
+	svc.raise(&event.MatchDeleted{
+		ProjectGUID: cmd.ProjectGUID,
+		GameGUID:    cmd.GameGUID,
+		GUID:        cmd.GUID,
+	})
+	return Response{GUID: cmd.GUID}, nil
+}
