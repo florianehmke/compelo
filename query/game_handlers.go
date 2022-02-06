@@ -12,7 +12,7 @@ func (h *defaultHandler) handleGameCreated(e *event.GameCreated) {
 		GUID:         e.GUID,
 		ProjectGUID:  e.ProjectGUID,
 		Name:         e.Name,
-		matches:      make(map[string]*Match),
+		eloMatchList: newEloMatchList(),
 		playerStats:  make(map[string]*PlayerStats),
 		gameStats:    &GameStats{},
 		competitions: make(map[string]*Competition),

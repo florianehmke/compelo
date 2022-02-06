@@ -14,12 +14,12 @@ func (h *playerStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	log.Println("[query:player-stats] handling event", e.GetID(), e.EventType())
 
 	game := h.data.projects[e.ProjectGUID].games[e.GameGUID]
-	match := game.matches[e.GUID]
+	match := game.eloMatchList.entries[e.GUID]
 	for _, t := range match.Teams {
 		for _, p := range t.Players {
 			stats, ok := game.playerStats[p.GUID]
 			if !ok {
-				stats = h.newPlayerStats(p, game.GUID)
+				stats = h.newPlayerStats(p)
 			}
 			stats.addResult(match, t)
 
@@ -38,7 +38,7 @@ func (h *playerStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	}
 }
 
-func (h *playerStatsHandler) newPlayerStats(player *Player, gameGuid string) *PlayerStats {
+func (h *playerStatsHandler) newPlayerStats(player *Player) *PlayerStats {
 	return &PlayerStats{
 		Player: player,
 		Current: Stats{

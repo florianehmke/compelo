@@ -9,7 +9,7 @@ type Game struct {
 
 	Name string `json:"name"`
 
-	matches      map[string]*Match
+	eloMatchList *eloMatchList
 	playerStats  map[string]*PlayerStats
 	gameStats    *GameStats
 	competitions map[string]*Competition

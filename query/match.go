@@ -60,36 +60,6 @@ func (m *Match) determineResult() {
 	}
 }
 
-func (m *Match) calculateTeamElo(ratings map[string]*Rating) {
-	rm := rating.NewRatedMatch()
-	for i, t := range m.Teams {
-		sum := 0
-		for _, p := range t.Players {
-			sum += ratings[p.GUID].Current
-		}
-		avg := sum / len(t.Players)
-
-		// The rating service expects a "rank" to sort players.
-		// Here we just use the negative score instead, should
-		// result in the same thing for most games..
-		rm.AddPlayer(i, -t.Score, avg)
-	}
-	rm.Calculate()
-
-	for i := range m.Teams {
-		m.Teams[i].RatingDelta = rm.GetRatingDelta(i)
-	}
-}
-
-// FIXME don't use this, update via MatchList
-func (m *Match) updatePlayerRatings() {
-	for _, team := range m.Teams {
-		for _, player := range team.Players {
-			player.ratings[m.GameGUID].Current += team.RatingDelta
-		}
-	}
-}
-
 func (m *Match) scoreDifference() int {
 	lowestScore := 0
 	highestScore := 0
@@ -118,13 +88,27 @@ func sortMatchesByCreatedDate(values []*Match) {
 	})
 }
 
-// eloMatchList contains the basic linked matchList
-// as well as player ratings of all players that
-// were part of any its matches.
+// eloMatchList embeds the basic linked matchList.
+// Additionally it stores player elo ratings for all
+// players that took part in any of its matches.
+//
+// It is possible to remove matches, albeit its expensive
+// as it currently is required to re-calculate all elo
+// matches due to the nature of elo.
 type eloMatchList struct {
 	matchList
 
 	playerRatings map[string]int
+}
+
+func newEloMatchList() *eloMatchList {
+	matchList := matchList{
+		entries: make(map[string]*Match),
+	}
+	return &eloMatchList{
+		playerRatings: make(map[string]int),
+		matchList:     matchList,
+	}
 }
 
 func (ml *eloMatchList) addEloMatch(m *Match) {
@@ -224,4 +208,6 @@ func (ml *matchList) removeMatch(m *Match) {
 	} else if m.next != nil {
 		m.next.prev = nil
 	}
+
+	delete(ml.entries, m.GUID)
 }

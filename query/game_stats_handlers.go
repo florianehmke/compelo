@@ -16,7 +16,7 @@ func (h *gameStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	log.Println("[query:game-stats] handling event", e.GetID(), e.EventType())
 
 	game := h.data.projects[e.ProjectGUID].games[e.GameGUID]
-	match := game.matches[e.GUID]
+	match := game.eloMatchList.entries[e.GUID]
 
 	updateMaxScoreSumStats(game.gameStats, match)
 	updateMaxScoreDiffStats(game.gameStats, match)

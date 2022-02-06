@@ -12,6 +12,5 @@ func (h *defaultHandler) handlePlayerCreated(e *event.PlayerCreated) {
 		GUID:        e.GUID,
 		ProjectGUID: e.ProjectGUID,
 		Name:        e.Name,
-		ratings:     make(map[string]*Rating),
 	}
 }
