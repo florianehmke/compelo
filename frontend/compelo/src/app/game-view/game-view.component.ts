@@ -43,6 +43,12 @@ import {
     </div>
     <hr />
     <div class="row">
+      <div class="col-md">
+        <app-competitions></app-competitions>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
       <div class="col-md-6">
         <app-match-list
           [matches]="matches$ | async"

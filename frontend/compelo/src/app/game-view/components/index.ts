@@ -1,3 +1,4 @@
+import { CompetitionsComponent } from './competitions.component';
 import { MatchCreateComponent } from './match-create.component';
 import { MatchListComponent } from './match-list.component';
 import { MatchSettingsComponent } from './match-settings.component';
@@ -23,4 +24,5 @@ export const components: any[] = [
   GameStatsComponent,
   PlayerStatsChartComponent,
   PlayerStatsTableComponent,
+  CompetitionsComponent,
 ];
