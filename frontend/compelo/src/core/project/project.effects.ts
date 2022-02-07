@@ -159,6 +159,8 @@ export class ProjectEffects {
           switchMap((response) => [
             deleteMatchSuccess({ payload: response }),
             loadMatches({ payload: { gameGuid: game.guid } }),
+            loadPlayerStats({ payload: { gameGuid: game.guid } }),
+            loadGameStats({ payload: { gameGuid: game.guid } }),
           ]),
           catchError((err) => of(createPlayerError(err)))
         )

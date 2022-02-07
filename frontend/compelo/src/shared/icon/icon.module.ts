@@ -13,6 +13,7 @@ import {
   faTimes,
   faTrophy,
   faWrench,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { IconComponent } from './icon.component';
@@ -34,7 +35,8 @@ export class IconModule {
       faChartLine,
       faTable,
       faSignInAlt,
-      faTrophy
+      faTrophy,
+      faTrash
     );
   }
 }

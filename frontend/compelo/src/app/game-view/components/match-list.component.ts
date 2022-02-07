@@ -17,13 +17,26 @@ import { Match } from '@generated/api';
     <ng-container *ngIf="isLoaded; else showLoading">
       <table class="table table-bordered bg-white">
         <tbody>
-          <tr *ngFor="let match of matches | slice: from():to()">
+          <tr
+            *ngFor="let match of matches | slice: from():to()"
+            (mouseover)="showDeleteOn = match"
+            (mouseout)="showDeleteOn = null"
+          >
             <td>
               <div>{{ match.date | date }}</div>
               <div>
                 <small class="text-muted">{{
                   match.date | date: 'shortTime'
                 }}</small>
+                <app-icon
+                  icon="trash"
+                  class="float-right"
+                  [button]="true"
+                  [hidden]="showDeleteOn !== match"
+                  (click)="onDelete(match)"
+                >
+                  D
+                </app-icon>
               </div>
             </td>
             <td>
@@ -39,7 +52,6 @@ import { Match } from '@generated/api';
                     <span>{{ team | team }}</span>
                   </div>
                   <div>
-                    <a (click)="onDelete(match)">Delete</a>
                     <small class="text-muted">Score: </small>
                     <small>{{ team?.score }}</small>
                     <small class="text-muted">, Rating: </small>
@@ -88,6 +100,7 @@ export class MatchListComponent {
 
   page = 1;
   pageSize = 7;
+  showDeleteOn: Match = null;
 
   from(): number {
     return (this.page - 1) * this.pageSize;
