@@ -8,6 +8,7 @@
 
 # Database
 db.sql
+compelo.db
 
 # Built Binary
 /dist

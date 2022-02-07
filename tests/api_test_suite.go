@@ -193,16 +193,38 @@ func (s *apiTestSuite) listPlayers() {
 }
 
 func (s *apiTestSuite) createMatches() {
+	// simulate an accidentally created match first, and delete it.
+	guid := s.createMatch(s.matchRequests[0])
+	s.deleteMatch(guid)
+
 	for i, r := range s.matchRequests {
-		w := s.request("POST", "/api/projects/"+s.projectGUID+"/games/"+s.gameGUID+"/matches", r)
-
-		response := &command.Response{}
-		s.mustUnmarshal(w.Body.Bytes(), response)
-
-		s.assertEqual(http.StatusCreated, w.Code)
-		s.assertNotEmpty(response.GUID)
-		s.matchGUIDs[i] = response.GUID
+		s.matchGUIDs[i] = s.createMatch(r)
 	}
+
+	// simulate another accidentally created match and delete it again.
+	guid = s.createMatch(s.matchRequests[0])
+	s.deleteMatch(guid)
+}
+
+func (s *apiTestSuite) createMatch(r handler.CreateMatchRequest) string {
+	w := s.request("POST", "/api/projects/"+s.projectGUID+"/games/"+s.gameGUID+"/matches", r)
+
+	response := &command.Response{}
+	s.mustUnmarshal(w.Body.Bytes(), response)
+
+	s.assertEqual(http.StatusCreated, w.Code)
+	s.assertNotEmpty(response.GUID)
+	return response.GUID
+}
+
+func (s *apiTestSuite) deleteMatch(guid string) {
+	w := s.request("DELETE", "/api/projects/"+s.projectGUID+"/games/"+s.gameGUID+"/matches/"+guid, nil)
+
+	response := &command.Response{}
+	s.mustUnmarshal(w.Body.Bytes(), response)
+
+	s.assertEqual(http.StatusOK, w.Code)
+	s.assertEqual(response.GUID, guid)
 }
 
 func (s *apiTestSuite) listMatches() {
