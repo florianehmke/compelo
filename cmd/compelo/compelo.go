@@ -22,9 +22,9 @@ func main() {
 	}
 	dbPath, ok := os.LookupEnv("COMPELO_DB_PATH")
 	if !ok {
-		dbPath = "db.sql"
+		dbPath = "compelo.db"
 		log.Println("COMPELO_DB_PATH environment variable is missing.")
-		log.Println("Using default value instead: 'db.sql'.")
+		log.Println("Using default value instead: 'compelo.db'.")
 	}
 	port, ok := os.LookupEnv("COMPELO_PORT")
 	if !ok {
