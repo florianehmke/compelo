@@ -60,7 +60,8 @@ func (svc *Service) on(e event.Event) {
 		svc.playerStatsHandler.handleMatchCreated(e)
 	case *event.MatchDeleted:
 		svc.defaultHandler.handleMatchDeleted(e)
-		// FIXME handle stats
+		svc.gameStatsHandler.handleMatchDeleted(e)
+		svc.playerStatsHandler.handleMatchDeleted(e)
 	case *event.CompetitionCreated:
 		svc.defaultHandler.handleCompetitionCreated(e)
 	}

@@ -40,7 +40,6 @@ func (svc *Service) getPlayerBy(projectGUID string, playerGUID string) (*Player,
 
 	if player, ok := project.players[playerGUID]; ok {
 		return player, nil
-	} else {
-		return nil, fmt.Errorf("get player by guid (%s) failed: %w", playerGUID, ErrPlayerNotFound)
 	}
+	return nil, fmt.Errorf("get player by guid (%s) failed: %w", playerGUID, ErrPlayerNotFound)
 }

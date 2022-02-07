@@ -13,15 +13,26 @@ type playerStatsHandler struct {
 func (h *playerStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 	log.Println("[query:player-stats] handling event", e.GetID(), e.EventType())
 
+	match := h.data.projects[e.ProjectGUID].games[e.GameGUID].eloMatchList.entries[e.GUID]
+	h.addMatch(match)
+}
+
+func (h *playerStatsHandler) handleMatchDeleted(e *event.MatchDeleted) {
+	log.Println("[query:player-stats] handling event", e.GetID(), e.EventType())
+
 	game := h.data.projects[e.ProjectGUID].games[e.GameGUID]
-	match := game.eloMatchList.entries[e.GUID]
-	for _, t := range match.Teams {
+	h.recalculatePlayerStats(game)
+}
+
+func (h *playerStatsHandler) addMatch(m *Match) {
+	game := h.data.projects[m.ProjectGUID].games[m.GameGUID]
+	for _, t := range m.Teams {
 		for _, p := range t.Players {
 			stats, ok := game.playerStats[p.GUID]
 			if !ok {
 				stats = h.newPlayerStats(p)
 			}
-			stats.addResult(match, t)
+			stats.addResult(m, t)
 
 			// FIXME: very inefficient, instead chart it better.
 			// Results are just copied to provide a data point
@@ -29,12 +40,23 @@ func (h *playerStatsHandler) handleMatchCreated(e *event.MatchCreated) {
 			// player did not play that day.
 			for _, otherPlayerStats := range game.playerStats {
 				if otherPlayerStats.Player.GUID != p.GUID {
-					otherPlayerStats.copyCurrentResultToHistory(e.Date)
+					otherPlayerStats.copyCurrentResultToHistory(m.Date)
 				}
 			}
 
 			game.playerStats[p.GUID] = stats
 		}
+	}
+}
+
+func (h *playerStatsHandler) recalculatePlayerStats(game *Game) {
+	game.playerStats = make(map[string]*PlayerStats)
+
+	current := game.eloMatchList.head
+
+	for current != nil {
+		h.addMatch(current)
+		current = current.next
 	}
 }
 

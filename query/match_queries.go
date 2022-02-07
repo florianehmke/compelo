@@ -36,7 +36,6 @@ func (svc *Service) GetMatchBy(projectGUID string, gameGUID string, matchGUID st
 
 	if match, ok := game.eloMatchList.entries[matchGUID]; ok {
 		return match, nil
-	} else {
-		return nil, fmt.Errorf("get match by guid (%s) failed: %w", matchGUID, ErrMatchNotFound)
 	}
+	return nil, fmt.Errorf("get match by guid (%s) failed: %w", matchGUID, ErrMatchNotFound)
 }

@@ -31,13 +31,13 @@ func (p *PlayerStats) addResult(match *Match, team *MatchTeam) {
 	// game results
 	switch team.Result {
 	case Win:
-		p.Current.WinCount += 1
+		p.Current.WinCount++
 	case Draw:
-		p.Current.DrawCount += 1
+		p.Current.DrawCount++
 	case Loss:
-		p.Current.LossCount += 1
+		p.Current.LossCount++
 	}
-	p.Current.GameCount += 1
+	p.Current.GameCount++
 	p.History[formatDate(match.Date)] = p.Current
 }
 
