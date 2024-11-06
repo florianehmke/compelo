@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -12,10 +15,9 @@ import { ProjectService } from './project.service';
   declarations: [],
   imports: [
     CommonModule,
-    HttpClientModule,
     StoreModule.forFeature(FEATURE_KEY, reducer),
     EffectsModule.forFeature([ProjectEffects]),
   ],
-  providers: [ProjectService],
+  providers: [ProjectService, provideHttpClient(withInterceptorsFromDi())],
 })
 export class ProjectModule {}
