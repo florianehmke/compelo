@@ -20,7 +20,6 @@ generate:
 	mkdir -p $(FRONTEND_PATH)/dist
 	mkdir -p $(FRONTEND_PATH)/src/generated/api
 	touch $(FRONTEND_PATH)/dist/nothing
-	$(GOCMD) generate ./internal/db/scripts
 	$(GOCMD) generate ./frontend
 
 # Frontend
