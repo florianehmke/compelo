@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 import { CreateMatchRequest, Player } from '@generated/api';
 
@@ -63,7 +63,7 @@ export class MatchCreateComponent {
   players: Player[];
 
   @Input()
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
 
   @Output()
   matchCreated = new EventEmitter<CreateMatchRequest>();

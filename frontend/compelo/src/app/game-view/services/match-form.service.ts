@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 
@@ -13,9 +13,9 @@ export interface MatchFormSettings {
 
 @Injectable()
 export class MatchFormService {
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: UntypedFormBuilder) {}
 
-  buildForm(settings: MatchFormSettings): FormGroup {
+  buildForm(settings: MatchFormSettings): UntypedFormGroup {
     const teamArray = this.fb.array([]);
     for (let i = 0; i < settings.teamCount; i++) {
       teamArray.push(this.createTeamForm(settings.teamSize));
@@ -26,10 +26,10 @@ export class MatchFormService {
     });
   }
 
-  private createTeamForm(teamSize: number): FormGroup {
+  private createTeamForm(teamSize: number): UntypedFormGroup {
     const playerArray = this.fb.array([]);
     for (let i = 0; i < teamSize; i++) {
-      playerArray.push(new FormControl(null, Validators.required));
+      playerArray.push(new UntypedFormControl(null, Validators.required));
     }
 
     return this.fb.group({
