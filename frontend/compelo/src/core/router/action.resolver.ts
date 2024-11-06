@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Action, Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -16,7 +16,7 @@ interface RouteData<T> {
 }
 
 @Injectable()
-export class ActionResolver<T> implements Resolve<boolean> {
+export class ActionResolver<T> {
   constructor(private store: Store<T>) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<boolean> {

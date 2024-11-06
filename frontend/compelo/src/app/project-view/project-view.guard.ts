@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
@@ -9,7 +8,7 @@ import {
 import { tokenForProjectIdExists } from '@shared/jwt';
 
 @Injectable()
-export class ProjectViewGuard implements CanActivate {
+export class ProjectViewGuard {
   constructor(private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
