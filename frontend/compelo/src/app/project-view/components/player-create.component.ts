@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { Player } from '@generated/api';
+
+import { ButtonLabelComponent } from '../../../shared/button/button-label.component';
+import { ButtonPrimaryDirective } from '../../../shared/button/button-primary.directive';
 
 @Component({
   selector: 'app-player-create',
@@ -26,6 +30,8 @@ import { Player } from '@generated/api';
       </div>
     </form>
   `,
+  standalone: true,
+  imports: [FormsModule, ButtonPrimaryDirective, ButtonLabelComponent],
 })
 export class PlayerCreateComponent {
   @Output()

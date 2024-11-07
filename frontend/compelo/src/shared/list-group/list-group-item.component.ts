@@ -10,5 +10,6 @@ import { Component } from '@angular/core';
       <ng-content></ng-content>
     </button>
   `,
+  standalone: true,
 })
 export class ListGroupItemComponent {}

@@ -1,6 +1,10 @@
+import { NgFor, NgClass, SlicePipe, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 import { MatchData } from '@generated/api';
+
+import { TeamPipe } from '../pipes/team.pipe';
 
 @Component({
   selector: 'app-match-list',
@@ -16,12 +20,12 @@ import { MatchData } from '@generated/api';
     </div>
     <table class="table table-bordered bg-white">
       <tbody>
-        <tr *ngFor="let match of matches | slice: from():to()">
+        <tr *ngFor="let match of matches | slice : from() : to()">
           <td>
             <div>{{ match.date | date }}</div>
             <div>
               <small class="text-muted">{{
-                match.date | date: 'shortTime'
+                match.date | date : 'shortTime'
               }}</small>
             </div>
           </td>
@@ -66,6 +70,8 @@ import { MatchData } from '@generated/api';
       }
     `,
   ],
+  standalone: true,
+  imports: [NgFor, NgClass, NgbPagination, SlicePipe, DatePipe, TeamPipe],
 })
 export class MatchListComponent {
   @Input()

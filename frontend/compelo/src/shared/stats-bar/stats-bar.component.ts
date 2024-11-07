@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
@@ -47,6 +48,8 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
       }
     `,
   ],
+  standalone: true,
+  imports: [NgIf],
 })
 export class StatsBarComponent {
   @Input() data: StatsBarData;

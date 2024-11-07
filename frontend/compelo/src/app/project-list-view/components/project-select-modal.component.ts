@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { ButtonLabelComponent } from '../../../shared/button/button-label.component';
+import { ButtonPrimaryDirective } from '../../../shared/button/button-primary.directive';
 
 @Component({
   selector: 'app-project-select-modal',
@@ -35,6 +39,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </div>
     </form>
   `,
+  standalone: true,
+  imports: [FormsModule, ButtonPrimaryDirective, ButtonLabelComponent],
 })
 export class ProjectSelectModalComponent {
   password: string;

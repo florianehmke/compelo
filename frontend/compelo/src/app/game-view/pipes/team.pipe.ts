@@ -4,6 +4,7 @@ import { TeamData } from '@generated/api';
 
 @Pipe({
   name: 'team',
+  standalone: true,
 })
 export class TeamPipe implements PipeTransform {
   transform(team: TeamData, ...args: any[]): string {

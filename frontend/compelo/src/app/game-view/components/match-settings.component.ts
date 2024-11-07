@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
+import { ButtonLabelComponent } from '../../../shared/button/button-label.component';
+import { ButtonPrimaryDirective } from '../../../shared/button/button-primary.directive';
+import { IconComponent } from '../../../shared/icon/icon.component';
 import { MatchFormSettings } from '../services/match-form.service';
 
 @Component({
@@ -44,6 +48,13 @@ import { MatchFormSettings } from '../services/match-form.service';
         margin-bottom: 8px;
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    IconComponent,
+    FormsModule,
+    ButtonPrimaryDirective,
+    ButtonLabelComponent,
   ],
 })
 export class MatchSettingsComponent {

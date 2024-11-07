@@ -1,7 +1,11 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import { PlayerStats, Stats } from '@generated/api';
 import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
+
+import { StatsBarComponent } from '../../../../shared/stats-bar/stats-bar.component';
 
 @Component({
   selector: 'app-player-stats-table',
@@ -36,6 +40,8 @@ import { StatsBarData } from '@shared/stats-bar/stats-bar.models';
       </ng-container>
     </div>
   `,
+  standalone: true,
+  imports: [NgFor, NgIf, NgbTooltip, StatsBarComponent],
 })
 export class PlayerStatsTableComponent {
   @Input()

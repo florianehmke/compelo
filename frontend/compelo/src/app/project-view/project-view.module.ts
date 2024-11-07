@@ -8,9 +8,13 @@ import { ProjectViewComponent } from './project-view.component';
 import { ProjectViewGuard } from './project-view.guard';
 
 @NgModule({
-  declarations: [ProjectViewComponent, ...components],
   exports: [],
   providers: [ProjectViewGuard],
-  imports: [SharedModule, ProjectViewRoutingModule],
+  imports: [
+    SharedModule,
+    ProjectViewRoutingModule,
+    ProjectViewComponent,
+    ...components,
+  ],
 })
 export class ProjectViewModule {}

@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 
@@ -9,6 +10,11 @@ import {
   State,
 } from '@core/project';
 import { Game, Player } from '@generated/api';
+
+import { GameCreateComponent } from './components/game-create.component';
+import { GameListComponent } from './components/game-list.component';
+import { PlayerCreateComponent } from './components/player-create.component';
+import { PlayerListComponent } from './components/player-list.component';
 
 @Component({
   template: `
@@ -29,6 +35,14 @@ import { Game, Player } from '@generated/api';
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [
+    GameCreateComponent,
+    GameListComponent,
+    PlayerCreateComponent,
+    PlayerListComponent,
+    AsyncPipe,
+  ],
 })
 export class ProjectViewComponent {
   games$ = this.store.select(getGames);

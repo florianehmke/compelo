@@ -1,7 +1,16 @@
+import { NgIf, NgFor } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import {
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 import { CreateMatchRequest, Player } from '@generated/api';
+
+import { ButtonLabelComponent } from '../../../shared/button/button-label.component';
+import { ButtonPrimaryDirective } from '../../../shared/button/button-primary.directive';
+import { IconComponent } from '../../../shared/icon/icon.component';
 
 @Component({
   selector: 'app-match-create',
@@ -56,6 +65,16 @@ import { CreateMatchRequest, Player } from '@generated/api';
         margin-bottom: 8px;
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    IconComponent,
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    ButtonPrimaryDirective,
+    ButtonLabelComponent,
   ],
 })
 export class MatchCreateComponent {

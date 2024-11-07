@@ -1,4 +1,6 @@
+import { NgFor } from '@angular/common';
 import { Component, HostBinding } from '@angular/core';
+import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 
 import { ToastService } from '@shared/toast/toast.service';
 
@@ -15,6 +17,8 @@ import { ToastService } from '@shared/toast/toast.service';
       {{ toast.message }}
     </ngb-toast>
   `,
+  standalone: true,
+  imports: [NgFor, NgbToast],
 })
 export class ToastComponent {
   @HostBinding('class.ngb-toasts')

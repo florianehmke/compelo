@@ -15,6 +15,7 @@ import { APP_BUILD_DATE, APP_VERSION } from './version';
       }
     `,
   ],
+  standalone: true,
 })
 export class AppFooterComponent {
   appVersion = APP_VERSION;

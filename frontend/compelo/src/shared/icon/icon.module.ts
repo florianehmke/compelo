@@ -18,9 +18,8 @@ import {
 import { IconComponent } from './icon.component';
 
 @NgModule({
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, IconComponent],
   exports: [IconComponent],
-  declarations: [IconComponent],
   providers: [],
 })
 export class IconModule {

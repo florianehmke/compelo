@@ -1,6 +1,10 @@
+import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { Game, Project } from '@generated/api';
+
+import { IconComponent } from '../shared/icon/icon.component';
 
 @Component({
   selector: 'app-header',
@@ -45,6 +49,8 @@ import { Game, Project } from '@generated/api';
       }
     `,
   ],
+  standalone: true,
+  imports: [RouterLink, NgIf, IconComponent],
 })
 export class AppHeaderComponent {
   @Input()

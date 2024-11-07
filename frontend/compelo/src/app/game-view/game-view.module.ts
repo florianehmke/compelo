@@ -9,9 +9,14 @@ import { pipes } from './pipes';
 import { MatchFormService } from './services/match-form.service';
 
 @NgModule({
-  declarations: [GameViewComponent, ...components, ...pipes],
   exports: [],
-  imports: [SharedModule, GameViewRoutingModule],
+  imports: [
+    SharedModule,
+    GameViewRoutingModule,
+    GameViewComponent,
+    ...components,
+    ...pipes,
+  ],
   providers: [MatchFormService],
 })
 export class GameViewModule {}

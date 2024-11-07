@@ -1,7 +1,13 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 import { GameStats, PlayerStats } from '@generated/api';
+
+import { GameStatsComponent } from './game-stats.component';
+import { PlayerStatsChartComponent } from './player-stats-chart.component';
+import { PlayerStatsTableComponent } from './player-stats-table.component';
+import { IconComponent } from '../../../../shared/icon/icon.component';
 
 export interface Mode {
   title: string;
@@ -38,6 +44,15 @@ export interface Mode {
         margin-left: 0.5rem;
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    NgFor,
+    IconComponent,
+    NgIf,
+    PlayerStatsTableComponent,
+    PlayerStatsChartComponent,
+    GameStatsComponent,
   ],
 })
 export class StatsComponent {

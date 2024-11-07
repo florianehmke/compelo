@@ -1,6 +1,10 @@
+import { NgFor, DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import { GameStats } from '@generated/api';
+
+import { ScoresPipe } from '../../pipes/scores.pipe';
+import { TeamsPipe } from '../../pipes/teams.pipe';
 
 @Component({
   selector: 'app-game-stats',
@@ -40,6 +44,8 @@ import { GameStats } from '@generated/api';
       </ng-container>
     </div>
   `,
+  standalone: true,
+  imports: [NgFor, DatePipe, TeamsPipe, ScoresPipe],
 })
 export class GameStatsComponent {
   @Input()

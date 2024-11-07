@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
       <ng-content></ng-content>
     </div>
   `,
+  standalone: true,
 })
 export class ListGroupComponent {}

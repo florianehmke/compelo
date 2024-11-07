@@ -1,4 +1,6 @@
+import { NgIf, AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 
@@ -13,6 +15,10 @@ import {
 } from '@core/project';
 import { CreateMatchRequest } from '@generated/api';
 
+import { MatchCreateComponent } from './components/match-create.component';
+import { MatchListComponent } from './components/match-list.component';
+import { MatchSettingsComponent } from './components/match-settings.component';
+import { StatsComponent } from './components/stats/stats.component';
 import {
   MatchFormService,
   MatchFormSettings,
@@ -49,6 +55,17 @@ import {
       </div>
     </div>
   `,
+  standalone: true,
+  imports: [
+    MatchCreateComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf,
+    MatchSettingsComponent,
+    MatchListComponent,
+    StatsComponent,
+    AsyncPipe,
+  ],
 })
 export class GameViewComponent {
   players$ = this.store.select(getPlayers);

@@ -1,8 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { getSelectedGame, State as ProjectState } from '@core/project';
 import { getSelectedProject } from '@core/project-list';
+
+import { AppFooterComponent } from './app-footer.component';
+import { AppHeaderComponent } from './app-header.component';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +32,8 @@ import { getSelectedProject } from '@core/project-list';
       }
     `,
   ],
+  standalone: true,
+  imports: [AppHeaderComponent, RouterOutlet, AppFooterComponent, AsyncPipe],
 })
 export class AppComponent {
   game$ = this.projectStore.select(getSelectedGame);

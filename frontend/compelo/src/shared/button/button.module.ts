@@ -7,9 +7,13 @@ import { ButtonLabelComponent } from './button-label.component';
 import { ButtonPrimaryDirective } from './button-primary.directive';
 
 @NgModule({
-  imports: [CommonModule, IconModule],
+  imports: [
+    CommonModule,
+    IconModule,
+    ButtonLabelComponent,
+    ButtonPrimaryDirective,
+  ],
   exports: [ButtonLabelComponent, ButtonPrimaryDirective],
-  declarations: [ButtonLabelComponent, ButtonPrimaryDirective],
   providers: [],
 })
 export class ButtonModule {}

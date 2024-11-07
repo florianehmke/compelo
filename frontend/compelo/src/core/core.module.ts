@@ -9,8 +9,8 @@ import { environment } from '@env/environment';
 
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthService } from './auth.service';
-import { ProjectListModule } from './project-list/project-list.module';
 import { ProjectModule } from './project/project.module';
+import { ProjectListModule } from './project-list/project-list.module';
 
 export const metaReducers = environment.production ? [] : [];
 

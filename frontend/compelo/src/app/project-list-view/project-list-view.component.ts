@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
@@ -16,6 +17,8 @@ import { Payload } from '@shared/models';
 import { noop } from '@shared/util';
 
 import { ProjectSelectModalComponent } from './components';
+import { ProjectCreateComponent } from './components/project-create.component';
+import { ProjectListComponent } from './components/project-list.component';
 
 @Component({
   template: `
@@ -28,6 +31,8 @@ import { ProjectSelectModalComponent } from './components';
       (projectSelected)="onSelect($event)"
     ></app-project-list>
   `,
+  standalone: true,
+  imports: [ProjectCreateComponent, ProjectListComponent, AsyncPipe],
 })
 export class ProjectListViewComponent {
   projects$ = this.store.select(getProjects);

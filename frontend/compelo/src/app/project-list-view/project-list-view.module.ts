@@ -7,8 +7,12 @@ import { ProjectListViewRoutingModule } from './project-list-view-routing.module
 import { ProjectListViewComponent } from './project-list-view.component';
 
 @NgModule({
-  declarations: [ProjectListViewComponent, ...components],
   exports: [],
-  imports: [SharedModule, ProjectListViewRoutingModule],
+  imports: [
+    SharedModule,
+    ProjectListViewRoutingModule,
+    ProjectListViewComponent,
+    ...components,
+  ],
 })
 export class ProjectListViewModule {}
