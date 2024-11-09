@@ -1,3 +1,7 @@
 @import "theme/variables";
 @import 'bootstrap/scss/bootstrap';
 @import "theme/theme";
+
+.form-control, .form-select {
+  background-color: white
+}

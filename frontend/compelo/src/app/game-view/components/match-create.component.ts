@@ -39,7 +39,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
           />
           <div formArrayName="playerIds">
             <select
-              class="custom-select"
+              class="form-select"
               [formControlName]="j.toString()"
               [compareWith]="compareByID"
               *ngFor="let player of getPlayers(team); let j = index"
@@ -61,7 +61,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
   styles: [
     `
       .form-control,
-      .custom-select {
+      .form-select {
         margin-bottom: 8px;
       }
     `,

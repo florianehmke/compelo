@@ -9,11 +9,11 @@ import { TeamPipe } from '../pipes/team.pipe';
 @Component({
   selector: 'app-match-list',
   template: `
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between align-middle">
       <p class="lead">Recent Matches</p>
       <input
         type="text"
-        class="form-control-sm"
+        class="form-control form-control-sm w-50 h-25"
         placeholder="Filter by Player"
         (input)="filterChange.emit($event.target.value)"
       />
