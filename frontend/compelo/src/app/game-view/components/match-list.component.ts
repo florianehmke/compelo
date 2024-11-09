@@ -15,7 +15,7 @@ import { TeamPipe } from '../pipes/team.pipe';
         type="text"
         class="form-control form-control-sm w-50 h-25"
         placeholder="Filter by Player"
-        (input)="filterChange.emit($event.target.value)"
+        (input)="onFilter($event)"
       />
     </div>
     <table class="table table-bordered bg-white">
@@ -65,6 +65,11 @@ import { TeamPipe } from '../pipes/team.pipe';
   `,
   styles: [
     `
+      table,
+      td {
+        background-color: white;
+      }
+
       td {
         padding: 0.5rem;
       }
@@ -103,5 +108,9 @@ export class MatchListComponent {
 
   ratingClassFor(delta: number): string {
     return 0 < delta ? 'text-success' : 'text-danger';
+  }
+
+  onFilter(event: Event) {
+    this.filterChange.emit((event.target as HTMLInputElement).value);
   }
 }

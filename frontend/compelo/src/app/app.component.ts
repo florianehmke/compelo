@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { getSelectedGame, State as ProjectState } from '@core/project';
 import { getSelectedProject } from '@core/project-list';
+import { ToastComponent } from '@shared/toast';
 
 import { AppFooterComponent } from './app-footer.component';
 import { AppHeaderComponent } from './app-header.component';
@@ -33,7 +34,13 @@ import { AppHeaderComponent } from './app-header.component';
     `,
   ],
   standalone: true,
-  imports: [AppHeaderComponent, RouterOutlet, AppFooterComponent, AsyncPipe],
+  imports: [
+    AppHeaderComponent,
+    RouterOutlet,
+    AppFooterComponent,
+    AsyncPipe,
+    ToastComponent,
+  ],
 })
 export class AppComponent {
   game$ = this.projectStore.select(getSelectedGame);

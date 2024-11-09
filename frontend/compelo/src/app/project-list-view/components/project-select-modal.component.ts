@@ -13,12 +13,10 @@ import { ButtonPrimaryDirective } from '../../../shared/button/button-primary.di
         <h4 class="modal-title">Enter Password</h4>
         <button
           type="button"
-          class="close"
+          class="btn-close"
           aria-label="Close"
           (click)="activeModal.dismiss('Cross click')"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
+        ></button>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -34,7 +32,7 @@ import { ButtonPrimaryDirective } from '../../../shared/button/button-primary.di
       </div>
       <div class="modal-footer">
         <button type="submit" appPrimary>
-          <app-button-label icon="sign-in-alt"> Login </app-button-label>
+          <app-button-label icon="sign-in-alt"> Login</app-button-label>
         </button>
       </div>
     </form>

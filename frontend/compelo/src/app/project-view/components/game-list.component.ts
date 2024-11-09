@@ -7,7 +7,6 @@ import { Game } from '@generated/api';
 import { ListGroupButtonComponent } from '../../../shared/list-group/list-group-button.component';
 import { ListGroupComponent } from '../../../shared/list-group/list-group.component';
 
-
 @Component({
   selector: 'app-game-list',
   template: `
